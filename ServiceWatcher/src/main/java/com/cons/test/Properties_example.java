@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.util.Properties;
 
 
 public class Properties_example {
@@ -25,7 +26,7 @@ public class Properties_example {
     @SuppressWarnings("oracle.jdeveloper.java.semantic-warning")
     private void loadProperties() {
         //get properties from config.properties
-        Properties_example prop = new Properties_example();
+        Properties prop = new Properties();
         OutputStream output = null;
         try {
             FileInputStream outpout = new FileInputStream(configFileName);

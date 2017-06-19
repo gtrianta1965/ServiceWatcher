@@ -23,7 +23,6 @@ public class Properties_example {
         super();
     }
 
-    @SuppressWarnings("oracle.jdeveloper.java.semantic-warning")
     private void loadProperties() {
         //get properties from config.properties
         Properties prop = new Properties();
@@ -33,7 +32,7 @@ public class Properties_example {
 
             //Set values
             prop.load(outpout);
-            
+
             System.out.println(prop.getProperty("url"));
             System.out.println(prop.getProperty("dbuser"));
             System.out.println(prop.getProperty("dbpassword"));

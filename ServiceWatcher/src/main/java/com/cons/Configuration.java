@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class Configuration {
     public Configuration() {
         super();
+        
     }
 
 
@@ -24,14 +25,16 @@ public class Configuration {
 
     public void init() {
         clientLog = logger.LoggerConfig("confiquration");
-        init(configFile);
-    }
-
-    public void init(String fileName) {
-        //to do
-        clientLog.info("Init With Filename:" + fileName);
+        //init(configFile);
+        clientLog.info("Init With Filename:" + SWConstants.LOG_FILE_NAME_CONFIQURATION);
         serviceParameters = this.getServiceParameters();
     }
+
+//    public void init(String fileName) {
+//        //to do
+//        clientLog.info("Init With Filename:" + fileName);
+//        serviceParameters = this.getServiceParameters();
+//    }
 
     public boolean isValid() {
         return true;

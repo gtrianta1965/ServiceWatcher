@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 public class Configuration {
     public Configuration() {
         super();
-        
+        clientLog = logger.LoggerConfig("confiquration");
+        //        //init(configFile);
+        clientLog.info("Init With Filename:" + SWConstants.LOG_FILE_NAME_CONFIQURATION);
     }
 
 
@@ -24,9 +26,9 @@ public class Configuration {
     Logger clientLog = null;
 
     public void init() {
-        clientLog = logger.LoggerConfig("confiquration");
-        //init(configFile);
-        clientLog.info("Init With Filename:" + SWConstants.LOG_FILE_NAME_CONFIQURATION);
+//        clientLog = logger.LoggerConfig("confiquration");
+//        //init(configFile);
+//        clientLog.info("Init With Filename:" + SWConstants.LOG_FILE_NAME_CONFIQURATION);
         serviceParameters = this.getServiceParameters();
     }
 

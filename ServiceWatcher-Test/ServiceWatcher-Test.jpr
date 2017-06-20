@@ -64,9 +64,9 @@
       <string v="oracle.ide.model.ResourcePaths/resourcesContentSet"/>
       <string v="oracle.jdeveloper.model.J2eeSettings/webContentSet"/>
       <string v="oracle.jdeveloper.offlinedb.model.OfflineDBProjectSettings/offlineDBContentSet"/>
+      <string v="oracle.adfdtinternal.model.ide.settings.ADFMSettings/adfmContentSet"/>
       <string v="oracle.toplink.workbench.addin/toplinkContentSet"/>
       <string v="oracle.bm.commonIde.data.project.ModelerProjectSettings/modelersContentSet"/>
-      <string v="oracle.adfdtinternal.model.ide.settings.ADFMSettings/adfmContentSet"/>
    </list>
    <value n="defaultPackage" v=""/>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
@@ -75,16 +75,12 @@
       </list>
    </hash>
    <hash n="oracle.jdeveloper.compiler.OjcConfiguration">
-      <value n="webIANAEncoding" v="windows-1253"/>
+      <value n="webIANAEncoding" v="UTF-8"/>
    </hash>
    <hash n="oracle.jdeveloper.maven.compiler.MavenConfiguration">
-      <url n="pomfileURL" path="../../pom.xml"/>
-      <url n="testPomfileURL" path="../../pom.xml"/>
+      <url n="pomfileURL" path="../ServiceWatcher/pom.xml"/>
+      <url n="testPomfileURL" path="../ServiceWatcher/pom.xml"/>
       <value n="testProject" v="true"/>
-   </hash>
-   <hash n="oracle.jdeveloper.model.J2eeSettings">
-      <value n="j2eeWebAppName" v="ServiceWatcherApp-ServiceWatcher-Test-webapp"/>
-      <value n="j2eeWebContextRoot" v="ServiceWatcherApp-ServiceWatcher-Test-context-root"/>
    </hash>
    <hash n="oracle.jdevimpl.config.JProjectPaths">
       <url n="outputDirectory" path="classes/"/>

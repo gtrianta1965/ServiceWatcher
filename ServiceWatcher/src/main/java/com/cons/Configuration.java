@@ -18,7 +18,7 @@ public class Configuration {
 
     ClientLogger logger = new ClientLogger();
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
-    private int concurentThreads = 5;
+    private String concurentThreads = "0";
     private final static String configFile = "config.properties";
     Logger clientLog = null;
 
@@ -29,7 +29,7 @@ public class Configuration {
 
     public void init(String fileName) {
         //to do
-        clientLog.info("Init With Filename:"+fileName);
+        clientLog.info("Init With Filename:" + fileName);
         serviceParameters = this.getServiceParameters();
     }
 
@@ -47,23 +47,39 @@ public class Configuration {
 
     public List<ServiceParameter> getServiceParameters() {
         clientLog.info("Confiquration.getserviceParameters::START:");
+        ServiceParameter Sparams = new ServiceParameter();
         Properties prop = new Properties();
         OutputStream output = null;
         try {
             //FileHandler handler = new FileHandler("myapp-log.%u.%g.txt", 1024 * 1024, 10, true);
             FileInputStream outpout = new FileInputStream(configFile);
 
-            //Set values
-            prop.load(outpout);
-                        clientLog.info("url.1:"+prop.getProperty("url.1"));
-                        clientLog.info("description.1:"+prop.getProperty("description.1"));
-                        clientLog.info("type.1:"+prop.getProperty("type.1"));
-                        clientLog.info("group.1:"+prop.getProperty("group.1"));
-                        clientLog.info("searchString.1:"+prop.getProperty("searchString.1"));
-                        clientLog.info("concurentThreads:"+prop.getProperty("concurentThreads"));
+            int i = 1;
+            boolean b = true;
+            while (b) {
+                //Set values
+                prop.load(outpout);
+                clientLog.info("url." + i+" :"+ prop.getProperty("url." + i));
+                Sparams.setUrl(prop.getProperty("url." + i));
+                clientLog.info("description." + i+" :"+ prop.getProperty("description." + i));
+                Sparams.setDescription(prop.getProperty("description." + i));
+                clientLog.info("type." + i+" :"+ prop.getProperty("type." + i));
+                Sparams.setType(prop.getProperty("type." + i));
+                clientLog.info("group." + i+" :"+ prop.getProperty("group." + i));
+                Sparams.setGroup(prop.getProperty("group." + i));
+                clientLog.info("searchString." + i+" :"+ prop.getProperty("searchString." + i));
+                Sparams.setSearchString(prop.getProperty("searchString." + i));
+                //add each param based on the sequence number of the parameter
+                serviceParameters.add(Sparams);
+                    i++;
+                b = prop.containsKey("url." + i);
+                System.out.println("b:" + b);
+            }
+            this.setConcurentThreads(prop.getProperty("concurentThreads"));
+            clientLog.info("concurentThreads:" + prop.getProperty("concurentThreads"));
 
         } catch (FileNotFoundException e) {
-            clientLog.warning("File not Found:"+e);
+            clientLog.warning("File not Found:" + e);
         } catch (IOException io) {
             io.printStackTrace();
         } finally {
@@ -80,11 +96,11 @@ public class Configuration {
         return serviceParameters;
     }
 
-    public void setConcurentThreads(int concurentThreads) {
+    public void setConcurentThreads(String concurentThreads) {
         this.concurentThreads = concurentThreads;
     }
 
-    public int getConcurentThreads() {
+    public String getConcurentThreads() {
         return concurentThreads;
     }
 }

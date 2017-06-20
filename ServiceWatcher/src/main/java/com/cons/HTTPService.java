@@ -25,16 +25,16 @@ public class HTTPService implements Service {
         List<ServiceParameter> serviceParamObj = conf.getServiceParameters();
         for(ServiceParameter s : serviceParamObj){
             service(s);
-            
         }
         
-        ServiceParameter sp = new ServiceParameter();
+        /*ServiceParameter sp = new ServiceParameter();
         sp.setUrl("http://192.168.42.63:7003/test-sso/faces/Logn");
-        service(sp);
+        service(sp);*/
     }
 
     @Override
     public void service(ServiceParameter sp) {
+        System.out.println("bbb");
             String currentUrl = sp.getUrl();
             int responseFromUrl = getResponseCodeFromUrl(currentUrl);
             System.out.println(responseFromUrl);

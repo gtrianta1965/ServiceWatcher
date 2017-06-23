@@ -31,7 +31,7 @@ public class Configuration {
 
     public void init(String fileName) {
         this.serviceParameters.clear();
-        ServiceParameter serviceParameter = new ServiceParameter();
+        
         Properties prop = new Properties();
         InputStream input = null;
         
@@ -45,17 +45,20 @@ public class Configuration {
             boolean hasMore = true;
             while (hasMore) {
                 i++;
+                ServiceParameter serviceParameter = new ServiceParameter();
                 serviceParameter.setUrl(prop.getProperty("url." + i));
-                serviceParameter.setDescription(prop.getProperty("description." + i));
-                serviceParameter.setType(prop.getProperty("type." + i));
-                serviceParameter.setGroup(prop.getProperty("group." + i));
-                serviceParameter.setSearchString(prop.getProperty("searchString." + i));
-                if (serviceParameter.getUrl() == null) {
-                    hasMore = false;
-                } else {
+                if (serviceParameter.getUrl() != null) {
+                    serviceParameter.setId(i);
+                    serviceParameter.setDescription(prop.getProperty("description." + i));
+                    serviceParameter.setType(prop.getProperty("type." + i));
+                    serviceParameter.setGroup(prop.getProperty("group." + i));
+                    serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
-                }
+
+                } else {
+                    hasMore = false;
+                } 
             }
             //Read single value properties
             String v = prop.getProperty("concurrentThreads");

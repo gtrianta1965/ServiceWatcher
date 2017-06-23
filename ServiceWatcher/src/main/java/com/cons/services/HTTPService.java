@@ -31,7 +31,6 @@ public class HTTPService extends Service {
     public void run() {
         
         ServiceParameter sp = new ServiceParameter();
-        init(sp);
         service(sp);
 
     }
@@ -42,53 +41,52 @@ public class HTTPService extends Service {
     public void service(ServiceParameter sp) {
         String currentUrl = sp.getUrl();
         int responseCode=0;
+        boolean found = false;
         try {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.getSocketAddress(), this.getSocketPort()));
             URL myPharmLink = new URL(currentUrl);
-            HttpURLConnection huc =  (HttpURLConnection)myPharmLink.openConnection(proxy);
+            HttpURLConnection huc =  (HttpURLConnection)myPharmLink.openConnection();
             huc.setRequestMethod("GET"); 
             huc.connect(); 
             responseCode = huc.getResponseCode();
             
             BufferedReader in = new BufferedReader(
                new InputStreamReader(myPharmLink.openStream()));
-            
             if (responseCode == 200){
                 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null){
-                    System.out.println(inputLine);
-                    if (inputLine.toLowerCase().contains(sp.getSearchString().toLowerCase())){
-                        System.out.println("find it");
+                    if(sp.getSearchString()!=null){
+                        if (inputLine.toLowerCase().contains(sp.getSearchString().toLowerCase())){
+                            this.setSuccessfulCall(true);
+                            found = true;
+                            break;
+                        }
+                    }else{
                         this.setSuccessfulCall(true);
-                        System.out.println("setting success status "+ this.isSuccessfulCall());
                         break;
                     }
                     
-                    System.out.println(this.isSuccessfulCall());
-                    
                 }
-            }else{
-                System.out.println("set error msg");
+                if (sp.getSearchString()!=null && found==false){//if no match found for getSearchString
+                    this.setSuccessfulCall(false);
+                    this.setErrorCall("Search String not found in response");
+                }
+            }else{               //if status is <>200
                 this.setSuccessfulCall(false);
-                this.setErrorCall("bad url");
+                this.setErrorCall("bad url with response code: "+responseCode);
             }
             
             in.close();
             
         } catch (MalformedURLException e) {
             this.setSuccessfulCall(false);
-            this.setErrorCall("bad url");
-            System.out.println(this.getErrorCall());
-            
+            this.setErrorCall("bad url with response code: "+responseCode);
         }catch (ProtocolException e){
             this.setSuccessfulCall(false);
-            this.setErrorCall("bad url");
-            System.out.println(this.getErrorCall());
+            this.setErrorCall("bad url with response code: "+responseCode);
         }catch (Exception e){
             this.setSuccessfulCall(false);
-            this.setErrorCall("bad url");
-            System.out.println(this.getErrorCall());
+            this.setErrorCall("bad url with response code: "+responseCode);
         }        
     }
     
@@ -98,28 +96,6 @@ public class HTTPService extends Service {
         HTTPService hs = new HTTPService();
         hs.run();
         
-    }
-    
-    public void init(ServiceParameter sp){ //method for initialise tempor for test
-        sp.setUrl("https://www.google.gr");//192.168.42.63:7003/test-sso/faces/Login https://www.google.gr
-        sp.setDescription("test");
-        sp.setGroup("test2");
-        sp.setType("test3");
-        sp.setSearchString("Αναζήτηση");
-        this.setSocketAddress("192.168.19.54");
-        this.setSocketPort(8080);
-    }
-    
-    public ServiceParameter init(String url){ //method for junit test initialization
-        ServiceParameter sp = new ServiceParameter();
-        sp.setUrl(url);//192.168.42.63:7003/test-sso/faces/Login https://www.google.gr
-        sp.setDescription("test");
-        sp.setGroup("test2");
-        sp.setType("test3");
-        sp.setSearchString("Αναζήτηση");
-        this.setSocketAddress("192.168.19.54");
-        this.setSocketPort(8080);
-        return sp;
     }
 
 }

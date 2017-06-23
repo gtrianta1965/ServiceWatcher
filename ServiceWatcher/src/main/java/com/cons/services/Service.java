@@ -5,8 +5,6 @@ import com.cons.ServiceParameter;
 public abstract class Service implements Runnable {
     
     ServiceParameter currentServParam = new ServiceParameter();
-    private String SocketAddress; //proxy addr
-    private int SocketPort;        //proxy port
     private String errorCall;        //message for successful/unsuccessful call
     private boolean successfulCall;      //boolean for  for successful/unsuccessful call
     
@@ -41,28 +39,12 @@ public abstract class Service implements Runnable {
         return currentServParam;
     }
 
-    public void setSocketPort(int SocketPort) {
-        this.SocketPort = SocketPort;
-    }
-
-    public int getSocketPort() {
-        return SocketPort;
-    }
-
     public void setSuccessfulCall(boolean successfulCall) {
         this.successfulCall = successfulCall;
     }
 
     public boolean isSuccessfulCall() {
         return successfulCall;
-    }
-
-    public void setSocketAddress(String SocketAddress) {
-        this.SocketAddress = SocketAddress;
-    }
-
-    public String getSocketAddress() {
-        return SocketAddress;
     }
 
     public void setErrorCall(String errorCall) {

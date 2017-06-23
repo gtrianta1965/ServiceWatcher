@@ -14,7 +14,6 @@ import org.junit.Test;
 public class HTTPServiceTest {
     
     private HTTPService hs;
-    private ServiceParameter sp;
     
     public HTTPServiceTest() {
         super();
@@ -28,38 +27,93 @@ public class HTTPServiceTest {
     
     
     /**
-         * Tests a scenario that a valid url is called
-         */
-        @Test
-        public void testValidCall() {
-            ServiceParameter s = hs.init("https://www.google.gr");
-            hs.service(s);
-            Assert.assertTrue(hs.isSuccessfulCall());
-            Assert.assertEquals(null, hs.getErrorCall());
-        }
+      * Tests a scenario that a valid url is called
+      * e.g. https://www.google.gr
+     */
+    @Test
+    public void testValidCall() {
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"https://www.google.gr","Αναζήτηση");
+        hs.service(s);
+        Assert.assertTrue(hs.isSuccessfulCall());
+        Assert.assertEquals(null, hs.getErrorCall());
+    }
     
     
     /**
-         * Tests a scenario that an invalid url is called
-         */
-        @Test
-        public void testInvalidCall() {
-            ServiceParameter s = hs.init("https://www.google.grrr");
-            hs.service(s);
-            Assert.assertFalse(hs.isSuccessfulCall());
-            Assert.assertEquals("bad url", hs.getErrorCall());
-        }
+      * Tests a scenario that a valid url is called but the search string not found
+      * e.g. https://www.google.gr and setSearchString= "Αναζήτησηηη"
+     */
+    @Test
+    public void unsuccessfulSearch() {
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"https://www.google.gr","Αναζήτησηηη");
+        hs.service(s);
+        Assert.assertFalse(hs.isSuccessfulCall());
+        Assert.assertEquals("Search String not found in response", hs.getErrorCall());
+    }
+    
+    /**
+      * Tests a scenario that a valid url is called
+      * e.g. https://www.google.gr and setSearchString= "Αναζήτηση"
+     */
+    @Test
+    public void successfulSearch() {
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"https://www.google.gr","Αναζήτηση");
+        hs.service(s);
+        Assert.assertTrue(hs.isSuccessfulCall());
+        Assert.assertEquals(null, hs.getErrorCall());
+    }
+    
+    /**
+      * Tests a scenario that a valid url is called but the search string is empty
+      * e.g. https://www.google.gr and setSearchString= null
+     */
+    @Test
+    public void testValidCallNullSearch() {
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"https://www.google.gr","");
+        hs.service(s);
+        Assert.assertTrue(hs.isSuccessfulCall());
+        Assert.assertEquals(null, hs.getErrorCall());
+    }
+    
+    /**
+      * Tests a scenario that an invalid url is called
+      * e.g. https://www.google.grrr
+     */
+    @Test
+    public void testInvalidCall() {
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"https://www.google.grrr","Αναζήτηση");
+        hs.service(s);
+        Assert.assertFalse(hs.isSuccessfulCall());
+        Assert.assertEquals("bad url with response code: 404", hs.getErrorCall());
+    }
     
     
     /**
          * Tests a scenario that is a 404 url is called
+         * e.g. 192.168.42.63:7003/test-sso/faces/Login
          */
         @Test
         public void testValidCallWithNoResult() {
-            ServiceParameter s = hs.init("192.168.42.63:7003/test-sso/faces/Login");
+            ServiceParameter s = new ServiceParameter();
+            s = init(s,"192.168.42.63:7003/test-sso/faces/Login","Αναζήτηση");
             hs.service(s);
             Assert.assertFalse(hs.isSuccessfulCall());
-            Assert.assertEquals("bad url", hs.getErrorCall());
+            Assert.assertEquals("bad url with response code: 400", hs.getErrorCall());
+        }
+    
+        //initialization method for ServiceParameter Object    
+        public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 
+            sp.setUrl(url);
+            sp.setDescription("test");
+            sp.setGroup("test2");
+            sp.setType("test3");
+            sp.setSearchString(searchString);
+            return sp;
         }
     
     

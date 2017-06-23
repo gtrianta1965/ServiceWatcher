@@ -3,7 +3,7 @@ package com.cons;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,28 +11,84 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Configuration {
+    private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
+    private int concurrentThreads = 5;
+    private final static String configFile = "config.properties";
+    ClientLogger logger = new ClientLogger();
+    Logger clientLog = null;
+    boolean valid;
+    String  error;
+
     public Configuration() {
         super();
     }
-    Logger logger = Logger.getLogger("confiquration");
-    public List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
-    private int concurentThreads = 5;
-    private final static String configFile="config.properties";
+
 
     public void init() {
+        //Initialize from the factory default configuration file (configFile)
         init(configFile);
     }
 
     public void init(String fileName) {
+        this.serviceParameters.clear();
+        ServiceParameter serviceParameter = new ServiceParameter();
+        Properties prop = new Properties();
+        InputStream input = null;
+        
+        setValid(true);
+        setError(null);
+        try {
+            input = new FileInputStream(fileName);
+            prop.load(input);
+            //Read first all "array" properties (ServiceParameters)
+            int i = 0;
+            boolean hasMore = true;
+            while (hasMore) {
+                i++;
+                serviceParameter.setUrl(prop.getProperty("url." + i));
+                serviceParameter.setDescription(prop.getProperty("description." + i));
+                serviceParameter.setType(prop.getProperty("type." + i));
+                serviceParameter.setGroup(prop.getProperty("group." + i));
+                serviceParameter.setSearchString(prop.getProperty("searchString." + i));
+                if (serviceParameter.getUrl() == null) {
+                    hasMore = false;
+                } else {
+                    //add each param based on the sequence number of the parameter
+                    serviceParameters.add(serviceParameter);
+                }
+            }
+            //Read single value properties
+            String v = prop.getProperty("concurrentThreads");
+            if ( v != null) {
+               try {
+                    this.setConcurrentThreads(Integer.parseInt(v));
+                } catch (NumberFormatException nfe) {
+                    this.setValid(false);
+                    this.setError("NumberFormatException");
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            setValid(false);
+            setError("Property file " + fileName + " does not exist");
+        } catch (IOException io) {
+            setValid(false);
+            setError("Error reading from Property file " + fileName );
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    setValid(false);
+                    setError("Error closing Property file " + fileName );
+                }
+            }
+        }
+    }
+
+
+    public void save() {
         //to do
-        logger.info("Init With Filename:"+fileName);
-        serviceParameters=this.getServiceParameters();
-    }
-    public boolean isValid(){
-        return true;
-    }
-    public void save(){
-        //to do 
     }
 
     public void setserviceParameters(List<ServiceParameter> serviceParameters) {
@@ -40,45 +96,37 @@ public class Configuration {
     }
 
     public List<ServiceParameter> getServiceParameters() {
-        
-        Properties prop = new Properties();
-        OutputStream output = null;
-        try {
-            FileInputStream outpout = new FileInputStream(configFile);
-
-            //Set values
-            prop.load(outpout);
-            logger.info("url.1:"+prop.getProperty("url.1"));
-            logger.info("description.1:"+prop.getProperty("description.1"));
-            logger.info("type.1:"+prop.getProperty("type.1"));
-            logger.info("group.1:"+prop.getProperty("group.1"));
-            logger.info("searchString.1:"+prop.getProperty("searchString.1"));
-            logger.info("concurentThreads:"+prop.getProperty("concurentThreads"));
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not Found");
-        } catch (IOException io) {
-            io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        
-        
-        
-        return serviceParameters;
+        return this.serviceParameters;
     }
 
-    public void setConcurentThreads(int concurentThreads) {
-        this.concurentThreads = concurentThreads;
+    public void setConcurrentThreads(int concurentThreads) {
+        this.concurrentThreads = concurentThreads;
     }
 
-    public int getConcurentThreads() {
-        return concurentThreads;
+    public int getConcurrentThreads() {
+        return concurrentThreads;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getError() {
+        return error;
+    }
+    
+    public static void main(String args[]){
+        Configuration c = new Configuration();
+        c.init("dummy");
+        System.out.println("error=" + c.getError());
+        System.out.println(c.getConcurrentThreads());
     }
 }

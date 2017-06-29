@@ -2,6 +2,8 @@ package com.cons;
 
 import com.cons.services.HTTPService;
 
+import com.cons.utils.SWConstants;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +35,7 @@ public class HTTPServiceTest {
     @Test
     public void testValidCall() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"https://www.google.gr","Αναζήτηση");
+        s = init(s,"http://www.idika.gr","H");
         hs.service(s);
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
@@ -47,7 +49,7 @@ public class HTTPServiceTest {
     @Test
     public void unsuccessfulSearch() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"https://www.google.gr","Αναζήτησηηη");
+        s = init(s,"http://www.idika.gr","Ηλεκτρονικήηη");
         hs.service(s);
         Assert.assertFalse(hs.isSuccessfulCall());
         Assert.assertEquals("Search String not found in response", hs.getErrorCall());
@@ -60,7 +62,7 @@ public class HTTPServiceTest {
     @Test
     public void successfulSearch() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"https://www.google.gr","Αναζήτηση");
+        s = init(s,"http://www.idika.gr","H");
         hs.service(s);
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
@@ -73,7 +75,7 @@ public class HTTPServiceTest {
     @Test
     public void testValidCallNullSearch() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"https://www.google.gr","");
+        s = init(s,"http://www.idika.gr","");
         hs.service(s);
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());

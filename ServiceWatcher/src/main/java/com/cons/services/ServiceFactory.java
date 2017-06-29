@@ -11,7 +11,7 @@ public class ServiceFactory {
             if(serviceType.equalsIgnoreCase("HTTP")){
                 serviceToBeCreated = new HTTPService();
             }else if (serviceType.equalsIgnoreCase("DB")){
-                //serviceToBeCreated = new DBService(); //soon to be added
+                serviceToBeCreated = new DBService(); //soon to be added
             }
             
         }else{

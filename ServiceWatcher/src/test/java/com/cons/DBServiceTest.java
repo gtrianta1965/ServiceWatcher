@@ -30,30 +30,31 @@ public class DBServiceTest {
         Assert.assertTrue(ds.isSuccessfulCall());
         Assert.assertEquals(null, ds.getErrorCall());
     }
-    
-    
-    /**
-      * Tests a scenario that a NON DB URL is called
-      * e.g. 
-     */
-    @Test
-    public void testInvalidTypeCall() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"jdbc:oracle:thin:epresbkp2/Manager1@shstst-scan.idika.gr:1521/tstdb_taf","http");
-        ds.service(s);
-        Assert.assertFalse(ds.isSuccessfulCall());
-    }
+
     
     /**
       * Tests a scenario that a WRONG CREDENTIALS ON URL is called
       * e.g. 
      */
-    public void testInvalidLogin() {
+    @Test
+    public void testInvalidLoginCall() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"jdbc:oracle:thin:epresbkp2/manager1@shstst-scan.idika.gr:1521/tstdb_taf","DB");
         ds.service(s);
         Assert.assertFalse(ds.isSuccessfulCall());
-    }
+    } 
+        
+    //    /**
+    //      * Tests a scenario that a NON DB URL is called
+    //      * e.g. 
+    //     */
+    //    @Test
+    //    public void testInvalidTypeCall() {
+    //        ServiceParameter s = new ServiceParameter();
+    //        s = init(s,"jdbc:oracle:thin:epresbkp2/Manager1@shstst-scan.idika.gr:1521/tstdb_taf","http");
+    //        ds.service(s);
+    //        Assert.assertFalse(ds.isSuccessfulCall());
+    //    }
     
     //initialization method for ServiceParameter Object    
     public ServiceParameter init(ServiceParameter sp,String url, String type){ 

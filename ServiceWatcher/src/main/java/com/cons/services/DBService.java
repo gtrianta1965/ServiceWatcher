@@ -32,20 +32,13 @@ public class DBService extends Service {
             Class.forName("oracle.jdbc.OracleDriver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.setErrorCall(e.getMessage());
         }
-        //This Fails Logon
-        String currentUrl1 =
-            "jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=yes)(USER=epresbkp2)(PASSWORD=Manager1)(ADDRESS=(PROTOCOL=TCP)(HOST=shststdb1-vip.idika.gr)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=shststdb2-vip.idika.gr)(PORT=1521))(CONNECT_DATA=(SERVER=SHARED)(SERVICE_NAME=tstdb_taf)))";
-        //Connected
-        String currentUrl2 = "jdbc:oracle:thin:epresbkp2/Manager1@shstst-scan.idika.gr:1521/tstdb_taf";
-        String currentUrl4 = "jdbc:oracle:thin:hr/oracle@192.168.6.67:1521/orcl";
-        String db_username = "epresbkp2";
-        String db_password = "Manager1";
+
         sp.getType();
         String currentUrl=sp.getUrl();
         
-
-        if (sp.getType().equals("DB")) {
             try {
 
                 DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
@@ -86,11 +79,6 @@ public class DBService extends Service {
                 }
             }
 
-
-        } else {
-            System.out.println("This is not Database Type in properties ");
-            this.setSuccessfulCall(false);
-        }
     }
 
     public static void main(String args[]) {

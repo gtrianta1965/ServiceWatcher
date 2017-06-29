@@ -88,23 +88,26 @@ public class HTTPServiceTest {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"https://www.google.grrr","Αναζήτηση");
         hs.service(s);
+        String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
-        Assert.assertEquals("bad url with response code: 404", hs.getErrorCall());
+        Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
     }
     
     
     /**
-         * Tests a scenario that is a 404 url is called
-         * e.g. 192.168.42.63:7003/test-sso/faces/Login
-         */
-        @Test
-        public void testValidCallWithNoResult() {
-            ServiceParameter s = new ServiceParameter();
-            s = init(s,"192.168.42.63:7003/test-sso/faces/Login","Αναζήτηση");
-            hs.service(s);
-            Assert.assertFalse(hs.isSuccessfulCall());
-            Assert.assertEquals("bad url with response code: 400", hs.getErrorCall());
-        }
+     * Tests a scenario that is a 404 url is called
+     * e.g. 192.168.42.63:7003/test-sso/faces/Login
+     */
+    @Test
+    public void testValidCallWithNoResult() {
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://192.168.42.63:7003/test-sso/faces/Login","Αναζήτηση");
+        hs.service(s);
+        String errorMsg = hs.getErrorCall();
+        Assert.assertFalse(hs.isSuccessfulCall());
+        Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
+        
+    }
     
         //initialization method for ServiceParameter Object    
         public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 

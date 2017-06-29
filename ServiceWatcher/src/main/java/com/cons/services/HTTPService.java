@@ -41,6 +41,7 @@ public class HTTPService extends Service {
     public void service(ServiceParameter sp) {
         String currentUrl = sp.getUrl();
         int responseCode=0;
+        String responseMessage = null;
         boolean found = false;
         try {
             URL myPharmLink = new URL(currentUrl);
@@ -48,6 +49,7 @@ public class HTTPService extends Service {
             huc.setRequestMethod("GET"); 
             huc.connect(); 
             responseCode = huc.getResponseCode();
+            responseMessage = huc.getResponseMessage();
             
             BufferedReader in = new BufferedReader(
                new InputStreamReader(myPharmLink.openStream()));
@@ -73,20 +75,20 @@ public class HTTPService extends Service {
                 }
             }else{               //if status is <>200
                 this.setSuccessfulCall(false);
-                this.setErrorCall("bad url with response code: "+responseCode);
+                this.setErrorCall("url with response message: "+responseMessage);
             }
             
             in.close();
             
         } catch (MalformedURLException e) {
             this.setSuccessfulCall(false);
-            this.setErrorCall("bad url with response code: "+responseCode);
+            this.setErrorCall("url with response message: "+e.getMessage());
         }catch (ProtocolException e){
             this.setSuccessfulCall(false);
-            this.setErrorCall("bad url with response code: "+responseCode);
+            this.setErrorCall("url with response message: "+e.getMessage());
         }catch (Exception e){
             this.setSuccessfulCall(false);
-            this.setErrorCall("bad url with response code: "+responseCode);
+            this.setErrorCall("url with response message: "+e.getMessage());
         }        
     }
     

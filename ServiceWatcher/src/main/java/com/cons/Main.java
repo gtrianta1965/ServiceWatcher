@@ -1,5 +1,6 @@
 package com.cons;
 
+import com.cons.services.HTTPService;
 import com.cons.ui.MainFrame;
 import com.cons.ui.ServicesTableModel;
 

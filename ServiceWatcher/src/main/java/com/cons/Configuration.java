@@ -127,9 +127,9 @@ public class Configuration {
     }
     
     public static void main(String args[]){
+        
         Configuration c = new Configuration();
-        c.init("dummy");
-        System.out.println("error=" + c.getError());
-        System.out.println(c.getConcurrentThreads());
+        c.init();
+
     }
 }

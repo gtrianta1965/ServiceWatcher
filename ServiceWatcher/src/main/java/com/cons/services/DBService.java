@@ -26,7 +26,7 @@ public class DBService extends Service {
         try {
             Class.forName("oracle.jdbc.OracleDriver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println(e.getMessage());
             this.setErrorCall(e.getMessage());
         }
@@ -41,24 +41,24 @@ public class DBService extends Service {
                 conn = DriverManager.getConnection(currentUrl);
                 
             } catch (ClassNotFoundException ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
                 System.err.println(ex.getMessage());
                 this.setErrorCall(ex.getMessage());
                 this.setSuccessfulCall(false);
             } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
                 System.err.println(ex.getMessage());
                 this.setErrorCall(ex.getMessage());
                 this.setSuccessfulCall(false);
             } catch (InstantiationException ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
                 this.setSuccessfulCall(false);
                 System.err.println(ex.getMessage());
                 this.setErrorCall(ex.getMessage());
                 this.setSuccessfulCall(false);
             } catch (SQLException ex) {
                 System.err.println(ex.getMessage());
-                ex.printStackTrace();
+                //ex.printStackTrace();
                 this.setErrorCall(ex.getMessage());
                 this.setSuccessfulCall(false);
             }

@@ -38,6 +38,7 @@ public class HTTPServiceTest {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
+        hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -52,6 +53,7 @@ public class HTTPServiceTest {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","Ηλεκτρονικήηη");
         hs.setServiceParameter(s);
+        hs.run();
         Assert.assertFalse(hs.isSuccessfulCall());
         Assert.assertEquals("Search String not found in response", hs.getErrorCall());
     }
@@ -65,6 +67,7 @@ public class HTTPServiceTest {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
+        hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -77,7 +80,8 @@ public class HTTPServiceTest {
     public void testValidCallNullSearch() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","");
-        hs.setServiceParameter(s);
+        hs.setServiceParameter(s);    
+        hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -91,10 +95,11 @@ public class HTTPServiceTest {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"https://www.google.grrr","Αναζήτηση");
         hs.setServiceParameter(s);
+        hs.run();
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         System.out.println(hs.getErrorCall());
-        Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
+        Assert.assertTrue(errorMsg.contains(SWConstants.SEARCH_STRING_NOT_FOUND_MSG));
         
     }
     
@@ -108,6 +113,7 @@ public class HTTPServiceTest {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.oracle.com","Αναζήτηση");
         hs.setServiceParameter(s);
+        hs.run();
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));

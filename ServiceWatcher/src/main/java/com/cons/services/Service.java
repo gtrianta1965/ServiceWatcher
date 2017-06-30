@@ -1,52 +1,44 @@
 package com.cons.services;
 
 import com.cons.ServiceParameter;
+import com.cons.utils.SWConstants;
 
 public abstract class Service implements Runnable {
     
-    ServiceParameter currentServParam = new ServiceParameter();
-    private String SocketAddress; //proxy addr
-    private int SocketPort;        //proxy port
+    ServiceParameter serviceParameter = new ServiceParameter();
+    ServiceOrchestrator serviceOrchestrator;
     private String errorCall;        //message for successful/unsuccessful call
     private boolean successfulCall;      //boolean for  for successful/unsuccessful call
     
     public Service(){   //default constructor
-        this.currentServParam.setUrl(" ");
-        this.currentServParam.setDescription(" ");
-        this.currentServParam.setType(" ");
-        this.currentServParam.setGroup(" ");
-        this.currentServParam.setSearchString(" ");
+        super();
     }
     
     public Service(ServiceParameter sp){ 
-        
-        this.currentServParam.setUrl(sp.getUrl());
-        this.currentServParam.setDescription(sp.getDescription());
-        this.currentServParam.setType(sp.getType());
-        this.currentServParam.setGroup(sp.getGroup());
-        this.currentServParam.setSearchString(sp.getSearchString());
-        //service(sp);
+        setServiceParamater(sp);
     }
     
+    public void run() {
+        printStatus(SWConstants.SERVICE_RUNNING);
+        service();
+        if (isSuccessfulCall()) {
+            printStatus(SWConstants.SERVICE_SUCCESS);
+        } else {
+            printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
+        }
+    }
     
-    public abstract void run();
-    
-    public abstract void service(ServiceParameter sp);
+    /*
+     * Service is the main method that all services should override
+     */
+    public abstract void service();
        
-    public void setCurrentServParam(ServiceParameter currentServParam) {
-        this.currentServParam = currentServParam;
+    public void setServiceParamater(ServiceParameter serviceParameter) {
+        this.serviceParameter = serviceParameter;
     }
 
-    public ServiceParameter getCurrentServParam() {
-        return currentServParam;
-    }
-
-    public void setSocketPort(int SocketPort) {
-        this.SocketPort = SocketPort;
-    }
-
-    public int getSocketPort() {
-        return SocketPort;
+    public ServiceParameter getServiceParameter() {
+        return serviceParameter;
     }
 
     public void setSuccessfulCall(boolean successfulCall) {
@@ -57,19 +49,24 @@ public abstract class Service implements Runnable {
         return successfulCall;
     }
 
-    public void setSocketAddress(String SocketAddress) {
-        this.SocketAddress = SocketAddress;
-    }
-
-    public String getSocketAddress() {
-        return SocketAddress;
-    }
-
     public void setErrorCall(String errorCall) {
         this.errorCall = errorCall;
     }
 
     public String getErrorCall() {
         return errorCall;
+    }
+    
+
+    public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {
+        this.serviceOrchestrator = serviceOrchestrator;
+    }
+
+    public ServiceOrchestrator getServiceOrchestrator() {
+        return serviceOrchestrator;
+    }
+    
+    protected void printStatus(String status) {
+        this.serviceOrchestrator.printStatus(serviceParameter.getId() - 1, status);
     }
 }

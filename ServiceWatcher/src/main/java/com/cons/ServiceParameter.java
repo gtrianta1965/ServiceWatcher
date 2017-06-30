@@ -5,6 +5,7 @@ public class ServiceParameter {
         super();
     }
     
+    private int    id;
     private String url;
     private String description;
     private String type;
@@ -49,5 +50,13 @@ public class ServiceParameter {
 
     public String getSearchString() {
         return searchString;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 }

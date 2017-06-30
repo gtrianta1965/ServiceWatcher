@@ -1,10 +1,13 @@
 package com.cons;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.cons.ServiceParameter;
 
 /**
  * Performs unit tests for the Configuration object.
@@ -86,9 +89,21 @@ public class ConfigurationTest {
         Assert.assertTrue(c.isValid());
         s = c.getServiceParameters();
         Assert.assertEquals(3, s.size()); 
-        Assert.assertEquals(4,c.getConcurrentThreads());
-        
-        
+        Assert.assertEquals(4,c.getConcurrentThreads());        
     }
+
+    /**
+     * Tests that checks the id's assigned to ServiceParameters
+     */
+    @Test
+    public void testServiceParametersIds() {
+        c.init("config-ut1.properties");
+        Assert.assertTrue(c.isValid());
+        ArrayList s = (ArrayList)c.getServiceParameters();
+        for (int i = 0; i < s.size() ; i++) {
+            Assert.assertEquals(i+1,((ServiceParameter)s.get(i)).getId());
+        }        
+    }    
+    
     
 }

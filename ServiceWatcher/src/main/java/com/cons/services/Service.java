@@ -25,9 +25,9 @@ public abstract class Service implements Runnable {
             printStatus(SWConstants.SERVICE_SUCCESS);
         } else {
             printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
-        }
     }
-    
+    }
+
     /*
      * Service is the main method that all services should override
      */
@@ -60,7 +60,7 @@ public abstract class Service implements Runnable {
 
     public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {
         this.serviceOrchestrator = serviceOrchestrator;
-    }
+}
 
     public ServiceOrchestrator getServiceOrchestrator() {
         return serviceOrchestrator;

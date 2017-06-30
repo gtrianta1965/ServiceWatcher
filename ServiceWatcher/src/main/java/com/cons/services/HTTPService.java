@@ -29,7 +29,7 @@ public class HTTPService extends Service {
         super(sp);
     }
 
-
+        
     @Override
     public void service() {
         String currentUrl = serviceParameter.getUrl();
@@ -52,10 +52,10 @@ public class HTTPService extends Service {
                 while ((inputLine = in.readLine()) != null){
                     if(serviceParameter.getSearchString()!=null){
                         if (inputLine.toLowerCase().contains(serviceParameter.getSearchString().toLowerCase())){
-                            this.setSuccessfulCall(true);
+                        this.setSuccessfulCall(true);
                             found = true;
-                            break;
-                        }
+                        break;
+                    }
                     }else{
                         this.setSuccessfulCall(true);
                         break;
@@ -63,9 +63,9 @@ public class HTTPService extends Service {
                     
                 }
                 if (serviceParameter.getSearchString()!=null && found==false){//if no match found for getSearchString
-                    this.setSuccessfulCall(false);
+                this.setSuccessfulCall(false);
                     this.setErrorCall(SWConstants.SEARCH_STRING_NOT_FOUND_MSG);
-                }
+            }
             }else{               //if status is <>200
                 this.setSuccessfulCall(false);
                 this.setErrorCall(SWConstants.URL_RESPONSE_ERROR_MSG + responseMessage);
@@ -92,5 +92,5 @@ public class HTTPService extends Service {
         hs.run();
         
     }
-
-}
+    
+    }

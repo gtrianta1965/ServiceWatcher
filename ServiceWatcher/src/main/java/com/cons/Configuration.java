@@ -49,16 +49,16 @@ public class Configuration {
                 serviceParameter.setUrl(prop.getProperty("url." + i));
                 if (serviceParameter.getUrl() != null) {
                     serviceParameter.setId(i);
-                    serviceParameter.setDescription(prop.getProperty("description." + i));
-                    serviceParameter.setType(prop.getProperty("type." + i));
-                    serviceParameter.setGroup(prop.getProperty("group." + i));
-                    serviceParameter.setSearchString(prop.getProperty("searchString." + i));
+                serviceParameter.setDescription(prop.getProperty("description." + i));
+                serviceParameter.setType(prop.getProperty("type." + i));
+                serviceParameter.setGroup(prop.getProperty("group." + i));
+                serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
 
                 } else {
                     hasMore = false;
-                } 
+                }
             }
             //Read single value properties
             String v = prop.getProperty("concurrentThreads");

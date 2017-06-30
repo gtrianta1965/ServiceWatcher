@@ -1,6 +1,5 @@
 package com.cons.services;
 
-import com.cons.ServiceParameter;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.SWConstants;
 

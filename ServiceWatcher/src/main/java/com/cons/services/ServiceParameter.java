@@ -1,4 +1,4 @@
-package com.cons;
+package com.cons.services;
 
 public class ServiceParameter {
     public ServiceParameter() {

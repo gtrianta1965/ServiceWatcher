@@ -2,6 +2,8 @@ package com.cons;
 
 import com.cons.services.DBService;
 
+import com.cons.services.ServiceParameter;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -27,7 +29,7 @@ import org.junit.Test;
     public void testValidCall() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"jdbc:oracle:thin:epresbkp2/Manager1@shstst-scan.idika.gr:1521/tstdb_taf","DB");
-        ds.service(s);
+        ds.setServiceParameter(s);
         Assert.assertTrue(ds.isSuccessfulCall());
         Assert.assertEquals(null, ds.getErrorCall());
     }
@@ -41,7 +43,7 @@ import org.junit.Test;
     public void testInvalidLoginCall() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"jdbc:oracle:thin:epresbkp2/manager1@shstst-scan.idika.gr:1521/tstdb_taf","DB");
-        ds.service(s);
+        ds.setServiceParameter(s);
         Assert.assertFalse(ds.isSuccessfulCall());
     } 
         
@@ -59,6 +61,7 @@ import org.junit.Test;
     
     //initialization method for ServiceParameter Object    
     public ServiceParameter init(ServiceParameter sp,String url, String type){ 
+        sp.setId(1);
         sp.setUrl(url);
         sp.setDescription("test");
         sp.setGroup("test2");

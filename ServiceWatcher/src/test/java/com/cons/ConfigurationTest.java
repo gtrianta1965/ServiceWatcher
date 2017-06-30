@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cons.ServiceParameter;
+import com.cons.services.ServiceParameter;
 
 /**
  * Performs unit tests for the Configuration object.

@@ -2,6 +2,7 @@ package com.cons;
 
 import com.cons.services.HTTPService;
 
+import com.cons.services.ServiceParameter;
 import com.cons.utils.SWConstants;
 
 import org.junit.Assert;
@@ -36,7 +37,7 @@ public class HTTPServiceTest {
     public void testValidCall() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","H");
-        hs.setServiceParamater(s);
+        hs.setServiceParameter(s);
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -50,7 +51,7 @@ public class HTTPServiceTest {
     public void unsuccessfulSearch() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","Ηλεκτρονικήηη");
-        hs.setServiceParamater(s);
+        hs.setServiceParameter(s);
         Assert.assertFalse(hs.isSuccessfulCall());
         Assert.assertEquals("Search String not found in response", hs.getErrorCall());
     }
@@ -63,7 +64,7 @@ public class HTTPServiceTest {
     public void successfulSearch() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","H");
-        hs.setServiceParamater(s);
+        hs.setServiceParameter(s);
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -76,7 +77,7 @@ public class HTTPServiceTest {
     public void testValidCallNullSearch() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.idika.gr","");
-        hs.setServiceParamater(s);
+        hs.setServiceParameter(s);
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -89,7 +90,7 @@ public class HTTPServiceTest {
     public void testInvalidCall() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"https://www.google.grrr","Αναζήτηση");
-        hs.setServiceParamater(s);
+        hs.setServiceParameter(s);
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         System.out.println(hs.getErrorCall());
@@ -106,7 +107,7 @@ public class HTTPServiceTest {
     public void testValidCallWithNoResult() {
         ServiceParameter s = new ServiceParameter();
         s = init(s,"http://www.oracle.com","Αναζήτηση");
-        hs.setServiceParamater(s);
+        hs.setServiceParameter(s);
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
@@ -115,6 +116,7 @@ public class HTTPServiceTest {
     
         //initialization method for ServiceParameter Object    
         public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 
+            sp.setId(1);
             sp.setUrl(url);
             sp.setDescription("test");
             sp.setGroup("test2");

@@ -2,7 +2,6 @@ package com.cons.services;
 
 
 import com.cons.Configuration;
-import com.cons.ServiceParameter;
 
 import com.cons.utils.SWConstants;
 

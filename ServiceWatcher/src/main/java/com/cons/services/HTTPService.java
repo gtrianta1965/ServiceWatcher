@@ -4,6 +4,8 @@ package com.cons.services;
 import com.cons.Configuration;
 import com.cons.ServiceParameter;
 
+import com.cons.utils.SWConstants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,19 +29,10 @@ public class HTTPService extends Service {
         super(sp);
     }
 
-    @Override
-    public void run() {
-        
-        ServiceParameter sp = new ServiceParameter();
-        service(sp);
-
-    }
-    
-    
 
     @Override
-    public void service(ServiceParameter sp) {
-        String currentUrl = sp.getUrl();
+    public void service() {
+        String currentUrl = serviceParameter.getUrl();
         int responseCode=0;
         String responseMessage = null;
         boolean found = false;
@@ -57,8 +50,8 @@ public class HTTPService extends Service {
                 
                 String inputLine;
                 while ((inputLine = in.readLine()) != null){
-                    if(sp.getSearchString()!=null){
-                        if (inputLine.toLowerCase().contains(sp.getSearchString().toLowerCase())){
+                    if(serviceParameter.getSearchString()!=null){
+                        if (inputLine.toLowerCase().contains(serviceParameter.getSearchString().toLowerCase())){
                             this.setSuccessfulCall(true);
                             found = true;
                             break;
@@ -69,26 +62,26 @@ public class HTTPService extends Service {
                     }
                     
                 }
-                if (sp.getSearchString()!=null && found==false){//if no match found for getSearchString
+                if (serviceParameter.getSearchString()!=null && found==false){//if no match found for getSearchString
                     this.setSuccessfulCall(false);
-                    this.setErrorCall("Search String not found in response");
+                    this.setErrorCall(SWConstants.SEARCH_STRING_NOT_FOUND_MSG);
                 }
             }else{               //if status is <>200
                 this.setSuccessfulCall(false);
-                this.setErrorCall("url with response message: "+responseMessage);
+                this.setErrorCall(SWConstants.URL_RESPONSE_ERROR_MSG + responseMessage);
             }
             
             in.close();
             
         } catch (MalformedURLException e) {
             this.setSuccessfulCall(false);
-            this.setErrorCall("url with response message: "+e.getMessage());
+            this.setErrorCall(SWConstants.MALLFORMED_URL_EXCEPTION_MSG + e.getMessage());
         }catch (ProtocolException e){
             this.setSuccessfulCall(false);
-            this.setErrorCall("url with response message: "+e.getMessage());
+            this.setErrorCall(SWConstants.PROTOCOL_EXCEPTION_MSG + e.getMessage());
         }catch (Exception e){
             this.setSuccessfulCall(false);
-            this.setErrorCall("url with response message: "+e.getMessage());
+            this.setErrorCall(SWConstants.GENERIC_EXCEPTION_MSG + e.getMessage());
         }        
     }
     

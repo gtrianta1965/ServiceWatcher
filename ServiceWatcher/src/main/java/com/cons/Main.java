@@ -1,6 +1,8 @@
 package com.cons;
 
 import com.cons.services.HTTPService;
+import com.cons.services.ServiceFactory;
+import com.cons.services.ServiceOrchestrator;
 import com.cons.ui.MainFrame;
 import com.cons.ui.ServicesTableModel;
 
@@ -25,32 +27,19 @@ public class Main {
         }
         
         // Open the UI and initialize it with a custom TableModel
-        ServicesTableModel sdm = new ServicesTableModel();
-        sdm.initFromConfiguration(conf);
+        ServicesTableModel stm = new ServicesTableModel();
+        stm.initFromConfiguration(conf);
+
+        ServiceOrchestrator serviceOrchestrator = new ServiceOrchestrator();
+        serviceOrchestrator.setServiceTableModel(stm);
+        serviceOrchestrator.setConfiguration(conf);        
+        //serviceOrchestrator.start();
+
         MainFrame mf = new MainFrame();
-        mf.initModel(sdm);
+        mf.initModel(stm);
+        mf.setServiceOrchestrator(serviceOrchestrator);
         mf.setVisible(true);
         
-        //Start Thread Pooling with services
-        ExecutorService executor = Executors.newFixedThreadPool(5);
-        int threads = 10;
-        
-        for (int i = 0; i < threads; i++) {
-            Runnable worker = new HTTPService();
-            executor.execute(worker);
-        }
-        
-
-        
-        executor.shutdown();
-        while (!executor.isTerminated()) {
-        }
-        
-        System.out.println("Jobs Submitted");
-        sdm.changeModel();
-        
-        
-        System.out.println("Finished all threads");
         
     }
 }

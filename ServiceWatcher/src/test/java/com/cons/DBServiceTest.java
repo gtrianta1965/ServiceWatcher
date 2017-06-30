@@ -4,9 +4,10 @@ import com.cons.services.DBService;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class DBServiceTest {
+@Ignore public class DBServiceTest {
     private DBService ds;
     public DBServiceTest() {
         super();

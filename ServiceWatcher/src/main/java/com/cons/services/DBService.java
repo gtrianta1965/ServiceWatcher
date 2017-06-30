@@ -17,14 +17,9 @@ public class DBService extends Service {
         super(sp);
     }
 
-    @Override
-    public void run() {
-        ServiceParameter sp = new ServiceParameter();
-        service(sp);
-    }
 
     @Override
-    public void service(ServiceParameter sp) {
+    public void service() {
         // TODO Implement this method
         Connection conn = null;
 
@@ -36,8 +31,8 @@ public class DBService extends Service {
             this.setErrorCall(e.getMessage());
         }
 
-        sp.getType();
-        String currentUrl=sp.getUrl();
+        serviceParameter.getType();
+        String currentUrl=serviceParameter.getUrl();
         
             try {
 

@@ -2,27 +2,41 @@
 package com.cons.ui;
 
 import com.cons.Configuration;
+import com.cons.services.ServiceOrchestrator;
+import com.cons.ui.CustomTableCellRenderer;
+import com.cons.utils.SWConstants;
 
 import javax.swing.ImageIcon;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
  * @author gtrianta
  */
+@SuppressWarnings("oracle.jdeveloper.java.field-not-serializable")
+
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
+    ServiceOrchestrator serviceOrchestrator;
     /** Creates new form MainFrame */
-
     public MainFrame() {
 
     }
 
     private void setColumnsWidth() {
-        servicesTable.getColumnModel().getColumn(0).setPreferredWidth(10);
-        servicesTable.getColumnModel().getColumn(1).setPreferredWidth(200);
-        servicesTable.getColumnModel().getColumn(2).setPreferredWidth(120);
-        servicesTable.getColumnModel().getColumn(3).setPreferredWidth(20);
-        servicesTable.getColumnModel().getColumn(4).setPreferredWidth(20);
+        //Size of each column espressed in percentage
+        float[] columnWidthPercentage = {2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f};
+        
+        int tW = servicesTable.getWidth();
+            TableColumn column;
+            TableColumnModel jTableColumnModel = servicesTable.getColumnModel();
+            int cantCols = jTableColumnModel.getColumnCount();
+            for (int i = 0; i < cantCols; i++) {
+                column = jTableColumnModel.getColumn(i);
+                int pWidth = Math.round(columnWidthPercentage[i] * tW);
+                column.setPreferredWidth(pWidth);
+            }
     }
 
     public void initModel(ServicesTableModel stm) {
@@ -45,13 +59,20 @@ public class MainFrame extends javax.swing.JFrame {
         btnExit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         servicesTable = new javax.swing.JTable();
+        servicesTable.setDefaultRenderer(String.class, new CustomTableCellRenderer());
         lblVersion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Service Watcher");
+        setPreferredSize(new java.awt.Dimension(950, 500));
 
         btnRefresh.setIcon(new ImageIcon(this.getClass().getResource("/src/images/refresh.png")));
         btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRefresh(evt);
+            }
+        });
 
         btnExit.setIcon(new ImageIcon(this.getClass().getResource("/src/images/exit.png")));
         btnExit.setText("Exit");
@@ -100,9 +121,15 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-END:initComponents
 
     private void ButtonExit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExit
-      this.dispose();  //Remove JFrame 1
+      this.dispose();  //Remove JFrame 
       System.exit(0);
     }//GEN-LAST:event_ButtonExit
+
+    private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
+       //TODO: Disable button, check if orchestrator is running, display a message if it is already running
+       serviceOrchestrator.start();
+       
+    }//GEN-LAST:event_buttonRefresh
 
     /**
      * @param args the command line arguments
@@ -187,5 +214,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     public ServicesTableModel getServicesTableModel() {
         return servicesTableModel;
+    }
+
+    public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {
+        this.serviceOrchestrator = serviceOrchestrator;
+    }
+
+    public ServiceOrchestrator getServiceOrchestrator() {
+        return serviceOrchestrator;
     }
 }

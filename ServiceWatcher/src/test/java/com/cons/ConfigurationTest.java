@@ -88,15 +88,8 @@ public class ConfigurationTest {
         c.init();
         Assert.assertTrue(c.isValid());
         s = c.getServiceParameters();
-<<<<<<< HEAD
         Assert.assertEquals(3, s.size()); 
         Assert.assertEquals(4,c.getConcurrentThreads());        
-=======
-        //Assert.assertEquals(3, s.size()); 
-        Assert.assertEquals(4,c.getConcurrentThreads());
-        
-        
->>>>>>> 14b0ac09f788839a016c8f5af10be84de2e4141d
     }
 
     /**

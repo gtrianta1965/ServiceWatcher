@@ -1,17 +1,19 @@
 package com.cons.services;
 
+import com.cons.ServiceParameter;
+
 public class ServiceFactory {
     public ServiceFactory() {
         super();
     }
     
-    public static Service createService(String serviceType){
+    public static Service createService(ServiceParameter serviceParameter){
         Service serviceToBeCreated = null;
-        if (serviceType !=null){
-            if(serviceType.equalsIgnoreCase("HTTP")){
-                serviceToBeCreated = new HTTPService();
-            }else if (serviceType.equalsIgnoreCase("DB")){
-                serviceToBeCreated = new DBService(); //soon to be added
+        if (serviceParameter.getType() !=null){
+            if(serviceParameter.getType().equalsIgnoreCase("HTTP")){
+                serviceToBeCreated = new HTTPService(serviceParameter);
+            }else if (serviceParameter.getType().equalsIgnoreCase("DB")){
+                serviceToBeCreated = new DBService(serviceParameter); //soon to be added
             }
             
         }else{

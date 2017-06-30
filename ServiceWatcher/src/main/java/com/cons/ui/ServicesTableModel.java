@@ -4,44 +4,45 @@ import com.cons.Configuration;
 
 import com.cons.ServiceParameter;
 
+import com.cons.utils.SWConstants;
+
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 public class ServicesTableModel extends AbstractTableModel {
-    @SuppressWarnings("compatibility:3592099106572457242")
-    private boolean DEBUG = false;
+    @SuppressWarnings("compatibility:2206726703879486991")
     private static final long serialVersionUID = 1L;
+    private boolean DEBUG = false;
+
     private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status"};
 
     private Object[][] data;
     
     
     
-    public void changeModel() {
-        for (int i=0 ; i< getRowCount() ; i++) {
-            data[i][5] = "TATA";
-        }
-        
-        //Send an event to the table to refresh the data
+    /*
+     * Row is zero indexed!!!!
+     */
+    public void setStatus(int row, String status) {
+        data[row][SWConstants.TABLE_STATUS_INDEX] = status;
         fireTableDataChanged();
-              
     }
     
     public void initFromConfiguration(Configuration configuration) {
         int rows = configuration.getServiceParameters().size();
         ServiceParameter sp;
         List<ServiceParameter> spl = configuration.getServiceParameters();
-        data = new Object[rows][6];
+        data = new Object[rows][SWConstants.TABLE_NUMBER_OF_COLUMNS];
         
         for (int i=0 ; i< rows ; i++) {
             sp = (ServiceParameter)spl.get(i);
-            data[i][0] = sp.getId();
-            data[i][1] = sp.getUrl();
-            data[i][2] = sp.getDescription();
-            data[i][3] = sp.getType();
-            data[i][4] = sp.getGroup();
-            data[i][5] = new String();
+            data[i][SWConstants.TABLE_ID_INDEX] = sp.getId();
+            data[i][SWConstants.TABLE_URL_INDEX] = sp.getUrl();
+            data[i][SWConstants.TABLE_DESCRIPTION_INDEX] = sp.getDescription();
+            data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
+            data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
+            data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
         }    
     }
 

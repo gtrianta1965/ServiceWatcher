@@ -14,7 +14,7 @@ public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private int concurrentThreads = 5;
     private final static String configFile = "config.properties";
-    ClientLogger logger = new ClientLogger();
+
     Logger clientLog = null;
     boolean valid;
     String  error;

@@ -92,7 +92,9 @@ public class HTTPServiceTest {
         hs.service(s);
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
+        System.out.println(hs.getErrorCall());
         Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
+        
     }
     
     

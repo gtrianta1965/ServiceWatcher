@@ -95,8 +95,7 @@ public class HTTPServiceTest {
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         System.out.println(hs.getErrorCall());
-        Assert.assertTrue(errorMsg.contains(SWConstants.SEARCH_STRING_NOT_FOUND_MSG));
-        
+        Assert.assertTrue(errorMsg.contains(SWConstants.URL_HOST_ERROR_MSG));
     }
     
     

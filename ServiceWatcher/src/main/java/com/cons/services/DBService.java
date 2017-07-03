@@ -23,13 +23,6 @@ public class DBService extends Service {
         // TODO Implement this method
         Connection conn = null;
 
-        try {
-            Class.forName("oracle.jdbc.OracleDriver");
-        } catch (ClassNotFoundException e) {
-            //e.printStackTrace();
-            System.out.println(e.getMessage());
-            this.setErrorCall(e.getMessage());
-        }
 
         serviceParameter.getType();
         String currentUrl=serviceParameter.getUrl();
@@ -41,24 +34,15 @@ public class DBService extends Service {
                 conn = DriverManager.getConnection(currentUrl);
                 
             } catch (ClassNotFoundException ex) {
-                //ex.printStackTrace();
-                System.err.println(ex.getMessage());
                 this.setErrorCall(ex.getMessage());
                 this.setSuccessfulCall(false);
             } catch (IllegalAccessException ex) {
-                //ex.printStackTrace();
-                System.err.println(ex.getMessage());
                 this.setErrorCall(ex.getMessage());
                 this.setSuccessfulCall(false);
             } catch (InstantiationException ex) {
-                //ex.printStackTrace();
                 this.setSuccessfulCall(false);
-                System.err.println(ex.getMessage());
                 this.setErrorCall(ex.getMessage());
-                this.setSuccessfulCall(false);
             } catch (SQLException ex) {
-                System.err.println(ex.getMessage());
-                //ex.printStackTrace();
                 this.setErrorCall(ex.getMessage());
                 this.setSuccessfulCall(false);
             }

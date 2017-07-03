@@ -12,6 +12,7 @@ public class SWConstants {
     public final static String GENERIC_EXCEPTION_MSG = "Generic Exception:";
     public final static String SEARCH_STRING_NOT_FOUND_MSG = "Search String not found in response";
     public final static String URL_RESPONSE_ERROR_MSG = "url with response message:";
+    public final static String URL_HOST_ERROR_MSG = "The host was not found";
     
     //Service thread status
     public final static String SERVICE_SUBMITTED = "SUBMITTED";

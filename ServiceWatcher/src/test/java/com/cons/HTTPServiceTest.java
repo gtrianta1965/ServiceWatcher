@@ -15,7 +15,7 @@ import org.junit.Test;
  */
 
 public class HTTPServiceTest {
-    
+    ServiceParameter s;
     private HTTPService hs;
     
     public HTTPServiceTest() {
@@ -26,6 +26,7 @@ public class HTTPServiceTest {
     @Before
         public void createHTTPService() {
             hs = new HTTPService();
+            
         }
     
     
@@ -34,12 +35,10 @@ public class HTTPServiceTest {
       * e.g. https://www.google.gr
      */
     @Test
-    public void testValidCall() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://news.in.gr/","News");
-        hs.setServiceParamater(s);
-        hs.service();
-        //System.out.println("hs.isSuccessfulCall()= "+hs.isSuccessfulCall());
+    public void testValidCall() {        
+        s = init("http://www.idika.gr","H");
+        hs.setServiceParameter(s);
+        hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -51,10 +50,9 @@ public class HTTPServiceTest {
      */
     @Test
     public void unsuccessfulSearch() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://news.in.gr/","Newss");
-        hs.setServiceParamater(s);
-        hs.service();
+        s = init("http://www.idika.gr","Ηλεκτρονικήηη");
+        hs.setServiceParameter(s);
+        hs.run();
         Assert.assertFalse(hs.isSuccessfulCall());
         Assert.assertEquals("Search String not found in response", hs.getErrorCall());
     }
@@ -65,10 +63,9 @@ public class HTTPServiceTest {
      */
     @Test
     public void successfulSearch() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://news.in.gr/","News");
-        hs.setServiceParamater(s);
-        hs.service();
+        s = init("http://www.idika.gr","H");
+        hs.setServiceParameter(s);
+        hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -79,10 +76,9 @@ public class HTTPServiceTest {
      */
     @Test
     public void testValidCallNullSearch() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://news.in.gr/","");
-        hs.setServiceParamater(s);
-        hs.service();
+        s = init("http://www.idika.gr","");
+        hs.setServiceParameter(s);    
+        hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
@@ -93,14 +89,13 @@ public class HTTPServiceTest {
      */
     @Test
     public void testInvalidCall() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://news.in.grrrr/","Αναζήτηση");
-        hs.setServiceParamater(s);
-        hs.service();
+        s = init("https://www.google.grrr","Αναζήτηση");
+        hs.setServiceParameter(s);
+        hs.run();
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         System.out.println(hs.getErrorCall());
-        Assert.assertTrue(errorMsg.contains(SWConstants.GENERIC_EXCEPTION_MSG));
+        Assert.assertTrue(errorMsg.contains(SWConstants.SEARCH_STRING_NOT_FOUND_MSG));
         
     }
     
@@ -111,10 +106,9 @@ public class HTTPServiceTest {
      */
     @Test
     public void testValidCallWithNoResult() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://www.oracle.com","Αναζήτηση");
-        hs.setServiceParamater(s);
-        hs.service();
+        s = init("http://www.oracle.com","Αναζήτηση");
+        hs.setServiceParameter(s);
+        hs.run();
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
@@ -122,7 +116,9 @@ public class HTTPServiceTest {
     }
     
         //initialization method for ServiceParameter Object    
-        public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 
+        public ServiceParameter init(String url, String searchString){ 
+            ServiceParameter sp = new ServiceParameter();
+            sp.setId(1);
             sp.setUrl(url);
             sp.setDescription("test");
             sp.setGroup("test2");

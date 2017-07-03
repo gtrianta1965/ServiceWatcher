@@ -1,6 +1,6 @@
 package com.cons.services;
 
-import com.cons.ServiceParameter;
+import com.cons.services.ServiceParameter;
 
 import com.cons.test.DBServiceExample;
 

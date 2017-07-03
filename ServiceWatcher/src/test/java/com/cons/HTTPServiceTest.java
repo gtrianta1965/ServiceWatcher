@@ -1,9 +1,8 @@
-
-
 package com.cons;
 
 import com.cons.services.HTTPService;
 
+import com.cons.services.ServiceParameter;
 import com.cons.utils.SWConstants;
 
 import org.junit.Assert;

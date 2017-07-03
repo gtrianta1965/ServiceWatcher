@@ -32,7 +32,7 @@ public class DBServiceTest {
     public void testValidCall() {
         
         s = init(s,"jdbc:oracle:thin:epresbkp2/Manager1@shstst-scan.idika.gr:1521/tstdb_taf","DB");
-        ds.setServiceParamater(s);
+        //ds.setServiceParamater(s);
         ds.service();
         Assert.assertTrue(ds.isSuccessfulCall());
         Assert.assertEquals(null, ds.getErrorCall());
@@ -46,7 +46,7 @@ public class DBServiceTest {
     @Test
     public void testInvalidLoginCall() {
         s = init(s,"jdbc:oracle:thin:epresbkp2/manager1@shstst-scan.idika.gr:1521/tstdb_taf","DB");
-        ds.setServiceParamater(s);
+        //ds.setServiceParamater(s);
         ds.service();
         Assert.assertFalse(ds.isSuccessfulCall());
     } 

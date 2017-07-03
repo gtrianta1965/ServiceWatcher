@@ -6,8 +6,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.cons.ServiceParameter;
 import com.cons.services.ServiceParameter;
 
 /**

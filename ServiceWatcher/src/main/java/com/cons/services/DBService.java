@@ -50,7 +50,7 @@ public class DBService extends Service {
         
             try {
 
-                DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+                //DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
                 Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
                 conn = DriverManager.getConnection(currentUrl,userName,password);
                 

@@ -17,29 +17,37 @@ import java.util.concurrent.Executors;
 public class Main {
     public static void main(String[] args) {
 
- 
-        //Read Configuration (From Property File)
-        Configuration conf = new Configuration();
-        conf.init();
-        if (!conf.isValid()){
-            System.out.println("Error reading configuration (" + conf.getError() + ")");
-            System.exit(1);
+        if (args!= null||args.length<=0) {
+            
+            for (String s : args) {
+                if (s.equalsIgnoreCase("-conf"));
+                System.out.println("Proxy Argument:"+s);
+           } 
+            
         }
-        
-        // Open the UI and initialize it with a custom TableModel
-        ServicesTableModel stm = new ServicesTableModel();
-        stm.initFromConfiguration(conf);
+            //Read Configuration (From Property File)
+            Configuration conf = new Configuration();
+            conf.init();
+            if (!conf.isValid()) {
+                System.out.println("Error reading configuration (" + conf.getError() + ")");
+                System.exit(1);
+            }
 
-        ServiceOrchestrator serviceOrchestrator = new ServiceOrchestrator();
-        serviceOrchestrator.setServiceTableModel(stm);
-        serviceOrchestrator.setConfiguration(conf);        
-        //serviceOrchestrator.start();
+            // Open the UI and initialize it with a custom TableModel
+            ServicesTableModel stm = new ServicesTableModel();
+            stm.initFromConfiguration(conf);
 
-        MainFrame mf = new MainFrame();
-        mf.initModel(stm);
-        mf.setServiceOrchestrator(serviceOrchestrator);
-        mf.setVisible(true);
-        
-        
-    }
+            ServiceOrchestrator serviceOrchestrator = new ServiceOrchestrator();
+            serviceOrchestrator.setServiceTableModel(stm);
+            serviceOrchestrator.setConfiguration(conf);
+            //serviceOrchestrator.start();
+
+            MainFrame mf = new MainFrame();
+            mf.initModel(stm);
+            mf.setServiceOrchestrator(serviceOrchestrator);
+            mf.setVisible(true);
+
+
+        }
+    
 }

@@ -1,7 +1,8 @@
 package com.cons.services;
 
-import com.cons.ServiceParameter;
+import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.SWConstants;
+
 
 public abstract class Service implements Runnable {
     
@@ -15,7 +16,7 @@ public abstract class Service implements Runnable {
     }
     
     public Service(ServiceParameter sp){ 
-        setServiceParamater(sp);
+        setServiceParameter(sp);
     }
     
     public void run() {
@@ -25,15 +26,15 @@ public abstract class Service implements Runnable {
             printStatus(SWConstants.SERVICE_SUCCESS);
         } else {
             printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
+        }
     }
-    }
-
+    
     /*
      * Service is the main method that all services should override
      */
     public abstract void service();
        
-    public void setServiceParamater(ServiceParameter serviceParameter) {
+    public void setServiceParameter(ServiceParameter serviceParameter) {
         this.serviceParameter = serviceParameter;
     }
 
@@ -60,13 +61,18 @@ public abstract class Service implements Runnable {
 
     public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {
         this.serviceOrchestrator = serviceOrchestrator;
-}
+    }
 
     public ServiceOrchestrator getServiceOrchestrator() {
         return serviceOrchestrator;
     }
     
     protected void printStatus(String status) {
-        this.serviceOrchestrator.printStatus(serviceParameter.getId() - 1, status);
+        if (serviceOrchestrator != null ) {
+           this.serviceOrchestrator.printStatus(serviceParameter.getId() - 1, status);
+        }
+        else {
+            System.out.println(status);
+        }
     }
 }

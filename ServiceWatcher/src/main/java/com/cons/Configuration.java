@@ -1,5 +1,7 @@
 package com.cons;
 
+import com.cons.services.ServiceParameter;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

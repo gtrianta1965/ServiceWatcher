@@ -1,6 +1,6 @@
 package com.cons.test;
 
-import com.cons.ServiceParameter;
+import com.cons.services.ServiceParameter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

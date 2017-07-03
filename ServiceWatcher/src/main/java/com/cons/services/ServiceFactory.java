@@ -1,6 +1,5 @@
 package com.cons.services;
 
-import com.cons.ServiceParameter;
 
 public class ServiceFactory {
     public ServiceFactory() {

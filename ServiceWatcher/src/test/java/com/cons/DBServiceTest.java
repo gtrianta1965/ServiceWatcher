@@ -2,6 +2,8 @@ package com.cons;
 
 import com.cons.services.DBService;
 
+import com.cons.services.ServiceParameter;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -63,6 +65,7 @@ public class DBServiceTest {
     
     //initialization method for ServiceParameter Object    
     public ServiceParameter init(ServiceParameter sp,String url, String type){ 
+        sp.setId(1);
         sp.setUrl(url);
         sp.setDescription("test");
         sp.setGroup("test2");

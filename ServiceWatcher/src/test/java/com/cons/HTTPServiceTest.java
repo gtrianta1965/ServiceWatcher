@@ -15,7 +15,7 @@ import org.junit.Test;
  */
 
 public class HTTPServiceTest {
-    ServiceParameter s;
+    
     private HTTPService hs;
     
     public HTTPServiceTest() {
@@ -26,7 +26,6 @@ public class HTTPServiceTest {
     @Before
         public void createHTTPService() {
             hs = new HTTPService();
-            
         }
     
     
@@ -35,8 +34,9 @@ public class HTTPServiceTest {
       * e.g. https://www.google.gr
      */
     @Test
-    public void testValidCall() {        
-        s = init("http://www.idika.gr","H");
+    public void testValidCall() {
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -50,7 +50,8 @@ public class HTTPServiceTest {
      */
     @Test
     public void unsuccessfulSearch() {
-        s = init("http://www.idika.gr","Ηλεκτρονικήηη");
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","Ηλεκτρονικήηη");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertFalse(hs.isSuccessfulCall());
@@ -63,7 +64,8 @@ public class HTTPServiceTest {
      */
     @Test
     public void successfulSearch() {
-        s = init("http://www.idika.gr","H");
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -76,7 +78,8 @@ public class HTTPServiceTest {
      */
     @Test
     public void testValidCallNullSearch() {
-        s = init("http://www.idika.gr","");
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","");
         hs.setServiceParameter(s);    
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -89,7 +92,8 @@ public class HTTPServiceTest {
      */
     @Test
     public void testInvalidCall() {
-        s = init("https://www.google.grrr","Αναζήτηση");
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"https://www.google.grrr","Αναζήτηση");
         hs.setServiceParameter(s);
         hs.run();
         String errorMsg = hs.getErrorCall();
@@ -106,7 +110,8 @@ public class HTTPServiceTest {
      */
     @Test
     public void testValidCallWithNoResult() {
-        s = init("http://www.oracle.com","Αναζήτηση");
+        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.oracle.com","Αναζήτηση");
         hs.setServiceParameter(s);
         hs.run();
         String errorMsg = hs.getErrorCall();
@@ -116,8 +121,7 @@ public class HTTPServiceTest {
     }
     
         //initialization method for ServiceParameter Object    
-        public ServiceParameter init(String url, String searchString){ 
-            ServiceParameter sp = new ServiceParameter();
+        public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 
             sp.setId(1);
             sp.setUrl(url);
             sp.setDescription("test");

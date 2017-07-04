@@ -96,7 +96,7 @@ public class HTTPServiceTest {
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         System.out.println(hs.getErrorCall());
-        Assert.assertTrue(errorMsg.contains(SWConstants.GENERIC_EXCEPTION_MSG));
+        Assert.assertTrue(errorMsg.contains(SWConstants.GENERIC_EXCEPTION_MSG   ));
     }
     
     

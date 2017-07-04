@@ -35,7 +35,7 @@ public class HTTPServiceTest {
      */
     @Test
         public void testValidCall() {
-        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -49,7 +49,7 @@ public class HTTPServiceTest {
      */
     @Test
     public void unsuccessfulSearch() {
-        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","Ηλεκτρονικήηη");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertFalse(hs.isSuccessfulCall());
@@ -62,7 +62,7 @@ public class HTTPServiceTest {
      */
     @Test
     public void successfulSearch() {
-        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -75,7 +75,7 @@ public class HTTPServiceTest {
      */
     @Test
     public void testValidCallNullSearch() {
-        ServiceParameter s = new ServiceParameter();
+        s = init(s,"http://www.idika.gr","");
         hs.setServiceParameter(s);    
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());

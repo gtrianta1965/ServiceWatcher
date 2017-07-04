@@ -34,9 +34,7 @@ public class HTTPServiceTest {
       * e.g. https://www.google.gr
      */
     @Test
-    public void testValidCall() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -51,7 +49,6 @@ public class HTTPServiceTest {
     @Test
     public void unsuccessfulSearch() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://www.idika.gr","Ηλεκτρονικήηη");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertFalse(hs.isSuccessfulCall());
@@ -65,7 +62,6 @@ public class HTTPServiceTest {
     @Test
     public void successfulSearch() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://www.idika.gr","H");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -79,49 +75,45 @@ public class HTTPServiceTest {
     @Test
     public void testValidCallNullSearch() {
         ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://www.idika.gr","");
         hs.setServiceParameter(s);    
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
     
-    /**
-      * Tests a scenario that an invalid url is called
-      * e.g. https://www.google.grrr
-     */
-    @Test
-    public void testInvalidCall() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"https://www.google.grrr","Αναζήτηση");
-        hs.setServiceParameter(s);
-        hs.run();
-        String errorMsg = hs.getErrorCall();
-        Assert.assertFalse(hs.isSuccessfulCall());
-        System.out.println(hs.getErrorCall());
-        Assert.assertTrue(errorMsg.contains(SWConstants.SEARCH_STRING_NOT_FOUND_MSG));
-        
-    }
+
+//    /**
+//      * Tests a scenario that an invalid url is called
+//      * e.g. https://www.google.grrr
+//     */
+//    @Test
+//    public void testInvalidCall() {
+//        s = init("https://www.googlesdsds.grrr","Αναζήτηση");
+//        hs.setServiceParameter(s);
+//        hs.run();
+//        String errorMsg = hs.getErrorCall();
+//        Assert.assertFalse(hs.isSuccessfulCall());
+//        System.out.println(hs.getErrorCall());
+//        Assert.assertTrue(errorMsg.contains(SWConstants.URL_HOST_ERROR_MSG));
+//    }
+//    
     
-    
-    /**
-     * Tests a scenario that is a 404 url is called
-     * e.g. 192.168.42.63:7003/test-sso/faces/Login
-     */
-    @Test
-    public void testValidCallWithNoResult() {
-        ServiceParameter s = new ServiceParameter();
-        s = init(s,"http://www.oracle.com","Αναζήτηση");
-        hs.setServiceParameter(s);
-        hs.run();
-        String errorMsg = hs.getErrorCall();
-        Assert.assertFalse(hs.isSuccessfulCall());
-        Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
-        
-    }
+//    /**
+//     * Tests a scenario that is a 404 url is called
+//     * e.g. 192.168.42.63:7003/test-sso/faces/Login
+//     */
+//    @Test
+//    public void testValidCallWithNoResult() {
+//        s = init("http://www.idika.gr","sdfdsfdsfds");
+//        hs.setServiceParameter(s);
+//        hs.run();
+//        String errorMsg = hs.getErrorCall();
+//        Assert.assertFalse(hs.isSuccessfulCall());
+//        Assert.assertTrue(errorMsg.contains(SWConstants.UNSUCCESSFUL_RESPONSE_MSG));
+//        
+//    }
     
         //initialization method for ServiceParameter Object    
-        public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 
             sp.setId(1);
             sp.setUrl(url);
             sp.setDescription("test");

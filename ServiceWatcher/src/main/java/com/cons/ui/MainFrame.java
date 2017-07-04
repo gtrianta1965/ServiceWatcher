@@ -42,7 +42,7 @@ public class MainFrame extends javax.swing.JFrame {
     public void initModel(ServicesTableModel stm) {
         servicesTableModel = stm;       
         
-        ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
+        //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
  

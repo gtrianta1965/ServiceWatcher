@@ -12,7 +12,12 @@ public class SWConstants {
     public final static String GENERIC_EXCEPTION_MSG = "Generic Exception:";
     public final static String SEARCH_STRING_NOT_FOUND_MSG = "Search String not found in response";
     public final static String URL_RESPONSE_ERROR_MSG = "url with response message:";
-    
+    public final static String URL_HOST_ERROR_MSG = "The host was not found";
+    public final static String SERVICE_DB_ERROR_ORACLE_CLASS_MSG = "Oracle Class driver Was not Found";
+    public final static String SERVICE_DB_ERROR_ORACLE_SQLEXCEPTION_MSG = "SQL Connection Error";
+
+
+        
     //Service thread status
     public final static String SERVICE_SUBMITTED = "SUBMITTED";
     public final static String SERVICE_SUCCESS = "SUCCESS";

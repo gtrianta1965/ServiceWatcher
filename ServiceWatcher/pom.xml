@@ -24,6 +24,9 @@
         <resources>
             <resource>
                 <directory>src/images/</directory>
+                <targetPath>src/images/</targetPath>
+                <filtering>false</filtering>
+                <includes/>
             </resource>
         </resources>
         <plugins>

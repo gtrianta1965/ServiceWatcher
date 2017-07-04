@@ -31,7 +31,8 @@ public class DBServiceTest {
     @Test
     public void testValidCall() {
         
-        s = init(s,"jdbc:oracle:thin:epresbkp2/Manager1@shstst-scan.idika.gr:1521/tstdb_taf","DB");
+        //s = init("jdbc:oracle:thin:@shstst-scan.idika.gr:1521/tstdb_taf","epresbkp2","manager1");
+        s = init("jdbc:oracle:thin:@shstst-scan.idika.gr:1521/tstdb_taf","epresbkp2","Manager1");
         ds.setServiceParameter(s);
         ds.run();
         Assert.assertTrue(ds.isSuccessfulCall());
@@ -45,7 +46,7 @@ public class DBServiceTest {
      */
     @Test
     public void testInvalidLoginCall() {
-        s = init(s,"jdbc:oracle:thin:epresbkp2/manager1@shstst-scan.idika.gr:1521/tstdb_taf","DB");
+        s = init("jdbc:oracle:thin:@shstst-scan.idika.gr:1521/tstdb_taf","epresbkp2","Manager");
         ds.setServiceParameter(s);
         ds.run();
         Assert.assertFalse(ds.isSuccessfulCall());
@@ -64,13 +65,15 @@ public class DBServiceTest {
     //    }
     
     //initialization method for ServiceParameter Object    
-    public ServiceParameter init(ServiceParameter sp,String url, String type){ 
+    public ServiceParameter init(String url, String userName ,String pass){
+        ServiceParameter sp = new ServiceParameter();
         sp.setId(1);
+        sp.setUsername(userName);
+        sp.setPassword(pass);
         sp.setUrl(url);
         sp.setDescription("test");
-        sp.setGroup("test2");
-        sp.setType(type);
-        sp.setSearchString("test");
+        sp.setGroup("Internal DB");
+        sp.setType("DB");        
         return sp;
     }
     

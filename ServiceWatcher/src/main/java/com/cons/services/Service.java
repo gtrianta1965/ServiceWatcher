@@ -72,7 +72,9 @@ public abstract class Service implements Runnable {
            this.serviceOrchestrator.printStatus(serviceParameter.getId() - 1, status);
         }
         else {
+            /* Uncomment for command line status
             System.out.println(status);
+            */
         }
     }
 }

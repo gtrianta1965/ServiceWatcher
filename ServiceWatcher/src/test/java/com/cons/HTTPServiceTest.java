@@ -34,6 +34,7 @@ public class HTTPServiceTest {
       * e.g. https://www.google.gr
      */
     @Test
+        public void testValidCall() {
         ServiceParameter s = new ServiceParameter();
         hs.setServiceParameter(s);
         hs.run();
@@ -113,7 +114,8 @@ public class HTTPServiceTest {
 //        
 //    }
     
-        //initialization method for ServiceParameter Object    
+        //initialization method for ServiceParameter Object 
+        public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 
             sp.setId(1);
             sp.setUrl(url);
             sp.setDescription("test");

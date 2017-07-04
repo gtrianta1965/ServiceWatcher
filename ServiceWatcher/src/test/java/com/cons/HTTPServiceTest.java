@@ -15,7 +15,7 @@ import org.junit.Test;
  */
 
 public class HTTPServiceTest {
-    ServiceParameter s;
+    
     private HTTPService hs;
     
     public HTTPServiceTest() {
@@ -26,7 +26,6 @@ public class HTTPServiceTest {
     @Before
         public void createHTTPService() {
             hs = new HTTPService();
-            
         }
     
     
@@ -35,8 +34,8 @@ public class HTTPServiceTest {
       * e.g. https://www.google.gr
      */
     @Test
-    public void testValidCall() {        
-        s = init("http://www.idika.gr","H");
+        public void testValidCall() {
+        ServiceParameter s = new ServiceParameter();
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -50,7 +49,7 @@ public class HTTPServiceTest {
      */
     @Test
     public void unsuccessfulSearch() {
-        s = init("http://www.idika.gr","Ηλεκτρονικήηη");
+        ServiceParameter s = new ServiceParameter();
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertFalse(hs.isSuccessfulCall());
@@ -63,7 +62,7 @@ public class HTTPServiceTest {
      */
     @Test
     public void successfulSearch() {
-        s = init("http://www.idika.gr","H");
+        ServiceParameter s = new ServiceParameter();
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
@@ -76,13 +75,14 @@ public class HTTPServiceTest {
      */
     @Test
     public void testValidCallNullSearch() {
-        s = init("http://www.idika.gr","");
+        ServiceParameter s = new ServiceParameter();
         hs.setServiceParameter(s);    
         hs.run();
         Assert.assertTrue(hs.isSuccessfulCall());
         Assert.assertEquals(null, hs.getErrorCall());
     }
     
+
 //    /**
 //      * Tests a scenario that an invalid url is called
 //      * e.g. https://www.google.grrr
@@ -114,9 +114,8 @@ public class HTTPServiceTest {
 //        
 //    }
     
-        //initialization method for ServiceParameter Object    
-        public ServiceParameter init(String url, String searchString){ 
-            ServiceParameter sp = new ServiceParameter();
+        //initialization method for ServiceParameter Object 
+        public ServiceParameter init(ServiceParameter sp,String url, String searchString){ 
             sp.setId(1);
             sp.setUrl(url);
             sp.setDescription("test");

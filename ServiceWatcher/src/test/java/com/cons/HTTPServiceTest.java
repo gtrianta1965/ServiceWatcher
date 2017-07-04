@@ -15,8 +15,9 @@ import org.junit.Test;
  */
 
 public class HTTPServiceTest {
-    ServiceParameter s;
+    
     private HTTPService hs;
+    private ServiceParameter s;
     
     public HTTPServiceTest() {
         super();
@@ -26,7 +27,6 @@ public class HTTPServiceTest {
     @Before
         public void createHTTPService() {
             hs = new HTTPService();
-            
         }
     
     
@@ -83,6 +83,7 @@ public class HTTPServiceTest {
         Assert.assertEquals(null, hs.getErrorCall());
     }
     
+    
     /**
       * Tests a scenario that an invalid url is called
       * e.g. https://www.google.grrr
@@ -95,7 +96,7 @@ public class HTTPServiceTest {
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
         System.out.println(hs.getErrorCall());
-        Assert.assertTrue(errorMsg.contains(SWConstants.GENERIC_EXCEPTION_MSG));
+        Assert.assertTrue(errorMsg.contains(SWConstants.GENERIC_EXCEPTION_MSG   ));
     }
     
     

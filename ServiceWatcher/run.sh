@@ -1,1 +1,0 @@
-java -cp /home/Akorilli/jdeveloper/mywork/ServiceWatcherTrunk/ServiceWatcher/target/lib/ojdbc6-11.2.0.3.jar -jar -Dhttp.proxyHost=192.168.19.54 -Dhttp.proxyPort=8080 /home/Akorilli/jdeveloper/mywork/ServiceWatcherTrunk/ServiceWatcher/target/ServiceWatcher-1.0-SNAPSHOT.jar

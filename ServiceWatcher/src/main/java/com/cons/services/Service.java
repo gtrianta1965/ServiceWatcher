@@ -1,5 +1,6 @@
 package com.cons.services;
 
+import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.SWConstants;
 
@@ -8,6 +9,7 @@ public abstract class Service implements Runnable {
     
     ServiceParameter serviceParameter = new ServiceParameter();
     ServiceOrchestrator serviceOrchestrator;
+    Configuration configuration;
     private String errorCall;        //message for successful/unsuccessful call
     private boolean successfulCall;      //boolean for  for successful/unsuccessful call
     
@@ -76,5 +78,13 @@ public abstract class Service implements Runnable {
             System.out.println(status);
             */
         }
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
     }
 }

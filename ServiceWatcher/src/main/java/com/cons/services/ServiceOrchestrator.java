@@ -45,11 +45,11 @@ public class ServiceOrchestrator {
         }
         //Start Thread Pooling with services
         //TODO:Use configuration parameter for pooling
-        executor = Executors.newFixedThreadPool(2);
+        executor = Executors.newFixedThreadPool(configuration.getConcurrentThreads());
         
         for (int i = 0; i < configuration.getServiceParameters().size() ; i++) {
             serviceTableModel.setStatus(i, SWConstants.SERVICE_SUBMITTED);
-            Runnable serviceWorker = ServiceFactory.createService(configuration.getServiceParameters().get(i));
+            Runnable serviceWorker = ServiceFactory.createService(configuration.getServiceParameters().get(i),configuration);
             ((Service)serviceWorker).setServiceOrchestrator(this);
             executor.execute(serviceWorker);
         }

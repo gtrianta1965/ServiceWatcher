@@ -16,35 +16,11 @@ import java.util.concurrent.Executors;
  */
 public class Main {
     public static void main(String[] args) {
-        boolean externalPropertiesFile = false;
-        String externalConfigFile = null;
-        boolean foundExpectedArg = false;
-        if (args != null || args.length <= 0) {
-            int i = 0;
-            for (String s : args) {
-
-                if (s.equalsIgnoreCase("-conf")) {
-                    System.out.println("Configuration Argument:" + s);
-                    externalPropertiesFile = true;
-                    foundExpectedArg = true;
-                    if (args.length >= i + 1) {
-                        externalConfigFile = args[i + 1];
-                        System.out.println(externalConfigFile);
-                    } else {
-                        System.out.println("Arguments -conf must be followed By <config file Name>");
-                    }
-                    i++;
-                } else {
-                    foundExpectedArg = false;
-                }
-            }
-            if (!foundExpectedArg) {
-                System.out.println("wrong Argument found expected  something like -conf <config file Name>");
-            }
-        }
+        String externalConfigFile = getConfigurationFileFromCommandLine(args);
+        
         //Read Configuration (From Property File)
         Configuration conf = new Configuration();
-        if (externalPropertiesFile) {
+        if (externalConfigFile != null) {
             conf.init(externalConfigFile);
         } else {
             conf.init();
@@ -69,6 +45,24 @@ public class Main {
         mf.setVisible(true);
 
 
+    }
+    
+    private static  String getConfigurationFileFromCommandLine(String[] args) {
+        String configFile = null;
+        for (int i = 0 ; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("-conf")) {
+                //Found switch, check next argument
+                if (i + 1 < args.length) {
+                    configFile = args[i+1];
+                    System.out.println("Custom configuration specified (" + configFile + ")");
+                } else {
+                    System.out.println("Arguments -conf must be followed By <config file Name>");
+                }
+                
+            }
+        }
+        
+        return configFile;
     }
 
 

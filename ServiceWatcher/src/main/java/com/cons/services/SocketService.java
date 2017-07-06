@@ -28,7 +28,7 @@ public class SocketService extends Service {
             } catch (IOException ioex){
                 // Catch and set call false and set error
                 this.setSuccessfulCall(false);
-                this.setErrorCall("Remote is unreachable.");
+                this.setErrorCall(SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG);
             }
         } catch (Exception ex){
             this.setSuccessfulCall(false);

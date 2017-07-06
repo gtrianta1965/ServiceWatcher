@@ -162,14 +162,22 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
-        if(jCheckBox1.isSelected() ){
-            serviceOrchestrator.start();
-        }
+        
+         
         if (jCheckBox1.isSelected()) {
             jComboBox1.setEnabled(false);
             String time_value= String.valueOf(jComboBox1.getSelectedItem());
             System.out.println(time_value);
             btnRefresh.setEnabled(false);
+            while(true){
+                serviceOrchestrator.start();
+                try {
+                    wait(Integer.parseInt(time_value));
+                } catch (InterruptedException e) {
+                }
+            }
+            
+            
         } else {
             jComboBox1.setEnabled(true);
             btnRefresh.setEnabled(true);

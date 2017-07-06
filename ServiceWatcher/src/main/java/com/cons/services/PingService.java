@@ -2,7 +2,11 @@ package com.cons.services;
 
 import com.cons.utils.SWConstants;
 
+import java.io.IOException;
+
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 import java.util.concurrent.Exchanger;
@@ -19,23 +23,21 @@ public class PingService extends Service {
     @Override
     public void service() {        
         try {
-            boolean result = false;
-            //Get inet obj based on name (ip/url)
-            InetAddress addr = InetAddress.getByName(serviceParameter.getUrl());
-            //Ping with wait time PING_DIE_INTERVAL
-            result = addr.isReachable(SWConstants.PING_DIE_INTERVAL);
-            this.setSuccessfulCall(result);
-            if(result == false){
-                this.setErrorCall("Unreachable URL/PING.");
+            // Try to open socket
+            try(Socket soc = new Socket()){
+                // TODO change constants to geters on commit
+                // Try to connect if not throw IO
+                soc.connect(new InetSocketAddress(serviceParameter.getUrl(), SWConstants.PING_TARGET_PORT), SWConstants.PING_DIE_INTERVAL);
+                // If success set call true
+                this.setSuccessfulCall(true);
+            } catch (IOException ioex){
+                // Catch and set call false and set error
+                this.setSuccessfulCall(false);
+                this.setErrorCall("Remote is unreachable.");
             }
-        } catch (UnknownHostException uhe) {
-            this.setSuccessfulCall(false);
-            this.setErrorCall(uhe.getMessage());
-            uhe.printStackTrace();
         } catch (Exception ex){
             this.setSuccessfulCall(false);
             this.setErrorCall(ex.getMessage());
-            ex.printStackTrace();
         }
     }
 }

@@ -6,6 +6,9 @@ import com.cons.services.ServiceOrchestrator;
 import com.cons.ui.CustomTableCellRenderer;
 import com.cons.utils.SWConstants;
 
+
+import java.awt.event.ItemEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -97,7 +100,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10","20"}));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -160,14 +163,30 @@ public class MainFrame extends javax.swing.JFrame {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if(jCheckBox1.isSelected() ){
-            serviceOrchestrator.start(); 
-        }    
+            serviceOrchestrator.start();
+        }
+        if (jCheckBox1.isSelected()) {
+            jComboBox1.setEnabled(false);
+            String time_value= String.valueOf(jComboBox1.getSelectedItem());
+            System.out.println(time_value);
+            btnRefresh.setEnabled(false);
+        } else {
+            jComboBox1.setEnabled(true);
+            btnRefresh.setEnabled(true);
+        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jComboBox1ActionPerformed
+        
+        
 
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      */

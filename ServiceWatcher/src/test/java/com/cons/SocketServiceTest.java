@@ -1,6 +1,6 @@
 package com.cons;
 
-import com.cons.services.PingService;
+import com.cons.services.SocketService;
 
 import com.cons.services.ServiceParameter;
 
@@ -13,18 +13,18 @@ import org.junit.Test;
  * Unit test fir PingService Object.
  */
 
-public class PingServiceTest {
+public class SocketServiceTest {
     
-    private PingService ps;
+    private SocketService ps;
     private ServiceParameter s;
     
-    public PingServiceTest() {
+    public SocketServiceTest() {
         super();
     }
     
     @Before
-    public void createPingService(){
-        ps = new PingService();
+    public void createSocketService(){
+        ps = new SocketService();
     }
     
     /**

@@ -3,25 +3,20 @@ package com.cons.services;
 import com.cons.utils.SWConstants;
 
 import java.io.IOException;
-
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-import java.util.concurrent.Exchanger;
-
-public class PingService extends Service {
-    public PingService(ServiceParameter serviceParameter) {
+public class SocketService extends Service {
+    public SocketService(ServiceParameter serviceParameter) {
         super(serviceParameter);
     }
 
-    public PingService() {
+    public SocketService() {
         super();
     }
 
     @Override
-    public void service() {        
+    public void service() {
         try {
             // Try to open socket
             try(Socket soc = new Socket()){

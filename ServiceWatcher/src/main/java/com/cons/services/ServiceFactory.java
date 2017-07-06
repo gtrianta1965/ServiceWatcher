@@ -16,7 +16,7 @@ public class ServiceFactory {
             }else if (serviceParameter.getType().equalsIgnoreCase("DB")){
                 serviceToBeCreated = new DBService(serviceParameter); //soon to be added
             }else if (serviceParameter.getType().equalsIgnoreCase("PING")){
-                serviceToBeCreated = new PingService(serviceParameter);
+                serviceToBeCreated = new SocketService(serviceParameter);
             }
             
         }else{

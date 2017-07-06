@@ -36,6 +36,7 @@ public class SWConstants {
     //Number of columns in the table
     public final static int TABLE_NUMBER_OF_COLUMNS = 6;
     
-    
+    //Ping die interval
+    public final static int PING_DIE_INTERVAL = 1000;
 
 }

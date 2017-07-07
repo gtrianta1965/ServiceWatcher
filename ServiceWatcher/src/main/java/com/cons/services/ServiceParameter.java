@@ -7,9 +7,7 @@ public class ServiceParameter {
     
     private int    id;
     private String url;
-    private String ip;
-    private int    port;
-    private int    socDieInterval;
+    private int    pingDieInterval;
     private String description;
     private String type;
     private String group;
@@ -41,28 +39,12 @@ public class ServiceParameter {
         return url;
     }
     
-    public void setIP(String ip) {
-        this.ip = ip;
+    public void setPingDieInterval(String interval) {
+        this.pingDieInterval = (interval == null ? 80 : Integer.parseInt(interval));
     }
 
-    public String getIP() {
-        return ip;
-    }
-    
-    public void setPort(String port) {
-        this.port = (port == null ? 80 : Integer.parseInt(port));
-    }
-
-    public int getPort() {
-        return port;
-    }
-    
-    public void setSocDieInterval(String interval) {
-        this.socDieInterval = (interval == null ? 80 : Integer.parseInt(interval));
-    }
-
-    public int getSocDieInterval() {
-        return socDieInterval;
+    public int getPingDieInterval() {
+        return pingDieInterval;
     }
 
     public void setDescription(String description) {

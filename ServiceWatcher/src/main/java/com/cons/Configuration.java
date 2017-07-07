@@ -50,14 +50,9 @@ public class Configuration {
                 i++;
                 ServiceParameter serviceParameter = new ServiceParameter();
                 serviceParameter.setUrl(prop.getProperty("url." + i));
-                serviceParameter.setIP(prop.getProperty("ip." + i));
-                if (serviceParameter.getUrl() != null || serviceParameter.getIP() != null) {
-                    if (serviceParameter.getUrl() == null){
-                        serviceParameter.setUrl(serviceParameter.getIP());
-                    }
+                if (serviceParameter.getUrl() != null) {
                     serviceParameter.setId(i);
-                serviceParameter.setPort(prop.getProperty("port." + i));
-                serviceParameter.setSocDieInterval(prop.getProperty("socDieINterval." + i));
+                serviceParameter.setPingDieInterval(prop.getProperty("pingDieInterval." + i));
                 serviceParameter.setDescription(prop.getProperty("description." + i));
                 serviceParameter.setType(prop.getProperty("type." + i));
                 serviceParameter.setGroup(prop.getProperty("group." + i));

@@ -7,9 +7,12 @@ import com.cons.ui.CustomTableCellRenderer;
 import com.cons.utils.SWConstants;
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.Timer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -100,7 +103,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10","20"}));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1","2","3"}));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -167,17 +170,20 @@ public class MainFrame extends javax.swing.JFrame {
         if (jCheckBox1.isSelected()) {
             jComboBox1.setEnabled(false);
             String time_value= String.valueOf(jComboBox1.getSelectedItem());
+            int temp=Integer.parseInt(time_value)*3600000;
             System.out.println(time_value);
             btnRefresh.setEnabled(false);
-            while(true){
-                serviceOrchestrator.start();
-                try {
-                    wait(Integer.parseInt(time_value));
-                } catch (InterruptedException e) {
+            serviceOrchestrator.start();
+            Timer timer=new Timer(temp,new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent arg0){
+                    serviceOrchestrator.start();
                 }
-            }
+            });
+            timer.setRepeats(true);
+            timer.start();
             
-            
+                 
         } else {
             jComboBox1.setEnabled(true);
             btnRefresh.setEnabled(true);

@@ -35,7 +35,7 @@ public class HTTPServiceTest {
       * e.g. https://www.google.gr
      */
     @Test
-    public void testValidCall() {        
+        public void testValidCall() {
         s = init("http://www.idika.gr","H");
         hs.setServiceParameter(s);
         hs.run();
@@ -83,7 +83,7 @@ public class HTTPServiceTest {
         Assert.assertEquals(null, hs.getErrorCall());
     }
     
-    
+
     /**
       * Tests a scenario that an invalid url is called
       * e.g. https://www.google.grrr
@@ -95,7 +95,6 @@ public class HTTPServiceTest {
         hs.run();
         String errorMsg = hs.getErrorCall();
         Assert.assertFalse(hs.isSuccessfulCall());
-        System.out.println(hs.getErrorCall());
         Assert.assertTrue(errorMsg.contains(SWConstants.GENERIC_EXCEPTION_MSG   ));
     }
     
@@ -115,7 +114,7 @@ public class HTTPServiceTest {
         
     }
     
-        //initialization method for ServiceParameter Object    
+        //initialization method for ServiceParameter Object 
         public ServiceParameter init(String url, String searchString){ 
             ServiceParameter sp = new ServiceParameter();
             sp.setId(1);

@@ -15,6 +15,9 @@ public class SWConstants {
     public final static String URL_HOST_ERROR_MSG = "The host was not found";
     public final static String SERVICE_DB_ERROR_ORACLE_CLASS_MSG = "Oracle Class driver Was not Found";
     public final static String SERVICE_DB_ERROR_ORACLE_SQLEXCEPTION_MSG = "SQL Connection Error";
+    public final static String RUNNING_STATUS ="RUNNING";
+    public final static String IDLE_STATUS ="IDLE";
+    
 
 
         

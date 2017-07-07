@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private int concurrentThreads = 5;
+    private int httpResponseTimeout = 5000;
     private final static String configFile = "config.properties";
 
     Logger clientLog = null;
@@ -55,6 +56,7 @@ public class Configuration {
                 serviceParameter.setType(prop.getProperty("type." + i));
                 serviceParameter.setGroup(prop.getProperty("group." + i));
                 serviceParameter.setSearchString(prop.getProperty("searchString." + i));
+                serviceParameter.setUsername(prop.getProperty("username." + i));
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
 
@@ -63,15 +65,8 @@ public class Configuration {
                 }
             }
             //Read single value properties
-            String v = prop.getProperty("concurrentThreads");
-            if ( v != null) {
-               try {
-                    this.setConcurrentThreads(Integer.parseInt(v));
-                } catch (NumberFormatException nfe) {
-                    this.setValid(false);
-                    this.setError("NumberFormatException");
-                }
-            }
+            this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"),5));
+            this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"),5000));
 
         } catch (FileNotFoundException e) {
             setValid(false);
@@ -91,6 +86,22 @@ public class Configuration {
         }
     }
 
+    private int getNumberProperty(String value, int defaultValue) {
+        int intValue = 0;
+        if (value != null) {
+            try {
+                 intValue = Integer.parseInt(value);
+             } catch (NumberFormatException nfe) {
+                 intValue = defaultValue;
+                 System.out.println("NumberFormatException reading property value " + value + ". Set to default (" + defaultValue + ")");
+             }
+            
+        } else {
+            intValue = defaultValue;
+        }
+        return intValue;
+        
+    }
 
     public void save() {
         //to do
@@ -128,10 +139,11 @@ public class Configuration {
         return error;
     }
     
-    public static void main(String args[]){
-        
-        Configuration c = new Configuration();
-        c.init();
+    public void setHttpResponseTimeout(int httpResponseTimeout) {
+        this.httpResponseTimeout = httpResponseTimeout;
+    }
 
+    public int getHttpResponseTimeout() {
+        return httpResponseTimeout;
     }
 }

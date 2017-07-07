@@ -50,7 +50,7 @@ public class ServiceParameter {
     }
     
     public void setPort(String port) {
-        this.port = Integer.parseInt(port);
+        this.port = (port == null ? 80 : Integer.parseInt(port));
     }
 
     public int getPort() {
@@ -58,7 +58,7 @@ public class ServiceParameter {
     }
     
     public void setSocDieInterval(String interval) {
-        this.socDieInterval = Integer.parseInt(interval);
+        this.socDieInterval = (interval == null ? 80 : Integer.parseInt(interval));
     }
 
     public int getSocDieInterval() {

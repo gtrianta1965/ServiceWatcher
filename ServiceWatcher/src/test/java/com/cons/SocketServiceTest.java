@@ -28,25 +28,12 @@ public class SocketServiceTest {
     }
     
     /**
-     * Test if ping returns with loopback ip
-     * With loop back ip = "127.0.0.1"
-     */
-    @Test
-    public void pingLoopback(){
-        s = init("127.0.0.1");
-        ps.setServiceParameter(s);
-        ps.run();
-        Assert.assertTrue(ps.isSuccessfulCall());
-        Assert.assertEquals(null, ps.getErrorCall());
-    }
-    
-    /**
      * Test if invalid ping returns invalid
      * With test url/ip = "fmi342jf982ffn3"
      */
     @Test
     public void pingInvalid(){
-        s = init("fmi342jf982ffn3");
+        s = init("fmi342jf982ffn3", 80);
         ps.setServiceParameter(s);
         ps.run();
         Assert.assertFalse(ps.isSuccessfulCall());
@@ -57,35 +44,23 @@ public class SocketServiceTest {
     //TODO uncomment when parameters IP and Port are implemented in serviceParameters.
     /**
      * Test valid URL ping.
-     * With URL = www.google.com
+     * With URL = www.google.com port = 80 (http)
      */
-//    @Test
-//    public void wwwCheck(){
-//        s = init("http://wwww.google.com");
-//        ps.setServiceParameter(s);
-//        ps.run();
-//        Assert.assertTrue(ps.isSuccessfulCall());
-//        Assert.assertEquals(null, ps.getErrorCall());
-//    }
-    
-    /**
-     * Test invalid URL ping.
-     * With URL = asdasdwas
-     */
-//    @Test
-//    public void wwwCheck(){
-//        s = init("asdasdwas");
-//        ps.setServiceParameter(s);
-//        ps.run();
-//        Assert.assertTrue(ps.isSuccessfulCall());
-//        Assert.assertEquals(null, ps.getErrorCall());
-//    }
+    @Test
+    public void checkIPResolver(){
+        s = init("http://www.google.com", 80);
+        ps.setServiceParameter(s);
+        ps.run();
+        Assert.assertTrue(ps.isSuccessfulCall());
+        Assert.assertEquals(null, ps.getErrorCall());
+    }
     
     //initialization method for ServiceParameter Object 
-    public ServiceParameter init(String url){ 
+    public ServiceParameter init(String url, int port){
         ServiceParameter sp = new ServiceParameter();
         sp.setId(1);
         sp.setUrl(url);
+        sp.setPort(String.valueOf(port));
         sp.setDescription("test");
         sp.setGroup("test2");
         sp.setType("test3");

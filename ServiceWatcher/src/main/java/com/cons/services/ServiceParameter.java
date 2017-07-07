@@ -7,6 +7,9 @@ public class ServiceParameter {
     
     private int    id;
     private String url;
+    private String ip;
+    private int    port;
+    private int    socDieInterval;
     private String description;
     private String type;
     private String group;
@@ -36,6 +39,30 @@ public class ServiceParameter {
 
     public String getUrl() {
         return url;
+    }
+    
+    public void setIP(String ip) {
+        this.ip = ip;
+    }
+
+    public String getIP() {
+        return ip;
+    }
+    
+    public void setPort(String port) {
+        this.port = Integer.parseInt(port);
+    }
+
+    public int getPort() {
+        return port;
+    }
+    
+    public void setSocDieInterval(String interval) {
+        this.socDieInterval = Integer.parseInt(interval);
+    }
+
+    public int getSocDieInterval() {
+        return socDieInterval;
     }
 
     public void setDescription(String description) {

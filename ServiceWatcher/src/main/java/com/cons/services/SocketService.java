@@ -25,7 +25,7 @@ public class SocketService extends Service {
         //Check if socket is URL based
         boolean urlMode = getURLMode();
         // TODO change serviceParameter.getUrl(); to get .getIp();
-        String ipAddr = serviceParameter.getUrl();
+        String ipAddr = serviceParameter.getIP();
         //If URL based
         if(urlMode){
             //Get ip from URL
@@ -51,13 +51,13 @@ public class SocketService extends Service {
             try(Socket soc = new Socket()){
                 // TODO change constants to geters on commit
                 // Try to connect if not throw IO
-                soc.connect(new InetSocketAddress(ipAddr, SWConstants.PING_TARGET_PORT), SWConstants.PING_DIE_INTERVAL);
+                soc.connect(new InetSocketAddress(ipAddr, serviceParameter.getPort()), serviceParameter.getSocDieInterval());
                 // If success set call true
                 this.setSuccessfulCall(true);
             } catch (IOException ioex){
                 // Catch and set call false and set error
                 this.setSuccessfulCall(false);
-                this.setErrorCall(SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + ipAddr +":" + SWConstants.PING_TARGET_PORT);
+                this.setErrorCall(SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + ipAddr +":" + serviceParameter.getPort());
             }
         } catch (Exception ex){
             this.setSuccessfulCall(false);

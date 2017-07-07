@@ -53,6 +53,34 @@ public class SocketServiceTest {
         Assert.assertNotNull(ps.getErrorCall());
     }
     
+    
+    //TODO uncomment when parameters IP and Port are implemented in serviceParameters.
+    /**
+     * Test valid URL ping.
+     * With URL = www.google.com
+     */
+//    @Test
+//    public void wwwCheck(){
+//        s = init("http://wwww.google.com");
+//        ps.setServiceParameter(s);
+//        ps.run();
+//        Assert.assertTrue(ps.isSuccessfulCall());
+//        Assert.assertEquals(null, ps.getErrorCall());
+//    }
+    
+    /**
+     * Test invalid URL ping.
+     * With URL = asdasdwas
+     */
+//    @Test
+//    public void wwwCheck(){
+//        s = init("asdasdwas");
+//        ps.setServiceParameter(s);
+//        ps.run();
+//        Assert.assertTrue(ps.isSuccessfulCall());
+//        Assert.assertEquals(null, ps.getErrorCall());
+//    }
+    
     //initialization method for ServiceParameter Object 
     public ServiceParameter init(String url){ 
         ServiceParameter sp = new ServiceParameter();

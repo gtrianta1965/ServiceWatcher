@@ -7,7 +7,7 @@ import com.cons.services.ServiceParameter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
+import java.lang.String;
 
 /**
  * Unit test fir PingService Object.
@@ -33,7 +33,7 @@ public class SocketServiceTest {
      */
     @Test
     public void pingInvalid(){
-        s = init("fmi342jf982ffn3", 80);
+        s = init("fmi342jf982ffn3");
         ps.setServiceParameter(s);
         ps.run();
         Assert.assertFalse(ps.isSuccessfulCall());
@@ -48,7 +48,7 @@ public class SocketServiceTest {
      */
     @Test
     public void checkIPResolver(){
-        s = init("http://www.google.com", 80);
+        s = init("www.google.com:80");
         ps.setServiceParameter(s);
         ps.run();
         Assert.assertTrue(ps.isSuccessfulCall());
@@ -56,11 +56,10 @@ public class SocketServiceTest {
     }
     
     //initialization method for ServiceParameter Object 
-    public ServiceParameter init(String url, int port){
+    public ServiceParameter init(String url){
         ServiceParameter sp = new ServiceParameter();
         sp.setId(1);
         sp.setUrl(url);
-        sp.setPort(String.valueOf(port));
         sp.setDescription("test");
         sp.setGroup("test2");
         sp.setType("test3");

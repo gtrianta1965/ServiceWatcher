@@ -57,7 +57,8 @@ public class SocketService extends Service {
         
         try {
             // Try to open socket
-            try(Socket soc = new Socket()){
+            Socket soc = new Socket();
+            try{
                 // Try to connect if not throw IO
                 soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), serviceParameter.getPingDieInterval());
                 // If success set call true
@@ -66,6 +67,8 @@ public class SocketService extends Service {
                 // Catch and set call false and set error
                 this.setSuccessfulCall(false);
                 this.setErrorCall(SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + fullURL[0] +":"+ fullURL[1]);
+            } finally {
+                soc.close();
             }
         } catch (Exception ex){
             this.setSuccessfulCall(false);

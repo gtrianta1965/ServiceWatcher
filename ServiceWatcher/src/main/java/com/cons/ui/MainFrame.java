@@ -25,10 +25,10 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
-    public int temp;
+    private int temp;
     private Timer timer2;
     private Timer timer;
-    private int counter=1;
+    private int counter=0;
     /** Creates new form MainFrame */
     public MainFrame() {
 
@@ -115,8 +115,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("jLabel1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,8 +130,8 @@ public class MainFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 463, Short.MAX_VALUE)
                         .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -155,9 +153,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jCheckBox1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jComboBox1)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(30, 30, 30))))
         );
 
@@ -184,14 +182,18 @@ public class MainFrame extends javax.swing.JFrame {
             String time_value= String.valueOf(jComboBox1.getSelectedItem());
             temp=Integer.parseInt(time_value)*3600000;
             System.out.println(time_value);
-            btnRefresh.setEnabled(false);
+            btnRefresh.setEnabled(false);            
             serviceOrchestrator.start();
+            jLabel1.setText("Minits left:" + String.valueOf(temp/60000));
             timer2=new Timer(60000,new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    ++counter;
-                    jLabel1.setText(String.valueOf(counter));
-                    
+                    if(serviceOrchestrator.getExecutor().isTerminated()){
+                        counter=0;    
+                    }else{
+                        ++counter;                        
+                    }
+                    jLabel1.setText("Minits left:"+ String.valueOf((temp/60000)-counter));                    
                 }
             });
                 
@@ -206,6 +208,8 @@ public class MainFrame extends javax.swing.JFrame {
             timer2.setRepeats(true);
             timer2.start();
         } else {
+            jLabel1.setText("Finished");
+
             timer2.stop();
             timer.stop();
             jComboBox1.setEnabled(true);

@@ -31,6 +31,8 @@ public class SFTPService extends Service {
             session.connect();
             ChannelSftp sftpChannel = (ChannelSftp) session.openChannel(protocol);
             sftpChannel.connect();
+            sftpChannel.disconnect();
+            session.disconnect();
             setSuccessfulCall(true);
         }catch (JSchException jschex){
             setSuccessfulCall(false);

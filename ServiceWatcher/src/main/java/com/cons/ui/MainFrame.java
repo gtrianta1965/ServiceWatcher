@@ -25,8 +25,8 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
-    private int temp;
-    private Timer timer2;
+    private int interval;
+    private Timer countdown_timer;
     private Timer timer;
     private int counter=0;
     /** Creates new form MainFrame */
@@ -180,12 +180,12 @@ public class MainFrame extends javax.swing.JFrame {
         if (jCheckBox1.isSelected()) {
             jComboBox1.setEnabled(false);
             String time_value= String.valueOf(jComboBox1.getSelectedItem());
-            temp=Integer.parseInt(time_value)*3600000;
+            interval=Integer.parseInt(time_value)*3600000;
             System.out.println(time_value);
             btnRefresh.setEnabled(false);            
             serviceOrchestrator.start();
-            jLabel1.setText("Minits left:" + String.valueOf(temp/60000));
-            timer2=new Timer(60000,new ActionListener(){
+            jLabel1.setText("Minits left:" + String.valueOf(interval/60000));
+            countdown_timer=new Timer(60000,new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     if(serviceOrchestrator.getExecutor().isTerminated()){
@@ -193,11 +193,11 @@ public class MainFrame extends javax.swing.JFrame {
                     }else{
                         ++counter;                        
                     }
-                    jLabel1.setText("Minits left:"+ String.valueOf((temp/60000)-counter));                    
+                    jLabel1.setText("Minits left:"+ String.valueOf((interval/60000)-counter));                    
                 }
             });
                 
-            timer=new Timer(temp,new ActionListener(){
+            timer=new Timer(interval,new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent arg0){
                     serviceOrchestrator.start();
@@ -205,12 +205,12 @@ public class MainFrame extends javax.swing.JFrame {
             });
             timer.setRepeats(true);
             timer.start();
-            timer2.setRepeats(true);
-            timer2.start();
+            countdown_timer.setRepeats(true);
+            countdown_timer.start();
         } else {
             jLabel1.setText("Finished");
 
-            timer2.stop();
+            countdown_timer.stop();
             timer.stop();
             jComboBox1.setEnabled(true);
             btnRefresh.setEnabled(true);

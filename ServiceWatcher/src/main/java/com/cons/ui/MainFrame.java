@@ -184,7 +184,7 @@ public class MainFrame extends javax.swing.JFrame {
             System.out.println(time_value);
             btnRefresh.setEnabled(false);            
             serviceOrchestrator.start();
-            jLabel1.setText("Minits left:" + String.valueOf(interval/60000));
+            jLabel1.setText("Minutes left:" + String.valueOf(interval/60000));
             countdown_timer=new Timer(60000,new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
@@ -193,7 +193,7 @@ public class MainFrame extends javax.swing.JFrame {
                     }else{
                         ++counter;                        
                     }
-                    jLabel1.setText("Minits left:"+ String.valueOf((interval/60000)-counter));                    
+                    jLabel1.setText("Minutes left:"+ String.valueOf((interval/60000)-counter));                    
                 }
             });
                 

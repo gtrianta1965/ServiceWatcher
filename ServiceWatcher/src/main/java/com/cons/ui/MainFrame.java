@@ -26,8 +26,9 @@ public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
     public int temp;
+    private Timer timer2;
     private Timer timer;
-    private Reftime refresh_timer;
+    private int counter=1;
     /** Creates new form MainFrame */
     public MainFrame() {
 
@@ -181,18 +182,19 @@ public class MainFrame extends javax.swing.JFrame {
         if (jCheckBox1.isSelected()) {
             jComboBox1.setEnabled(false);
             String time_value= String.valueOf(jComboBox1.getSelectedItem());
-            temp=Integer.parseInt(time_value)*100;
-            
-            refresh_timer = new Reftime(1 ,new ActionListener(){
-                private int countime =0;
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    countime++;
-                }
-            },this);
+            temp=Integer.parseInt(time_value)*3600000;
             System.out.println(time_value);
             btnRefresh.setEnabled(false);
             serviceOrchestrator.start();
+            timer2=new Timer(60000,new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    ++counter;
+                    jLabel1.setText(String.valueOf(counter));
+                    
+                }
+            });
+                
             timer=new Timer(temp,new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent arg0){
@@ -201,11 +203,10 @@ public class MainFrame extends javax.swing.JFrame {
             });
             timer.setRepeats(true);
             timer.start();
-            refresh_timer.start();
-            
-                 
+            timer2.setRepeats(true);
+            timer2.start();
         } else {
-            refresh_timer.stop();
+            timer2.stop();
             timer.stop();
             jComboBox1.setEnabled(true);
             btnRefresh.setEnabled(true);

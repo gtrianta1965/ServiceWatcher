@@ -1,31 +1,29 @@
 package com.cons.services;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-public class SSHService extends Service {
-    public SSHService(ServiceParameter serviceParameter) {
+public class SFTPService extends Service {
+    public SFTPService(ServiceParameter serviceParameter) {
         super(serviceParameter);
     }
 
-    public SSHService() {
+    public SFTPService() {
         super();
     }
 
     @Override
     public void service() {
-        int port = 22;
-        String username = "demo";
-        String password = "password";
-        String url = "test.rebex.net";
-        String protocol = "ssh";
+        String[] temp = serviceParameter.getUrl().split(":");
+        int port = Integer.parseInt(temp[1]);
+        String username = serviceParameter.getUsername();
+        String password = serviceParameter.getPassword();
+        String url = temp[0];
+        String protocol = "sftp";
         
         try{
-            setSuccessfulCall(true);
             JSch jsch = new JSch();
             Session session = jsch.getSession(username, url, port);
             session.setPassword(password);

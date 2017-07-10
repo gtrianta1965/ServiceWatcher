@@ -1,0 +1,4 @@
+Package without running unit tests:
+
+mvn package -Dmaven.test.skip=true
+

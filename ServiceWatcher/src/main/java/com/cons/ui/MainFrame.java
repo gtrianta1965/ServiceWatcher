@@ -1,16 +1,10 @@
 
 package com.cons.ui;
 
-import com.cons.Configuration;
+
 import com.cons.services.ServiceOrchestrator;
-import com.cons.ui.CustomTableCellRenderer;
-import com.cons.utils.SWConstants;
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 import javax.swing.table.TableColumn;

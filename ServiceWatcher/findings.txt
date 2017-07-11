@@ -2,3 +2,12 @@ Package without running unit tests:
 
 mvn package -Dmaven.test.skip=true
 
+
+If you merged a branch to master by accident and it is the last commit (but not yet pushed) revert the commit with :
+
+
+git reset --hard HEAD~1
+
+Pull a branch from remote (when the branch does not exist in local repository)
+git branch -f PingService origin/PingService
+

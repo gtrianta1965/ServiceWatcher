@@ -185,15 +185,18 @@ public class MainFrame extends javax.swing.JFrame {
             btnRefresh.setEnabled(false);            
             serviceOrchestrator.start();
             jLabel1.setText("Minutes left:" + String.valueOf(interval/60000));
-            countdown_timer=new Timer(60000,new ActionListener(){
+            countdown_timer=new Timer(60000 ,new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    if(serviceOrchestrator.getExecutor().isTerminated()){
-                        counter=0;    
-                    }else{
-                        ++counter;                        
+                    ++counter;
+                    if((interval/60000)==counter){
+                        countdown_timer.stop();
+                        counter=0;
+                        jLabel1.setText("Minutes left:" + String.valueOf(interval/60000));
+                        countdown_timer.start();
                     }
-                    jLabel1.setText("Minutes left:"+ String.valueOf((interval/60000)-counter));                    
+                    jLabel1.setText("Minutes left:"+ String.valueOf((interval/60000)-counter));
+                    
                 }
             });
                 

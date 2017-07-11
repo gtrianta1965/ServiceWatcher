@@ -17,6 +17,8 @@ public class ServiceFactory {
                 serviceToBeCreated = new DBService(serviceParameter); //soon to be added
             }else if (serviceParameter.getType().equalsIgnoreCase("PING")){
                 serviceToBeCreated = new SocketService(serviceParameter);
+            }else if (serviceParameter.getType().equals("SFTP")){
+                serviceToBeCreated = new SFTPService(serviceParameter);
             }
             
         }else{

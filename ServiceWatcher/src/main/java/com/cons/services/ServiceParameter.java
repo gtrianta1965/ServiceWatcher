@@ -13,6 +13,16 @@ public class ServiceParameter {
     private String searchString;
     private String username;
     private String password;
+    private String status;
+    private String error;
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getError() {
+        return error;
+    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -76,5 +86,13 @@ public class ServiceParameter {
 
     public int getId() {
         return id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

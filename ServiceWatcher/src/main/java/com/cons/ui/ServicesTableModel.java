@@ -39,7 +39,6 @@ public class ServicesTableModel extends AbstractTableModel {
             sp = (ServiceParameter)spl.get(i);
             data[i][SWConstants.TABLE_ID_INDEX] = sp.getId();
             data[i][SWConstants.TABLE_URL_INDEX] = sp.getUrl();
-            System.out.println("sp.getUrl()= "+sp.getUrl());
             data[i][SWConstants.TABLE_DESCRIPTION_INDEX] = sp.getDescription();
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();

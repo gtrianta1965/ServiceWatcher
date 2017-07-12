@@ -46,7 +46,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     public void initModel(ServicesTableModel stm) {
         servicesTableModel = stm;       
-        
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
@@ -66,7 +65,19 @@ public class MainFrame extends javax.swing.JFrame {
         servicesTable = new javax.swing.JTable();
         servicesTable.setDefaultRenderer(String.class, new CustomTableCellRenderer());
         lblVersion = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnLoad = new javax.swing.JButton();
+        statusBar = new javax.swing.JPanel();
+        statusBarSection1 = new javax.swing.JPanel();
+        totalServices = new javax.swing.JLabel();
+        numOfTotalS = new javax.swing.JLabel();
+        running = new javax.swing.JLabel();
+        numOfRunning = new javax.swing.JLabel();
+        successful = new javax.swing.JLabel();
+        numOfSuccess = new javax.swing.JLabel();
+        failed = new javax.swing.JLabel();
+        numOfFailed = new javax.swing.JLabel();
+        statusBarSection2 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Service Watcher");
@@ -94,12 +105,115 @@ public class MainFrame extends javax.swing.JFrame {
         lblVersion.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lblVersion.setText("Service Watcher v1.0");
 
-        jButton1.setText("Add file");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnLoad.setIcon(new ImageIcon(this.getClass().getResource("/src/images/add.png")));
+        btnLoad.setText("Add file");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonLoadProperties(evt);
             }
         });
+
+        statusBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+
+        statusBarSection1.setAlignmentX((float) 0.8);
+
+        totalServices.setText("Total Services :");
+        totalServices.setAlignmentX((float) 0.5);
+
+        numOfTotalS.setText(String.valueOf(servicesTable.getRowCount()));
+
+        running.setText("Running : ");
+
+        numOfRunning.setText(getServiceOrchestrator() !=null ? String.valueOf(serviceOrchestrator.getTotalOfRunning()):"0");
+
+        successful.setText("Successful : ");
+
+        numOfSuccess.setText(getServiceOrchestrator() !=null ? String.valueOf(serviceOrchestrator.getTotalOfSuccess()):"0");
+
+        failed.setText("Failed : ");
+
+        numOfFailed.setText(getServiceOrchestrator() !=null ? String.valueOf(serviceOrchestrator.getTotalOfFailed()):"0");
+
+        javax.swing.GroupLayout statusBarSection1Layout = new javax.swing.GroupLayout(statusBarSection1);
+        statusBarSection1.setLayout(statusBarSection1Layout);
+        statusBarSection1Layout.setHorizontalGroup(
+            statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarSection1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(totalServices, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(numOfTotalS)
+                .addGap(27, 27, 27)
+                .addComponent(running, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(numOfRunning)
+                .addGap(33, 33, 33)
+                .addComponent(successful, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(numOfSuccess)
+                .addGap(29, 29, 29)
+                .addComponent(failed)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(numOfFailed)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        statusBarSection1Layout.setVerticalGroup(
+            statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusBarSection1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(totalServices)
+                    .addComponent(numOfTotalS)
+                    .addComponent(running)
+                    .addComponent(numOfRunning)
+                    .addComponent(successful)
+                    .addComponent(numOfSuccess)
+                    .addComponent(failed)
+                    .addComponent(numOfFailed))
+                .addContainerGap())
+        );
+
+        jLabel2.setText(getServiceOrchestrator() !=null ? (serviceOrchestrator.isRunning()?"RUNNING":"RUNNING") :"IDLE");
+
+        javax.swing.GroupLayout statusBarSection2Layout = new javax.swing.GroupLayout(statusBarSection2);
+        statusBarSection2.setLayout(statusBarSection2Layout);
+        statusBarSection2Layout.setHorizontalGroup(
+            statusBarSection2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 227, Short.MAX_VALUE)
+            .addGroup(statusBarSection2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusBarSection2Layout.createSequentialGroup()
+                    .addContainerGap(86, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(47, Short.MAX_VALUE)))
+        );
+        statusBarSection2Layout.setVerticalGroup(
+            statusBarSection2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 38, Short.MAX_VALUE)
+            .addGroup(statusBarSection2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusBarSection2Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout statusBarLayout = new javax.swing.GroupLayout(statusBar);
+        statusBar.setLayout(statusBarLayout);
+        statusBarLayout.setHorizontalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarLayout.createSequentialGroup()
+                .addComponent(statusBarSection1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusBarSection2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
+        );
+        statusBarLayout.setVerticalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarLayout.createSequentialGroup()
+                .addGroup(statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(statusBarSection1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(statusBarSection2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,27 +223,30 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addGap(18, 18, 18))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 948, Short.MAX_VALUE)
+                    .addComponent(statusBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(lblVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -143,25 +260,30 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
        //TODO: Disable button, check if orchestrator is running, display a message if it is already running;
-        //runningMessage.setText(SWConstants.RUNNING_STATUS);
+        jLabel2.setText(SWConstants.RUNNING_STATUS);
         serviceOrchestrator.start();
-        //runningMessage.setText(SWConstants.IDLE_STATUS);
+        jLabel2.setText(SWConstants.IDLE_STATUS);
+        numOfSuccess.setText(String.valueOf(serviceOrchestrator.getNumberOfFinished()));
        
     }//GEN-LAST:event_buttonRefresh
 
 
     /* actions in order to add a new config file*/
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser fc = new JFileChooser();
-        javax.swing.JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
-        int returnVal = fc.showOpenDialog(jFileChooser1);
-        
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            serviceOrchestrator.loadNewFile(file);
+    private void buttonLoadProperties(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoadProperties
+        if(serviceOrchestrator.isRunning()){
+            JFileChooser fc = new JFileChooser();
+            javax.swing.JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
+            int returnVal = fc.showOpenDialog(jFileChooser1);
             
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                serviceOrchestrator.loadNewFile(file);  
+            }
+        }else{
+            System.out.println("running!whait to finish!");//popup to be implemented
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_buttonLoadProperties
 
     /**
      * @param args the command line arguments
@@ -234,11 +356,23 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel failed;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblVersion;
+    private javax.swing.JLabel numOfFailed;
+    private javax.swing.JLabel numOfRunning;
+    private javax.swing.JLabel numOfSuccess;
+    private javax.swing.JLabel numOfTotalS;
+    private javax.swing.JLabel running;
     private javax.swing.JTable servicesTable;
+    private javax.swing.JPanel statusBar;
+    private javax.swing.JPanel statusBarSection1;
+    private javax.swing.JPanel statusBarSection2;
+    private javax.swing.JLabel successful;
+    private javax.swing.JLabel totalServices;
     // End of variables declaration//GEN-END:variables
 
     public void setServicesTableModel(ServicesTableModel servicesTableModel) {

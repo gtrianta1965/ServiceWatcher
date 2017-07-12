@@ -7,12 +7,21 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+
+import javax.activation.FileDataSource;
+
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+
+import javax.mail.internet.MimeMultipart;
 
 import org.jsoup.nodes.Document;
 
@@ -50,7 +59,9 @@ public class Reporter {
         try {
             // Create a default MimeMessage object.
             MimeMessage message = new MimeMessage(session);
-
+            MimeMultipart multipart = new MimeMultipart("related");
+            BodyPart msgBodyPart = new MimeBodyPart();
+            
             // Set From: header field of the header.
             message.setFrom(new InternetAddress(from));
             // Set To: header field of the header.
@@ -58,18 +69,29 @@ public class Reporter {
 
             // Set Subject: header field
             message.setSubject("Service Watcher Report");
-            File input = new File("report.html");
-            Document doc = Jsoup.parse(input, "UTF-8");
-            Element element = doc.select("p#date").first();
             
+            // Parse template
+            File input = new File("../report_template.html");
+            Document doc = Jsoup.parse(input, "UTF-8");
+            // Add date
+            Element element = doc.select("p#date").first();
             Date date = new Date();
             element.text(date.toString());
-            
+            // Add log
             doc.select("p#field").first().appendElement("p").text("Log");
             
-
             // Now set the actual message
-            message.setContent(doc.toString(), "text/html");
+            msgBodyPart.setContent(doc.toString(), "text/html");
+            multipart.addBodyPart(msgBodyPart);
+            // second part (the image)
+            msgBodyPart = new MimeBodyPart();
+            DataSource fds = new FileDataSource("../sw.png");
+            msgBodyPart.setDataHandler(new DataHandler(fds));
+            msgBodyPart.setHeader("Content-ID", "<image>");
+            
+            multipart.addBodyPart(msgBodyPart);
+            
+            message.setContent(multipart);
 
             // Send message
             Transport.send(message);

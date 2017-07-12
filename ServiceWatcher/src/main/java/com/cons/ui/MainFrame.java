@@ -19,14 +19,23 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
-    private int interval;
-    private Timer countdown_timer;
-    private Timer timer;
+    private int interval=200;
+    private Timer generic_timer;
     private int counter=0;
     /** Creates new form MainFrame */
     public MainFrame() {
 
     }
+    public void initialization(){
+            generic_timer=new Timer( interval ,new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    counter++;
+                    jLabel1.setText(String.valueOf(counter));
+                }
+            });
+            generic_timer.start();          
+        }
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
@@ -173,42 +182,9 @@ public class MainFrame extends javax.swing.JFrame {
         
         if (jCheckBox1.isSelected()) {
             jComboBox1.setEnabled(false);
-            String time_value= String.valueOf(jComboBox1.getSelectedItem());
-            interval=Integer.parseInt(time_value)*3600000;
-            System.out.println(time_value);
-            btnRefresh.setEnabled(false);            
+            String time_value= String.valueOf(jComboBox1.getSelectedItem());           
             serviceOrchestrator.start();
-            jLabel1.setText("Minutes left:" + String.valueOf(interval/60000));
-            countdown_timer=new Timer(60000 ,new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    ++counter;
-                    if((interval/60000)==counter){
-                        countdown_timer.stop();
-                        counter=0;
-                        jLabel1.setText("Minutes left:" + String.valueOf(interval/60000));
-                        countdown_timer.start();
-                    }
-                    jLabel1.setText("Minutes left:"+ String.valueOf((interval/60000)-counter));
-                    
-                }
-            });
-                
-            timer=new Timer(interval,new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent arg0){
-                    serviceOrchestrator.start();
-                }
-            });
-            timer.setRepeats(true);
-            timer.start();
-            countdown_timer.setRepeats(true);
-            countdown_timer.start();
         } else {
-            jLabel1.setText("Finished");
-
-            countdown_timer.stop();
-            timer.stop();
             jComboBox1.setEnabled(true);
             btnRefresh.setEnabled(true);
         }

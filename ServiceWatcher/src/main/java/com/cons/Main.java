@@ -37,8 +37,12 @@ public class Main {
         mf.initModel(stm);
         mf.setServiceOrchestrator(serviceOrchestrator);
         mf.setVisible(true);
-
-
+        try{
+        mf.initialization();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            }
     }
     
     private static  String getConfigurationFileFromCommandLine(String[] args) {

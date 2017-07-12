@@ -3,8 +3,15 @@ package com.cons.ui;
 
 
 import com.cons.services.ServiceOrchestrator;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.text.SimpleDateFormat;
+
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 import javax.swing.table.TableColumn;
@@ -22,6 +29,9 @@ public class MainFrame extends javax.swing.JFrame {
     private int interval=200;
     private Timer generic_timer;
     private int counter=0;
+    private Date now;
+    private String newtime="0";
+    private String now2;
     /** Creates new form MainFrame */
     public MainFrame() {
 
@@ -31,11 +41,32 @@ public class MainFrame extends javax.swing.JFrame {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     counter++;
+                    auto_ref();
                     jLabel1.setText(String.valueOf(counter));
                 }
             });
             generic_timer.start();          
         }
+    
+    
+    
+    public void auto_ref(){
+        if (jCheckBox1.isSelected()) {
+            now = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(now);
+            now2 = df.format(now);
+            System.out.println(now2);
+
+            System.out.println(newtime);
+            if (now2.compareTo(newtime) == 0 || now2.compareTo(newtime) > 0) {
+                cal.add(Calendar.MINUTE, 10);
+                newtime = df.format(cal.getTime());
+                serviceOrchestrator.start();
+            }
+        }
+    }
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage

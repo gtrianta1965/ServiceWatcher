@@ -14,14 +14,9 @@ public class ReporterTest {
         super();
     }
     
-    @Before
-    public void initReporter(){
-        rep = new Reporter();
-    }
-    
     @Test
     public void testTest(){
-        rep.sendMail();
+        Reporter.sendMail();
         Assert.assertTrue(true);
     }
 }

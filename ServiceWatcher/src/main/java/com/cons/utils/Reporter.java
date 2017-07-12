@@ -13,10 +13,6 @@ import javax.mail.internet.MimeMessage;
 
 public class Reporter {
     
-    static Properties mailServerProperties;
-    static Session getMailSession;
-    static MimeMessage generateMailMessage;
-    
     public Reporter() {
         super();
     }
@@ -33,16 +29,12 @@ public class Reporter {
         // Get system properties
         Properties props = new Properties();
         props.setProperty("mail.smtp.ssl.enable", "true");
-        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.auth", "flase");
         
         props.setProperty("mail.transport.protocol", "smtp");
         // Get the default Session object.
         //Session session = Session.getDefaultInstance(props);
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("alexkalavitis@gmail.com", "PeriSterones194969");
-            }
-        });
+        Session session = Session.getInstance(props);
         
         try {
             // Create a default MimeMessage object.

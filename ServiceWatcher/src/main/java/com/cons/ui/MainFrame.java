@@ -10,6 +10,7 @@ import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -220,7 +221,7 @@ public class MainFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -231,7 +232,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 948, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 960, Short.MAX_VALUE)
                     .addComponent(statusBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
@@ -247,7 +248,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -270,7 +271,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     /* actions in order to add a new config file*/
     private void buttonLoadProperties(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoadProperties
-        if(serviceOrchestrator.isRunning()){
+        if(!serviceOrchestrator.isRunning()){
             JFileChooser fc = new JFileChooser();
             javax.swing.JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
             int returnVal = fc.showOpenDialog(jFileChooser1);
@@ -280,6 +281,7 @@ public class MainFrame extends javax.swing.JFrame {
                 serviceOrchestrator.loadNewFile(file);  
             }
         }else{
+            JOptionPane.showMessageDialog(null, "Services are currently running. Please wait to finish.");
             System.out.println("running!whait to finish!");//popup to be implemented
         }
         

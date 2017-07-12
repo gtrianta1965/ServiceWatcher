@@ -74,7 +74,7 @@ public class MainFrame extends javax.swing.JFrame {
                 //The refresh never executed (execute it now)
                 currentRefreshFireTime = new Date();  //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
-                nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, 1);
+                nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 System.out.println("First time refresh, current time was null");
                 serviceOrchestrator.start();
             }

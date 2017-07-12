@@ -7,7 +7,6 @@ public class ServiceParameter {
     
     private int    id;
     private String url;
-    private int    pingDieInterval;
     private String description;
     private String type;
     private String group;
@@ -37,14 +36,6 @@ public class ServiceParameter {
 
     public String getUrl() {
         return url;
-    }
-    
-    public void setPingDieInterval(String interval) {
-        this.pingDieInterval = (interval == null ? 80 : Integer.parseInt(interval));
-    }
-
-    public int getPingDieInterval() {
-        return pingDieInterval;
     }
 
     public void setDescription(String description) {

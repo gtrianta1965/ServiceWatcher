@@ -16,6 +16,7 @@ public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private int concurrentThreads = 5;
     private int httpResponseTimeout = 5000;
+    private int socketDieInterval = 5000;
     private final static String configFile = "config.properties";
 
     Logger clientLog = null;
@@ -52,7 +53,6 @@ public class Configuration {
                 serviceParameter.setUrl(prop.getProperty("url." + i));
                 if (serviceParameter.getUrl() != null) {
                     serviceParameter.setId(i);
-                serviceParameter.setPingDieInterval(prop.getProperty("pingDieInterval." + i));
                 serviceParameter.setDescription(prop.getProperty("description." + i));
                 serviceParameter.setType(prop.getProperty("type." + i));
                 serviceParameter.setGroup(prop.getProperty("group." + i));
@@ -68,6 +68,7 @@ public class Configuration {
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"),5));
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"),5000));
+            this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
 
         } catch (FileNotFoundException e) {
             setValid(false);
@@ -123,7 +124,15 @@ public class Configuration {
     public int getConcurrentThreads() {
         return concurrentThreads;
     }
-
+    
+    public void setSocketDieInterval(int socketDieInterval){
+        this.socketDieInterval = socketDieInterval;
+    }
+    
+    public int getSocketDieInterval(){
+        return socketDieInterval;
+    }
+    
     public void setValid(boolean valid) {
         this.valid = valid;
     }

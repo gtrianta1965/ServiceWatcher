@@ -60,7 +60,7 @@ public class SocketService extends Service {
             Socket soc = new Socket();
             try{
                 // Try to connect if not throw IO
-                soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), serviceParameter.getPingDieInterval());
+                soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), configuration.getSocketDieInterval());
                 // If success set call true
                 this.setSuccessfulCall(true);
             } catch (IOException ioex){

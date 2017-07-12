@@ -1,4 +1,4 @@
-package com.cons;
+package com.cons.utils;
 
 import java.io.File;
 
@@ -24,24 +24,22 @@ public class ClientLogger {
         LoggerConfig(logFileName);
     }
 
-
-        public Logger LoggerConfig(String logFileName) {
-            //just to make our log file nicer :)
-            SimpleDateFormat format = new SimpleDateFormat("M-d-yyyy");
-            try {
-                String logsDirectoryFolder = "logs";
-                Files.createDirectories(Paths.get(logsDirectoryFolder));
-                SimpleFormatter formatter = new SimpleFormatter();
-                fh = new FileHandler("./"+logsDirectoryFolder+"/"+logFileName
-                    + format.format(Calendar.getInstance().getTime()) + ".log",1024*1024,10,true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            fh.setFormatter(new SimpleFormatter());
-            logger.addHandler(fh);
-            return logger;
+    public Logger LoggerConfig(String logFileName) {
+        //just to make our log file nicer :)
+        SimpleDateFormat format = new SimpleDateFormat("M-d-yyyy");
+        try {
+            String logsDirectoryFolder = "logs";
+            Files.createDirectories(Paths.get(logsDirectoryFolder));
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh =
+                new FileHandler("./" + logsDirectoryFolder + "/" + logFileName +
+                                format.format(Calendar.getInstance().getTime()) + ".log", 1024 * 1024, 10, true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-   
+        fh.setFormatter(new SimpleFormatter());
+        logger.addHandler(fh);
+        return logger;
+    }
 }

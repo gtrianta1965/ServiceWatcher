@@ -27,49 +27,45 @@ import org.jsoup.nodes.Document;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class Reporter {
-    
+
     public Reporter() {
         super();
     }
 
     @SuppressWarnings("oracle.jdeveloper.java.semantic-warning")
-    public void sendMail(){
+    public static void sendMail() {
         // Recipient's email ID needs to be mentioned.
         String to = "alexkalavitis@gmail.com";
 
         // Sender's email ID needs to be mentioned
-        String from = "reporter@servicewatcher.com";
-
-        // Assuming you are sending email from localhost
-        String host = "localhost";
+        String from = SWConstants.REPORTER_NAME;
 
         // Get system properties
         Properties props = new Properties();
         props.setProperty("mail.smtp.ssl.enable", "true");
         props.setProperty("mail.smtp.auth", "flase");
-        
         props.setProperty("mail.transport.protocol", "smtp");
-        // Get the default Session object.
+
         //Session session = Session.getDefaultInstance(props);
         Session session = Session.getInstance(props);
-        
+
         try {
             // Create a default MimeMessage object.
             MimeMessage message = new MimeMessage(session);
+            // Init message parts
             MimeMultipart multipart = new MimeMultipart("related");
             BodyPart msgBodyPart = new MimeBodyPart();
-            
+
             // Set From: header field of the header.
             message.setFrom(new InternetAddress(from));
             // Set To: header field of the header.
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
             // Set Subject: header field
-            message.setSubject("Service Watcher Report");
-            
+            message.setSubject(SWConstants.REPORTER_MSG_SUBJECT);
+
             // Parse template
             File input = new File("../report_template.html");
             Document doc = Jsoup.parse(input, "UTF-8");
@@ -78,28 +74,38 @@ public class Reporter {
             Date date = new Date();
             element.text(date.toString());
             // Add log
-            doc.select("p#field").first().appendElement("p").text("Log");
-            
-            // Now set the actual message
+            doc.select("p#field")
+               .first()
+               .appendElement("p")
+               .text("Log");
+
+            // Set HTML message
             msgBodyPart.setContent(doc.toString(), "text/html");
+
+            // Add HTML to multipart
             multipart.addBodyPart(msgBodyPart);
-            // second part (the image)
+
+            // Add image to message
             msgBodyPart = new MimeBodyPart();
             DataSource fds = new FileDataSource("../sw.png");
             msgBodyPart.setDataHandler(new DataHandler(fds));
             msgBodyPart.setHeader("Content-ID", "<image>");
-            
+
+            // Add image to multipart
             multipart.addBodyPart(msgBodyPart);
-            
+
+            // Set message content as multipart
             message.setContent(multipart);
 
             // Send message
             Transport.send(message);
             System.out.println("Sent message successfully....");
-        }catch (MessagingException mex) {
+        } catch (MessagingException mex) {
             mex.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

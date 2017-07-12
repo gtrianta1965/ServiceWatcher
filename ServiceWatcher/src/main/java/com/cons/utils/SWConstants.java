@@ -35,5 +35,9 @@ public class SWConstants {
     
     //Number of columns in the table
     public final static int TABLE_NUMBER_OF_COLUMNS = 6;
+    
+    //Reporter
+    public final static String REPORTER_NAME = "reporter@servicewatcher.com";
+    public final static String REPORTER_MSG_SUBJECT = "Service Watcher Report";
 
 }

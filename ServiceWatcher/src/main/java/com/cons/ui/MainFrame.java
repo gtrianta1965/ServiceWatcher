@@ -4,13 +4,15 @@ package com.cons.ui;
 
 import com.cons.services.ServiceOrchestrator;
 
+import com.cons.utils.DateUtils;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.text.SimpleDateFormat;
 
-import java.util.Calendar;
 import java.util.Date;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
@@ -29,9 +31,11 @@ public class MainFrame extends javax.swing.JFrame {
     private int interval=200;
     private Timer generic_timer;
     private int counter=0;
-    private Date now;
-    private String newtime="0";
-    private String now2;
+
+    //The following variables control the fire times of the refresh timer.    
+    private Date currentRefreshFireTime = null;
+    private Date nextRefreshFireTime = null;
+    
     /** Creates new form MainFrame */
     public MainFrame() {
 
@@ -41,31 +45,44 @@ public class MainFrame extends javax.swing.JFrame {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     counter++;
-                    auto_ref();
+                    checkAutoRefresh();
                     jLabel1.setText(String.valueOf(counter));
                 }
             });
             generic_timer.start();          
         }
+    private void RefreshServices() {
+        currentRefreshFireTime = nextRefreshFireTime;
+        nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+        serviceOrchestrator.start();
+    }
     
+    /*
+     * CheckForAutoRefresh
+     */
     
-    
-    public void auto_ref(){
-        if (jCheckBox1.isSelected()) {
-            now = new Date();
-            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(now);
-            now2 = df.format(now);
-            System.out.println(now2);
-
-            System.out.println(newtime);
-            if (now2.compareTo(newtime) == 0 || now2.compareTo(newtime) > 0) {
-                cal.add(Calendar.MINUTE, 10);
-                newtime = df.format(cal.getTime());
+    public void checkAutoRefresh(){
+        if (checkAutoRefresh.isSelected()) {
+            //Check if we are running, that is the current time is not null
+            if (currentRefreshFireTime != null) {                
+                    Long diff = DateUtils.getDateDiff(nextRefreshFireTime, new Date(), TimeUnit.SECONDS);
+                    if (diff > 0) {
+                       System.out.println("Start refresh because current time > next fire time " + diff);  
+                       RefreshServices();
+                    }                
+            } else {
+                //The refresh never executed (execute it now)
+                currentRefreshFireTime = new Date();  //Set the current to NOW!!!
+                //Set the next fire time according to interval specified
+                nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, 1);
+                System.out.println("First time refresh, current time was null");
                 serviceOrchestrator.start();
             }
-        }
+        } else {
+            //Autorefresh is disabled. Nullify current and next fire times
+            currentRefreshFireTime = null;
+            nextRefreshFireTime = null;
+        }        
     }
 
     private void setColumnsWidth() {
@@ -105,8 +122,8 @@ public class MainFrame extends javax.swing.JFrame {
         servicesTable = new javax.swing.JTable();
         servicesTable.setDefaultRenderer(String.class, new CustomTableCellRenderer());
         lblVersion = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        checkAutoRefresh = new javax.swing.JCheckBox();
+        cbAutoRefreshInterval = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -135,17 +152,17 @@ public class MainFrame extends javax.swing.JFrame {
         lblVersion.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lblVersion.setText("Service Watcher v1.0");
 
-        jCheckBox1.setText("Auto-Refresh");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        checkAutoRefresh.setText("Auto-Refresh");
+        checkAutoRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                checkAutoRefreshActionPerformed(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1","2","3"}));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cbAutoRefreshInterval.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1","2","3"}));
+        cbAutoRefreshInterval.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cbAutoRefreshIntervalActionPerformed(evt);
             }
         });
 
@@ -160,9 +177,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
+                            .addComponent(checkAutoRefresh)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbAutoRefreshInterval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 463, Short.MAX_VALUE)
@@ -185,10 +202,10 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(43, 43, 43))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
+                        .addComponent(checkAutoRefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox1)
+                            .addComponent(cbAutoRefreshInterval)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(30, 30, 30))))
         );
@@ -207,24 +224,24 @@ public class MainFrame extends javax.swing.JFrame {
        
     }//GEN-LAST:event_buttonRefresh
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void checkAutoRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAutoRefreshActionPerformed
         // TODO add your handling code here:
       
         
-        if (jCheckBox1.isSelected()) {
-            jComboBox1.setEnabled(false);
-            String time_value= String.valueOf(jComboBox1.getSelectedItem());           
-            serviceOrchestrator.start();
+        if (checkAutoRefresh.isSelected()) {
+            cbAutoRefreshInterval.setEnabled(false);
+            String time_value= String.valueOf(cbAutoRefreshInterval.getSelectedItem());           
+            //serviceOrchestrator.start();
         } else {
-            jComboBox1.setEnabled(true);
+            cbAutoRefreshInterval.setEnabled(true);
             btnRefresh.setEnabled(true);
         }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_checkAutoRefreshActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cbAutoRefreshIntervalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAutoRefreshIntervalActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cbAutoRefreshIntervalActionPerformed
         
         
 
@@ -304,8 +321,8 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cbAutoRefreshInterval;
+    private javax.swing.JCheckBox checkAutoRefresh;
     public javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblVersion;

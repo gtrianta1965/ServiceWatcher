@@ -1,13 +1,7 @@
 package com.cons;
-
-import com.cons.services.HTTPService;
-import com.cons.services.ServiceFactory;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.ui.MainFrame;
 import com.cons.ui.ServicesTableModel;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 /**
@@ -43,8 +37,12 @@ public class Main {
         mf.initModel(stm);
         mf.setServiceOrchestrator(serviceOrchestrator);
         mf.setVisible(true);
-
-
+        try{
+        mf.initialization();
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+            }
     }
     
     private static  String getConfigurationFileFromCommandLine(String[] args) {

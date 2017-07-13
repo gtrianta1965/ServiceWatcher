@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
+import java.util.TimeZone;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -26,6 +29,9 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import javax.mail.internet.MimeUtility;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import org.jsoup.nodes.Document;
 
@@ -168,5 +174,17 @@ public class Reporter {
             ex.printStackTrace();
         }
         return msgBodyPart;
+    }
+    
+    public static void makeReport(){
+        JSONObject obj = new JSONObject();
+        obj.put("Date",Calendar.getInstance(TimeZone.getTimeZone("Greece/Athens")).getTime().toString());
+        obj.put("Author", "App Shah");
+        
+        JSONArray company = new JSONArray();
+        company.put("Compnay: eBay");
+        company.put("Compnay: Paypal");
+        company.put("Compnay: Google");
+        obj.put("Log", company);
     }
 }

@@ -1,9 +1,7 @@
 package com.cons.services;
 
 import com.cons.Configuration;
-import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.SWConstants;
-
 
 public abstract class Service implements Runnable {
     
@@ -26,8 +24,10 @@ public abstract class Service implements Runnable {
         service();
         if (isSuccessfulCall()) {
             printStatus(SWConstants.SERVICE_SUCCESS);
+            serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is UP");
         } else {
             printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
+            serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is DOWN");
         }
     }
     

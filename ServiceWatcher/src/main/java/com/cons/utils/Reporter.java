@@ -4,7 +4,9 @@ import java.io.File;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -23,6 +25,8 @@ import javax.mail.internet.MimeMessage;
 
 import javax.mail.internet.MimeMultipart;
 
+import javax.mail.internet.MimeUtility;
+
 import org.jsoup.nodes.Document;
 
 import org.jsoup.Jsoup;
@@ -33,12 +37,16 @@ public class Reporter {
     public Reporter() {
         super();
     }
-
-    @SuppressWarnings("oracle.jdeveloper.java.semantic-warning")
-    public static void sendMail() {
+    
+    /**
+     * This function sends a log email to the recipients based on an html template.
+     * @param recipients is a string array which includes all the recipients e-mails.
+     * @param log is a string array which includes the log to be sent via e-mail.
+     */
+    public static void sendMail(String[] recipients, List<String> log) {
+        List<InternetAddress> addresses = new ArrayList<InternetAddress>();
         // Recipient's email ID needs to be mentioned.
-        String to = "alexkalavitis@gmail.com";
-
+        InternetAddress[] to;
         // Sender's email ID needs to be mentioned
         String from = SWConstants.REPORTER_NAME;
 
@@ -60,36 +68,25 @@ public class Reporter {
 
             // Set From: header field of the header.
             message.setFrom(new InternetAddress(from));
+            for(String recipient:recipients){
+                addresses.add(new InternetAddress(recipient));
+            }
+            to = addresses.toArray(new InternetAddress[addresses.size()]);
             // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.addRecipients(Message.RecipientType.TO, to);
 
             // Set Subject: header field
             message.setSubject(SWConstants.REPORTER_MSG_SUBJECT);
 
-            // Parse template
-            File input = new File("../report_template.html");
-            Document doc = Jsoup.parse(input, "UTF-8");
-            // Add date
-            Element element = doc.select("p#date").first();
-            Date date = new Date();
-            element.text(date.toString());
-            // Add log
-            doc.select("p#field")
-               .first()
-               .appendElement("p")
-               .text("Log");
-
             // Set HTML message
-            msgBodyPart.setContent(doc.toString(), "text/html");
+            msgBodyPart.setContent(makePage("../report_template.html", log).toString(), "text/html");
 
             // Add HTML to multipart
             multipart.addBodyPart(msgBodyPart);
 
             // Add image to message
             msgBodyPart = new MimeBodyPart();
-            DataSource fds = new FileDataSource("../sw.png");
-            msgBodyPart.setDataHandler(new DataHandler(fds));
-            msgBodyPart.setHeader("Content-ID", "<image>");
+            msgBodyPart = makeAttachment("../sw.png", "<image>");
 
             // Add image to multipart
             multipart.addBodyPart(msgBodyPart);
@@ -99,13 +96,77 @@ public class Reporter {
 
             // Send message
             Transport.send(message);
-            System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {
             mex.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    /**
+     * This function initializes and loads a Document based on an HTML template with UTF-8 encoding
+     * pareses it with jsoup adds now date to a <p> element with id="date"
+     * and appends <p>log n</p> * n logs to the log section of the page
+     * 
+     * @param templatePath is the relative path to the HTML template
+     * @param log is the log to be added in the log section of the page
+     * @return returns an HTML page type of Document.
+     */
+    private static Document makePage(String templatePath, List<String> log){
+        Document doc = null;
+        File input = null;
+        try{
+            // Parse template
+            input = new File(templatePath);
+            doc = Jsoup.parse(input, "UTF-8");
+            // Add date
+            Element element = doc.select("p#date").first();
+            Date date = new Date();
+            element.text(date.toString());
+            // Add log
+            element = doc.select("p#field").first().appendElement("h4 id=\"logtlt\" align=\"center\"");
+            element.text("Log");
+            
+            int id=0;
+            for(String report:log){
+                String status = "white";
+                if(report.contains("UP")){
+                    status = "#76BB1E";
+                }else{
+                    status = "#D24626";
+                }
+                doc.select("p#field").first()
+                   .appendElement("p id=\"" + id + "\" style=\"background-color: " + status + ";\"")
+                   .text(report);
+                id++;
+            }
+        } catch (IOException ioex) {
+            ioex.printStackTrace();
+        }
+        return doc;
+    }
+    
+    
+    /**
+     * Makes a mail attachment from a relative file path and adds refrenses it to an id to be later used
+     * in an HTML page.
+     * 
+     * @param attachmentPath relative file path to attachment file.
+     * @param id an id reference which defines where it should be put if the id exists in the HTML.
+     * @return returns a bodypart object in order to be added to a multipart object message in an email.
+     */
+    private static BodyPart makeAttachment(String attachmentPath, String id){
+        BodyPart msgBodyPart = new MimeBodyPart();
+        DataSource fds = new FileDataSource(attachmentPath);
+        try {
+            msgBodyPart.setDataHandler(new DataHandler(fds));
+            msgBodyPart.setHeader("Content-ID", id);
+            msgBodyPart.setFileName(MimeUtility.encodeText("logo.png", "UTF-8", null));
+        } catch (MessagingException msge) {
+            msge.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return msgBodyPart;
     }
 }

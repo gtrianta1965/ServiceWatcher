@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
+    private boolean sendMailUpdates = false;
     private int concurrentThreads = 5;
     private int httpResponseTimeout = 5000;
     private int socketDieInterval = 5000;
@@ -69,6 +70,7 @@ public class Configuration {
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"),5));
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"),5000));
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
+            this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
 
         } catch (FileNotFoundException e) {
             setValid(false);
@@ -104,6 +106,23 @@ public class Configuration {
         return intValue;
         
     }
+    
+    private boolean getBooleanProperty(String value, boolean defaultValue) {
+        boolean booleanValue = false;
+        if (value != null) {
+            try {
+                 booleanValue = Boolean.parseBoolean(value);
+             } catch (NumberFormatException nfe) {
+                 booleanValue = defaultValue;
+                 System.out.println("NumberFormatException reading property value " + value + ". Set to default (" + defaultValue + ")");
+             }
+            
+        } else {
+            booleanValue = defaultValue;
+        }
+        return booleanValue;
+        
+    }
 
     public void save() {
         //to do
@@ -117,6 +136,14 @@ public class Configuration {
         return this.serviceParameters;
     }
 
+    public void setSendMailUpdates(boolean sendMailUpdates){
+        this.sendMailUpdates = sendMailUpdates;
+    }
+    
+    public boolean getSendMailUpdates(){
+        return this.sendMailUpdates;
+    }
+    
     public void setConcurrentThreads(int concurentThreads) {
         this.concurrentThreads = concurentThreads;
     }

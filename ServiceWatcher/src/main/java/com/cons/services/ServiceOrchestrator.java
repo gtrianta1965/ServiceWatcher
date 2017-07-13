@@ -49,7 +49,7 @@ public class ServiceOrchestrator {
         if (executor != null && !executor.isTerminated()) {
             System.out.println("Executor is running");
             return;
-        }else if(!firstTime){
+        }else if(!firstTime && configuration.getSendMailUpdates()){
             sendStatusLog();
             this.statusLog = new ArrayList<String>();
         }

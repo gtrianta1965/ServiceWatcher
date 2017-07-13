@@ -49,7 +49,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void RefreshServices() {
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
-        System.out.println("yolo");
         serviceOrchestrator.start();
     }
     

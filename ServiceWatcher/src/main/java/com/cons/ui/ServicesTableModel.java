@@ -1,9 +1,7 @@
 package com.cons.ui;
 
 import com.cons.Configuration;
-
 import com.cons.services.ServiceParameter;
-
 import com.cons.utils.SWConstants;
 
 import java.util.List;
@@ -19,6 +17,7 @@ public class ServicesTableModel extends AbstractTableModel {
 
     private Object[][] data;
     
+    private ServiceParameter sp;
     
     
     /*
@@ -31,7 +30,7 @@ public class ServicesTableModel extends AbstractTableModel {
     
     public void initFromConfiguration(Configuration configuration) {
         int rows = configuration.getServiceParameters().size();
-        ServiceParameter sp;
+        
         List<ServiceParameter> spl = configuration.getServiceParameters();
         data = new Object[rows][SWConstants.TABLE_NUMBER_OF_COLUMNS];
         
@@ -44,6 +43,8 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
             data[i][SWConstants.TABLE_PASSWORD_INDEX] = new String();
+            setValueAt(data[i][SWConstants.TABLE_PASSWORD_INDEX], i, SWConstants.TABLE_PASSWORD_INDEX);
+            sp.setPassword(data[i][SWConstants.TABLE_PASSWORD_INDEX].toString());
         }    
     }
 
@@ -96,6 +97,9 @@ public class ServicesTableModel extends AbstractTableModel {
 
         data[row][col] = value;
         fireTableCellUpdated(row, col);
+        sp.setPassword(data[row][SWConstants.TABLE_PASSWORD_INDEX].toString());
+        System.out.println(sp.getPassword());
+        
 
         if (DEBUG) {
             System.out.println("New value of data:");

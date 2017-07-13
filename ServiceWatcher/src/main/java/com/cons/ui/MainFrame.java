@@ -3,15 +3,12 @@ package com.cons.ui;
 
 
 import com.cons.services.ServiceOrchestrator;
-
 import com.cons.utils.DateUtils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 import java.util.Date;
-
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
@@ -30,7 +27,7 @@ public class MainFrame extends javax.swing.JFrame {
     ServiceOrchestrator serviceOrchestrator;
     private int interval=200;
     private Timer generic_timer;
-    private int counter=0;
+    private long diff;
 
     //The following variables control the fire times of the refresh timer.    
     private Date currentRefreshFireTime = null;
@@ -44,9 +41,7 @@ public class MainFrame extends javax.swing.JFrame {
             generic_timer=new Timer( interval ,new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    counter++;
                     checkAutoRefresh();
-                    jLabel1.setText(String.valueOf(counter));
                 }
             });
             generic_timer.start();          
@@ -54,6 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void RefreshServices() {
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+        System.out.println("yolo");
         serviceOrchestrator.start();
     }
     
@@ -64,25 +60,27 @@ public class MainFrame extends javax.swing.JFrame {
     public void checkAutoRefresh(){
         if (checkAutoRefresh.isSelected()) {
             //Check if we are running, that is the current time is not null
-            if (currentRefreshFireTime != null) {                
-                    Long diff = DateUtils.getDateDiff(nextRefreshFireTime, new Date(), TimeUnit.SECONDS);
-                    if (diff > 0) {
-                       System.out.println("Start refresh because current time > next fire time " + diff);  
-                       RefreshServices();
-                    }                
+            if (currentRefreshFireTime != null) {
+                diff = Math.abs(DateUtils.getDateDiff(nextRefreshFireTime, new Date(), TimeUnit.SECONDS));
+                next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                if (diff == 0) {
+                    next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                    RefreshServices();
+                }
             } else {
                 //The refresh never executed (execute it now)
-                currentRefreshFireTime = new Date();  //Set the current to NOW!!!
+                currentRefreshFireTime = new Date(); //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
-                nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
-                System.out.println("First time refresh, current time was null");
+                nextRefreshFireTime =
+                    DateUtils.addMinutesToDate(currentRefreshFireTime,
+                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 serviceOrchestrator.start();
             }
         } else {
             //Autorefresh is disabled. Nullify current and next fire times
             currentRefreshFireTime = null;
             nextRefreshFireTime = null;
-        }        
+        }
     }
 
     private void setColumnsWidth() {
@@ -124,7 +122,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblVersion = new javax.swing.JLabel();
         checkAutoRefresh = new javax.swing.JCheckBox();
         cbAutoRefreshInterval = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
+        next_refresh = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Service Watcher");
@@ -181,8 +179,8 @@ public class MainFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cbAutoRefreshInterval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 463, Short.MAX_VALUE)
+                                .addComponent(next_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 425, Short.MAX_VALUE)
                         .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -206,7 +204,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbAutoRefreshInterval)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(next_refresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(30, 30, 30))))
         );
 
@@ -323,9 +321,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnRefresh;
     private javax.swing.JComboBox<String> cbAutoRefreshInterval;
     private javax.swing.JCheckBox checkAutoRefresh;
-    public javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblVersion;
+    public javax.swing.JLabel next_refresh;
     private javax.swing.JTable servicesTable;
     // End of variables declaration//GEN-END:variables
 

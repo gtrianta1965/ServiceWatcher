@@ -43,8 +43,8 @@ public class Main {
             //serviceOrchestrator.start();
 
             MainFrame mf = new MainFrame();
-            mf.initModel(stm);
             mf.setServiceOrchestrator(serviceOrchestrator);
+            mf.initModel(stm);
             mf.setVisible(true);
 
 

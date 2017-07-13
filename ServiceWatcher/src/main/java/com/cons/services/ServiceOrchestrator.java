@@ -15,16 +15,12 @@ public class ServiceOrchestrator {
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
-    private Integer numberOfFinished;
-    private Integer totalOfServices;
-    private Integer totalOfRunning;
-    private Integer totalOfSubmitted;
-    private Integer totalOfSuccess;
-    private Integer totalOfFailed;
     
+    private OrchestratorStatus orchestratorStatus;
     
     public ServiceOrchestrator() {
         super();
+        orchestratorStatus = new OrchestratorStatus();
     }
 
     public void setConfiguration(Configuration configuration) {
@@ -47,45 +43,13 @@ public class ServiceOrchestrator {
         serviceTableModel.setStatus(row, status);
     }
     
-    public void setTotalOfServices(Integer totalOfServices) {
-        this.totalOfServices = totalOfServices;
+    public void setOrchestratorStatus(OrchestratorStatus orchestratorStatus) {
+        this.orchestratorStatus = orchestratorStatus;
     }
 
-    public Integer getTotalOfServices() {
-        return totalOfServices;
+    public OrchestratorStatus getOrchestratorStatus() {
+        return orchestratorStatus;
     }
-
-    public void setTotalOfRunning(Integer totalOfRunning) {
-        this.totalOfRunning = totalOfRunning;
-    }
-
-    public Integer getTotalOfRunning() {
-        return totalOfRunning;
-    }
-
-    public void setTotalOfSubmitted(Integer totalOfSubmitted) {
-        this.totalOfSubmitted = totalOfSubmitted;
-    }
-
-    public Integer getTotalOfSubmitted() {
-        return totalOfSubmitted;
-    }
-
-    public void setTotalOfSuccess(Integer totalOfSuccess) {
-        this.totalOfSuccess = totalOfSuccess;
-    }
-
-    public Integer getTotalOfSuccess() {
-        return totalOfSuccess;
-    }
-
-    public void setTotalOfFailed(Integer totalOfFailed) {
-        this.totalOfFailed = totalOfFailed;
-    }
-
-    public Integer getTotalOfFailed() {
-        return totalOfFailed;
-    }   
     
     
     public void start() {
@@ -94,18 +58,22 @@ public class ServiceOrchestrator {
             System.out.println("Executor is running");
             return;
         }
-        numberOfFinished = 0;
+        int totalSub = 0;
         //Start Thread Pooling with services
         //TODO:Use configuration parameter for pooling
         executor = Executors.newFixedThreadPool(configuration.getConcurrentThreads());
         for (int i = 0; i < configuration.getServiceParameters().size() ; i++) {
             configuration.getServiceParameters().get(i).setStatus(SWConstants.SERVICE_SUBMITTED);
-            numberOfFinished++;
+            
+            totalSub = orchestratorStatus.getTotalSubmitted();
+            orchestratorStatus.setTotalSubmitted(++totalSub);
+            
             serviceTableModel.setStatus(i, SWConstants.SERVICE_SUBMITTED);
             Runnable serviceWorker = ServiceFactory.createService(configuration.getServiceParameters().get(i),configuration);
             ((Service)serviceWorker).setServiceOrchestrator(this);
             executor.execute(serviceWorker);
         }
+        
         executor.shutdown();
         /* Study the following code and activate it when it is needed
         while (!executor.isTerminated()) {
@@ -128,39 +96,42 @@ public class ServiceOrchestrator {
         
     }
 
-    public void setNumberOfFinished(Integer numberOfFinished) {
-        this.numberOfFinished = numberOfFinished;
-    }
-
-    public Integer getNumberOfFinished() {
-        return numberOfFinished;
-    }
-
     
     public Boolean isRunning(){
-        Boolean flag;
+        Boolean running;
         if (executor != null && !executor.isTerminated()){
-           flag = true;
+           running = true;
         }else {
-            flag = false;
+            running = false;
         }
-        return flag;
+        return running;
     }
     
     /*check how many of services are submitted, running, successful or failed*/
-    public void getStatus(List<ServiceParameter> lsp){
-        totalOfServices = lsp.size();
+    public OrchestratorStatus getStatus(){
+        /*clear orchestratorStatus obj except of totalSubmitted*/
+        int submitted = orchestratorStatus.getTotalSubmitted();
+        orchestratorStatus.reset();
+        orchestratorStatus.setTotalSubmitted(submitted);
+        
+        List<ServiceParameter> lsp = configuration.getServiceParameters();
+        orchestratorStatus.setTotalServices(lsp.size());
+        int getValue = 0;
         for(ServiceParameter s :lsp){
-            if (s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_SUBMITTED)){
-                totalOfSubmitted++;
-            }else if (s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_RUNNING)){
-                totalOfRunning++;
+            if (s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_RUNNING)){
+                getValue = orchestratorStatus.getTotalRunning();
+                orchestratorStatus.setTotalRunning(++getValue);
             }else if(s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_SUCCESS)){
-                totalOfSuccess++;
+                getValue = orchestratorStatus.getTotalSuccess();
+                orchestratorStatus.setTotalSuccess(++getValue);
             }else if(s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED)){
-                totalOfFailed++;
+                getValue = orchestratorStatus.getTotalFailed();
+                orchestratorStatus.setTotalFailed(++getValue);
             }   
         }
+        
+        return orchestratorStatus;
     }
 
+    
 }

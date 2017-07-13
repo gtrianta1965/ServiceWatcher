@@ -37,7 +37,7 @@
                       <Component id="btnExit" min="-2" pref="126" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane1" pref="960" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <Component id="statusBar" alignment="0" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -48,14 +48,14 @@
           <Group type="102" alignment="1" attributes="0">
               <Component id="lblVersion" min="-2" pref="26" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="328" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="262" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnLoad" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   <Component id="btnRefresh" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   <Component id="btnExit" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="statusBar" min="-2" pref="39" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
           </Group>
@@ -138,8 +138,10 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="statusBarSection1" max="32767" attributes="0"/>
+                  <Component id="statusBarSection1" pref="480" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="statusBarSection3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                   <Component id="statusBarSection2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               </Group>
@@ -148,11 +150,12 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="statusBarSection1" min="-2" max="-2" attributes="0"/>
-                      <Component id="statusBarSection2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="statusBarSection3" alignment="0" max="32767" attributes="0"/>
+                      <Component id="statusBarSection2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="statusBarSection1" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -168,93 +171,23 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="totalServices" min="-2" pref="99" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="numOfTotalS" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="running" min="-2" pref="69" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="numOfRunning" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="successful" min="-2" pref="78" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="numOfSuccess" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                      <Component id="failed" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="numOfFailed" min="-2" max="-2" attributes="0"/>
+                      <Component id="statusMsg" min="-2" pref="473" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="totalServices" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="numOfTotalS" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="running" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="numOfRunning" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="successful" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="numOfSuccess" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="failed" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="numOfFailed" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="statusMsg" min="-2" pref="12" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="totalServices">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Total Services :"/>
-                <Property name="alignmentX" type="float" value="0.5"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="numOfTotalS">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="String.valueOf(servicesTable.getRowCount())" type="code"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="running">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Running : "/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="numOfRunning">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getServiceOrchestrator() !=null ? String.valueOf(serviceOrchestrator.getTotalOfRunning()):&quot;0&quot;" type="code"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="successful">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Successful : "/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="numOfSuccess">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getServiceOrchestrator() !=null ? String.valueOf(serviceOrchestrator.getTotalOfSuccess()):&quot;0&quot;" type="code"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="failed">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Failed : "/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="numOfFailed">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getServiceOrchestrator() !=null ? String.valueOf(serviceOrchestrator.getTotalOfFailed()):&quot;0&quot;" type="code"/>
-                </Property>
-              </Properties>
+            <Component class="javax.swing.JLabel" name="statusMsg">
             </Component>
           </SubComponents>
         </Container>
@@ -267,7 +200,7 @@
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace pref="86" max="32767" attributes="0"/>
-                          <Component id="jLabel2" min="-2" pref="94" max="-2" attributes="0"/>
+                          <Component id="statusRun" min="-2" pref="94" max="-2" attributes="0"/>
                           <EmptySpace pref="47" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -279,7 +212,7 @@
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                          <Component id="statusRun" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -287,14 +220,29 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel2">
+            <Component class="javax.swing.JLabel" name="statusRun">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getServiceOrchestrator() !=null ? (serviceOrchestrator.isRunning()?&quot;RUNNING&quot;:&quot;RUNNING&quot;) :&quot;IDLE&quot;" type="code"/>
+                  <Connection code="getServiceOrchestrator() !=null ? (serviceOrchestrator.isRunning()?&quot;RUNNING&quot;:&quot;IDLE&quot;) :&quot;IDLE&quot;" type="code"/>
                 </Property>
               </Properties>
             </Component>
           </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="statusBarSection3">
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="215" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
         </Container>
       </SubComponents>
     </Container>

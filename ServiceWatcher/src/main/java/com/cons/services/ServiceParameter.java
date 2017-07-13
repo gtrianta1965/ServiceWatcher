@@ -3,6 +3,7 @@ package com.cons.services;
 public class ServiceParameter {
     public ServiceParameter() {
         super();
+        this.status = "NA";
     }
     
     private int    id;

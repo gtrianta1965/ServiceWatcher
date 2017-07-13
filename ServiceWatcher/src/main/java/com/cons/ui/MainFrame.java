@@ -1,12 +1,18 @@
 
 package com.cons.ui;
 
-import com.cons.Configuration;
+
 import com.cons.services.ServiceOrchestrator;
-import com.cons.ui.CustomTableCellRenderer;
-import com.cons.utils.SWConstants;
+import com.cons.utils.DateUtils;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
+import javax.swing.Timer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -19,9 +25,62 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
+    private int interval=200;
+    private Timer generic_timer;
+    private long diff;
+
+    //The following variables control the fire times of the refresh timer.    
+    private Date currentRefreshFireTime = null;
+    private Date nextRefreshFireTime = null;
+    
     /** Creates new form MainFrame */
     public MainFrame() {
 
+    }
+    public void initialization(){
+            generic_timer=new Timer( interval ,new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    checkAutoRefresh();
+                }
+            });
+            generic_timer.start();          
+        }
+    private void RefreshServices() {
+        currentRefreshFireTime = nextRefreshFireTime;
+        nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+        System.out.println("yolo");
+        serviceOrchestrator.start();
+    }
+    
+    /*
+     * CheckForAutoRefresh
+     */
+    
+    public void checkAutoRefresh(){
+        if (checkAutoRefresh.isSelected()) {
+            //Check if we are running, that is the current time is not null
+            if (currentRefreshFireTime != null) {
+                diff = Math.abs(DateUtils.getDateDiff(nextRefreshFireTime, new Date(), TimeUnit.SECONDS));
+                next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                if (diff == 0) {
+                    next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                    RefreshServices();
+                }
+            } else {
+                //The refresh never executed (execute it now)
+                currentRefreshFireTime = new Date(); //Set the current to NOW!!!
+                //Set the next fire time according to interval specified
+                nextRefreshFireTime =
+                    DateUtils.addMinutesToDate(currentRefreshFireTime,
+                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                serviceOrchestrator.start();
+            }
+        } else {
+            //Autorefresh is disabled. Nullify current and next fire times
+            currentRefreshFireTime = null;
+            nextRefreshFireTime = null;
+        }
     }
 
     private void setColumnsWidth() {
@@ -61,10 +120,12 @@ public class MainFrame extends javax.swing.JFrame {
         servicesTable = new javax.swing.JTable();
         servicesTable.setDefaultRenderer(String.class, new CustomTableCellRenderer());
         lblVersion = new javax.swing.JLabel();
+        checkAutoRefresh = new javax.swing.JCheckBox();
+        cbAutoRefreshInterval = new javax.swing.JComboBox<>();
+        next_refresh = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Service Watcher");
-        setPreferredSize(new java.awt.Dimension(950, 500));
 
         btnRefresh.setIcon(new ImageIcon(this.getClass().getResource("/src/images/refresh.png")));
         btnRefresh.setText("Refresh");
@@ -89,32 +150,62 @@ public class MainFrame extends javax.swing.JFrame {
         lblVersion.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lblVersion.setText("Service Watcher v1.0");
 
+        checkAutoRefresh.setText("Auto-Refresh");
+        checkAutoRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkAutoRefreshActionPerformed(evt);
+            }
+        });
+
+        cbAutoRefreshInterval.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1","2","3"}));
+        cbAutoRefreshInterval.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbAutoRefreshIntervalActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 802, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkAutoRefresh)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbAutoRefreshInterval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(next_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 425, Short.MAX_VALUE)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(lblVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(checkAutoRefresh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbAutoRefreshInterval)
+                            .addComponent(next_refresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(30, 30, 30))))
         );
 
         pack();
@@ -131,6 +222,31 @@ public class MainFrame extends javax.swing.JFrame {
        
     }//GEN-LAST:event_buttonRefresh
 
+    private void checkAutoRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAutoRefreshActionPerformed
+        // TODO add your handling code here:
+      
+        
+        if (checkAutoRefresh.isSelected()) {
+            cbAutoRefreshInterval.setEnabled(false);
+            String time_value= String.valueOf(cbAutoRefreshInterval.getSelectedItem());           
+            //serviceOrchestrator.start();
+        } else {
+            cbAutoRefreshInterval.setEnabled(true);
+            btnRefresh.setEnabled(true);
+        }
+    }//GEN-LAST:event_checkAutoRefreshActionPerformed
+
+    private void cbAutoRefreshIntervalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAutoRefreshIntervalActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_cbAutoRefreshIntervalActionPerformed
+        
+        
+
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -203,8 +319,11 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JComboBox<String> cbAutoRefreshInterval;
+    private javax.swing.JCheckBox checkAutoRefresh;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblVersion;
+    public javax.swing.JLabel next_refresh;
     private javax.swing.JTable servicesTable;
     // End of variables declaration//GEN-END:variables
 

@@ -69,8 +69,7 @@ public class ConfigurationTest {
     @Test
     public void testInvalidConcurrentThreads() {
         c.init("config-ut2.properties");
-        Assert.assertFalse(c.isValid());
-        Assert.assertEquals(c.getError(), "NumberFormatException");
+        Assert.assertEquals(5,c.getConcurrentThreads()); //5 is the default
     }
     
     /**
@@ -87,7 +86,7 @@ public class ConfigurationTest {
         c.init();
         Assert.assertTrue(c.isValid());
         s = c.getServiceParameters();
-        Assert.assertEquals(5, s.size()); 
+        Assert.assertEquals(30, s.size()); 
         Assert.assertEquals(4,c.getConcurrentThreads());        
     }
 

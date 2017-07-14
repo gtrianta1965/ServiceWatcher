@@ -32,7 +32,7 @@ public class HTTPServiceTest {
     
     /**
       * Tests a scenario that a valid url is called
-      * e.g. https://www.google.gr
+      * e.g. http://www.idika.gr and setSearchString = "H"
      */
     @Test
         public void testValidCall() {
@@ -46,11 +46,11 @@ public class HTTPServiceTest {
     
     /**
       * Tests a scenario that a valid url is called but the search string not found
-      * e.g. https://www.google.gr and setSearchString= "Αναζήτησηηη"
+      * e.g. http://www.idika.gr and setSearchString= "Γ‡Γ«Γ¥ΓªΓ΄Γ±Γ―Γ­Γ©ΓªΓΓ§Γ§"
      */
     @Test
     public void unsuccessfulSearch() {
-        s = init("http://www.idika.gr","Ηλεκτρονικήηη");
+        s = init("http://www.idika.gr","Γ‡Γ«Γ¥ΓªΓ΄Γ±Γ―Γ­Γ©ΓªΓΓ§Γ§");
         hs.setServiceParameter(s);
         hs.run();
         Assert.assertFalse(hs.isSuccessfulCall());
@@ -59,7 +59,7 @@ public class HTTPServiceTest {
     
     /**
       * Tests a scenario that a valid url is called
-      * e.g. https://www.google.gr and setSearchString= "Αναζήτηση"
+      * e.g. http://www.idika.gr and setSearchString= "H"
      */
     @Test
     public void successfulSearch() {
@@ -90,7 +90,7 @@ public class HTTPServiceTest {
      */
     @Test
     public void testInvalidCall() {
-        s = init("https://www.googlesdsds.grrr","Αναζήτηση");
+        s = init("https://www.googlesdsds.grrr","ΓΓ­Γ΅Γ¦ΓΓ΄Γ§Γ³Γ§");
         hs.setServiceParameter(s);
         hs.run();
         String errorMsg = hs.getErrorCall();
@@ -101,7 +101,7 @@ public class HTTPServiceTest {
     
     /**
      * Tests a scenario that is a 404 url is called
-     * e.g. 192.168.42.63:7003/test-sso/faces/Login
+     * e.g. http://www.idika.gr and searchString = "sdfdsfdsfds"
      */
     @Test
     public void testValidCallWithNoResult() {

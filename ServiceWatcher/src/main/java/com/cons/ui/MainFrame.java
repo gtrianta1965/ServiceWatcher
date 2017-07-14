@@ -104,6 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
+        servicesTable.getTableHeader().setReorderingAllowed(false);
  
     }
     /** This method is called from within the constructor to

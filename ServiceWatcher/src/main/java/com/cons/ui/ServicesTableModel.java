@@ -97,11 +97,14 @@ public class ServicesTableModel extends AbstractTableModel {
                                value.getClass() + ")");
         }
 
-        data[row][col] = value;
         fireTableCellUpdated(row, col);
-        sp.setPassword(data[row][SWConstants.TABLE_PASSWORD_INDEX].toString());
-        System.out.println(sp.getPassword());
-        
+        if(col == SWConstants.TABLE_PASSWORD_INDEX){
+            sp.setPassword(value.toString());
+            System.out.println(sp.getPassword());
+        }
+        for(char a:sp.getPassword().toCharArray()){
+            data[row][col] += "*";
+        }        
 
         if (DEBUG) {
             System.out.println("New value of data:");

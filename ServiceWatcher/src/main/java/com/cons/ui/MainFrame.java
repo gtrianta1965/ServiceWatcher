@@ -103,6 +103,12 @@ public class MainFrame extends javax.swing.JFrame {
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
+        servicesTable.setColumnSelectionAllowed(true);
+           servicesTable.setRowSelectionAllowed(true);
+
+           if (servicesTable.getCellEditor() != null) {
+             servicesTable.getCellEditor().stopCellEditing();
+           }
  
     }
     /** This method is called from within the constructor to

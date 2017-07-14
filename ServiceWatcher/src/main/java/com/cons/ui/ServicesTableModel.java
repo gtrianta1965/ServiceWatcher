@@ -34,6 +34,8 @@ public class ServicesTableModel extends AbstractTableModel {
         List<ServiceParameter> spl = configuration.getServiceParameters();
         data = new Object[rows][SWConstants.TABLE_NUMBER_OF_COLUMNS];
         
+        
+        
         for (int i=0 ; i< rows ; i++) {
             sp = (ServiceParameter)spl.get(i);
             data[i][SWConstants.TABLE_ID_INDEX] = sp.getId();

@@ -24,10 +24,14 @@ public abstract class Service implements Runnable {
         service();
         if (isSuccessfulCall()) {
             printStatus(SWConstants.SERVICE_SUCCESS);
-            serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is UP");
+            if(serviceOrchestrator != null){
+                serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is UP");
+            }
         } else {
             printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
-            serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is DOWN");
+            if(serviceOrchestrator != null){
+                serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is DOWN");
+            }
         }
     }
     

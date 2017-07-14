@@ -176,15 +176,28 @@ public class Reporter {
         return msgBodyPart;
     }
     
-    public static void makeReport(){
-        JSONObject obj = new JSONObject();
-        obj.put("Date",Calendar.getInstance(TimeZone.getTimeZone("Greece/Athens")).getTime().toString());
-        obj.put("Author", "App Shah");
+    /**
+     * JSON log exporter.
+     * 
+     * @param log the log of services to be exported
+     * @return returns a JSONObject which includes:
+     * name of application,
+     * application version,
+     * timestamp of export,
+     * services log.
+     */
+    public static JSONObject exportToJSON(List<String> log){
+        JSONObject jsn = new JSONObject();
+        jsn.put("Application", "Service Watcher");
+        jsn.put("Version", "1");
+        jsn.put("Date",Calendar.getInstance(TimeZone.getTimeZone("Greece/Athens")).getTime().toString());
         
-        JSONArray company = new JSONArray();
-        company.put("Compnay: eBay");
-        company.put("Compnay: Paypal");
-        company.put("Compnay: Google");
-        obj.put("Log", company);
+        JSONArray alog = new JSONArray();
+        for(String a:log){
+            alog.put(a);
+        }
+        
+        jsn.put("Log", alog);
+        return jsn;
     }
 }

@@ -45,14 +45,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     }
     public void initialization(){
-            generic_timer=new Timer( interval ,new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    checkAutoRefresh();
-                }
-            });
-            generic_timer.start();          
-        }
+        generic_timer = new Timer(interval, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                checkAutoRefresh();
+                statusMsg.setText((serviceOrchestrator.getStatus()).toString());
+            }
+        });
+        generic_timer.start();
+    }
     private void RefreshServices() {
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
@@ -112,7 +113,7 @@ public class MainFrame extends javax.swing.JFrame {
         setColumnsWidth();
         servicesTable.setColumnSelectionAllowed(true);
         servicesTable.setRowSelectionAllowed(true);
-        statusMsg.setText((serviceOrchestrator.getStatus()).toString());
+        
  
            if (servicesTable.getCellEditor() != null) {
              servicesTable.getCellEditor().stopCellEditing();

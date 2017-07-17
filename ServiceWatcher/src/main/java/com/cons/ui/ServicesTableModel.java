@@ -43,7 +43,9 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
-        }    
+        }
+        
+        fireTableDataChanged();
     }
 
     public int getColumnCount() {
@@ -112,6 +114,5 @@ public class ServicesTableModel extends AbstractTableModel {
         }
         System.out.println("--------------------------");
     }
-    
 }
 

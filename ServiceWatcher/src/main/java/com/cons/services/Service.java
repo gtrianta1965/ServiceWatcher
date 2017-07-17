@@ -23,10 +23,14 @@ public abstract class Service implements Runnable {
     
     public void run() {
         printStatus(SWConstants.SERVICE_RUNNING);
+        serviceParameter.setStatus(SWConstants.SERVICE_RUNNING);
         service();
         if (isSuccessfulCall()) {
+            serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);
             printStatus(SWConstants.SERVICE_SUCCESS);
         } else {
+            serviceParameter.setStatus(SWConstants.SERVICE_FAILED);
+            serviceParameter.setError(getErrorCall());
             printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
         }
     }

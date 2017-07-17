@@ -1,5 +1,6 @@
 package com.cons.services;
 
+
 public class ServiceParameter {
     public ServiceParameter() {
         super();

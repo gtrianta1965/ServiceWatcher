@@ -56,7 +56,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void RefreshServices() {
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
-        System.out.println("yolo");
         serviceOrchestrator.start();
     }
     
@@ -92,7 +91,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
-        float[] columnWidthPercentage = {2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f};
+        float[] columnWidthPercentage = {2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f, 35.0f};
         
         int tW = servicesTable.getWidth();
             TableColumn column;
@@ -111,9 +110,13 @@ public class MainFrame extends javax.swing.JFrame {
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
-        servicesTable.getTableHeader().setReorderingAllowed(false);
+        servicesTable.setColumnSelectionAllowed(true);
+        servicesTable.setRowSelectionAllowed(true);
         statusMsg.setText((serviceOrchestrator.getStatus()).toString());
-
+ 
+           if (servicesTable.getCellEditor() != null) {
+             servicesTable.getCellEditor().stopCellEditing();
+            }
  
     }
     /** This method is called from within the constructor to

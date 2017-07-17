@@ -1,6 +1,5 @@
 package com.cons.utils;
 
-import java.net.ProtocolException;
 
 public class SWConstants {
     
@@ -19,7 +18,7 @@ public class SWConstants {
     public final static String IDLE_STATUS ="IDLE";
     public final static String SERVICE_SOCKET_UNREACHABLE_MSG = "Remote is unreachable at IP:PORT -> ";
 
-
+        
 
         
     //Service thread status
@@ -36,8 +35,8 @@ public class SWConstants {
     public final static int TABLE_TYPE_INDEX = 3;
     public final static int TABLE_GROUP_INDEX = 4;        
     public final static int TABLE_STATUS_INDEX = 5;
+    public final static int TABLE_PASSWORD_INDEX = 6;
     
     //Number of columns in the table
-    public final static int TABLE_NUMBER_OF_COLUMNS = 6;
-    
+    public final static int TABLE_NUMBER_OF_COLUMNS = 7;
 }

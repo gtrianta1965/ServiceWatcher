@@ -5,8 +5,6 @@ import com.cons.utils.Reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.mail.internet.InternetAddress;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,7 +22,7 @@ public class ReporterTest {
         log.add("Server: www.crazycows.gr - UP");
         
         String [] to = new String[]{"alexkalavitis@gmail.com"};
-        Reporter.sendMail(new String[]{"alexkalavitis@gmail.com"},log);
+        //Reporter.sendMail(new String[]{"alexkalavitis@gmail.com"},log);
         Assert.assertTrue(true);
     }
 }

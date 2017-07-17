@@ -51,8 +51,6 @@ public class SocketServiceTest {
         s = init("www.google.com:80");
         ps.setServiceParameter(s);
         ps.run();
-        System.out.println(ps.getErrorCall());
-
         Assert.assertTrue(ps.isSuccessfulCall());
         Assert.assertEquals(null, ps.getErrorCall());
     }

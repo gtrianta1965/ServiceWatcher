@@ -33,7 +33,6 @@ public class SFTPServiceTest {
         s = init("test.rebex.net:22", "demo", "password");
         sshs.setServiceParameter(s);
         sshs.run();
-        System.out.println(sshs.getErrorCall());
         Assert.assertTrue(sshs.isSuccessfulCall());
         Assert.assertEquals(null, sshs.getErrorCall());
     }
@@ -46,7 +45,6 @@ public class SFTPServiceTest {
         s = init("waka:9999", "demo", "password");
         sshs.setServiceParameter(s);
         sshs.run();
-        System.out.println(sshs.getErrorCall());
         Assert.assertFalse(sshs.isSuccessfulCall());
         Assert.assertNotNull(sshs.getErrorCall());
     }

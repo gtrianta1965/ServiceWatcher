@@ -1,6 +1,5 @@
 package com.cons.utils;
 
-import java.net.ProtocolException;
 
 public class SWConstants {
     
@@ -15,7 +14,11 @@ public class SWConstants {
     public final static String URL_HOST_ERROR_MSG = "The host was not found";
     public final static String SERVICE_DB_ERROR_ORACLE_CLASS_MSG = "Oracle Class driver Was not Found";
     public final static String SERVICE_DB_ERROR_ORACLE_SQLEXCEPTION_MSG = "SQL Connection Error";
+    public final static String RUNNING_STATUS ="RUNNING";
+    public final static String IDLE_STATUS ="IDLE";
     public final static String SERVICE_SOCKET_UNREACHABLE_MSG = "Remote is unreachable at IP:PORT -> ";
+
+        
 
         
     //Service thread status
@@ -32,10 +35,10 @@ public class SWConstants {
     public final static int TABLE_TYPE_INDEX = 3;
     public final static int TABLE_GROUP_INDEX = 4;        
     public final static int TABLE_STATUS_INDEX = 5;
+    public final static int TABLE_PASSWORD_INDEX = 6;
     
     //Number of columns in the table
-    public final static int TABLE_NUMBER_OF_COLUMNS = 6;
-    
+    public final static int TABLE_NUMBER_OF_COLUMNS = 7;
     //Reporter
     public final static String REPORTER_NAME = "reporter@servicewatcher.com";
     public final static String REPORTER_MSG_SUBJECT = "Service Watcher Report";

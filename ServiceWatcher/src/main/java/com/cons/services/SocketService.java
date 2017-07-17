@@ -58,16 +58,26 @@ public class SocketService extends Service {
         try {
             // Try to open socket
             Socket soc = new Socket();
+            // Try to connect if not throw IO
             try{
-                // Try to connect if not throw IO
-                soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), configuration.getSocketDieInterval());
+                if(configuration != null){
+                    soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), configuration.getSocketDieInterval());
+                }else{
+                    soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), 5000);
+                }
                 // If success set call true
                 this.setSuccessfulCall(true);
             } catch (IOException ioex){
                 // Catch and set call false and set error
                 this.setSuccessfulCall(false);
                 this.setErrorCall(SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + fullURL[0] +":"+ fullURL[1]);
-            } finally {
+            } catch (NumberFormatException nfex){
+                this.setSuccessfulCall(false);
+                this.setErrorCall("Number format error");
+            } catch (Exception ex){
+                this.setSuccessfulCall(false);
+                this.setErrorCall(ex.getMessage());
+            }finally {
                 soc.close();
             }
         } catch (Exception ex){

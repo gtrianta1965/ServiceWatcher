@@ -1,9 +1,7 @@
 package com.cons.ui;
 
 import com.cons.Configuration;
-
 import com.cons.services.ServiceParameter;
-
 import com.cons.utils.SWConstants;
 
 import java.util.List;
@@ -15,10 +13,11 @@ public class ServicesTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private boolean DEBUG = false;
 
-    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status"};
+    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status","Password"};
 
     private Object[][] data;
     
+    private ServiceParameter sp;
     
     
     /*
@@ -31,9 +30,11 @@ public class ServicesTableModel extends AbstractTableModel {
     
     public void initFromConfiguration(Configuration configuration) {
         int rows = configuration.getServiceParameters().size();
-        ServiceParameter sp;
+        
         List<ServiceParameter> spl = configuration.getServiceParameters();
         data = new Object[rows][SWConstants.TABLE_NUMBER_OF_COLUMNS];
+        
+        
         
         for (int i=0 ; i< rows ; i++) {
             sp = (ServiceParameter)spl.get(i);
@@ -43,7 +44,12 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
+            data[i][SWConstants.TABLE_PASSWORD_INDEX] = new String();
+            setValueAt(data[i][SWConstants.TABLE_PASSWORD_INDEX], i, SWConstants.TABLE_PASSWORD_INDEX);
+            sp.setPassword(data[i][SWConstants.TABLE_PASSWORD_INDEX].toString());
         }    
+        
+        fireTableDataChanged();
     }
 
     public int getColumnCount() {
@@ -77,6 +83,9 @@ public class ServicesTableModel extends AbstractTableModel {
      */
     public boolean isCellEditable(int row, int col) {
         //Nothing is editable
+        if(col==SWConstants.TABLE_PASSWORD_INDEX){
+            return true;            
+            }
         return false;
     }
 
@@ -90,8 +99,14 @@ public class ServicesTableModel extends AbstractTableModel {
                                value.getClass() + ")");
         }
 
-        data[row][col] = value;
         fireTableCellUpdated(row, col);
+        if(col == SWConstants.TABLE_PASSWORD_INDEX){
+            sp.setPassword(value.toString());
+            System.out.println(sp.getPassword());
+        }
+        for(char a:sp.getPassword().toCharArray()){
+            data[row][col] += "*";
+        }        
 
         if (DEBUG) {
             System.out.println("New value of data:");
@@ -112,6 +127,5 @@ public class ServicesTableModel extends AbstractTableModel {
         }
         System.out.println("--------------------------");
     }
-    
 }
 

@@ -111,7 +111,9 @@ public class MainFrame extends javax.swing.JFrame {
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
+        servicesTable.getTableHeader().setReorderingAllowed(false);
         statusMsg.setText((serviceOrchestrator.getStatus()).toString());
+
  
     }
     /** This method is called from within the constructor to
@@ -320,13 +322,13 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_cbAutoRefreshIntervalActionPerformed
-
+        
     private void buttonLoadProperties(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoadProperties
         if (!serviceOrchestrator.isRunning()) {
             JFileChooser fc = new JFileChooser();
             javax.swing.JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
             int returnVal = fc.showOpenDialog(jFileChooser1);
-
+        
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 serviceOrchestrator.loadNewFile(file);
@@ -336,9 +338,9 @@ public class MainFrame extends javax.swing.JFrame {
             System.out.println("running!whait to finish!"); //popup to be implemented
         }
     }//GEN-LAST:event_buttonLoadProperties
-        
-        
 
+    
+    
     
     
     

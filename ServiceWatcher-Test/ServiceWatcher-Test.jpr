@@ -83,6 +83,15 @@
       <url n="testPomfileURL" path="../ServiceWatcher/pom.xml"/>
       <value n="testProject" v="true"/>
    </hash>
+   <hash n="oracle.jdeveloper.runner.RunConfigurations">
+      <hash n="runConfigurationDefinitions">
+         <hash n="Default">
+            <value n="custom" v="false"/>
+            <value n="name" v="Default"/>
+            <url n="targetURL" path="../ServiceWatcher/src/main/java/com/cons/Main.java"/>
+         </hash>
+      </hash>
+   </hash>
    <hash n="oracle.jdevimpl.config.JProjectPaths">
       <url n="outputDirectory" path="classes/"/>
    </hash>

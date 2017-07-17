@@ -88,7 +88,7 @@ public class ServiceOrchestrator {
 
     
     public void sendStatusLog(){
-        Reporter.sendMail(new String[]{"alexkalavitis@gmail.com"}, this.statusLog);
+        Reporter.sendMail(configuration.getRecipients().toArray(new String[0]), this.statusLog);
     }
     
     public ExecutorService getExecutor() {

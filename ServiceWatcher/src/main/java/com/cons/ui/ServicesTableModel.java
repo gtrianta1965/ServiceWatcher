@@ -100,13 +100,12 @@ public class ServicesTableModel extends AbstractTableModel {
         }
 
         fireTableCellUpdated(row, col);
-        if(col == SWConstants.TABLE_PASSWORD_INDEX){
+        if (col == SWConstants.TABLE_PASSWORD_INDEX) {
             sp.setPassword(value.toString());
-            System.out.println(sp.getPassword());
         }
-        for(char a:sp.getPassword().toCharArray()){
+        for (char a : sp.getPassword().toCharArray()) {
             data[row][col] += "*";
-        }        
+        }
 
         if (DEBUG) {
             System.out.println("New value of data:");

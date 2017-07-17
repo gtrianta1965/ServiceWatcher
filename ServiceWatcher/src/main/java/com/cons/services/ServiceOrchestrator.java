@@ -17,7 +17,6 @@ public class ServiceOrchestrator {
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
-    private boolean firstTime = true;
     
     private OrchestratorStatus orchestratorStatus;
     
@@ -62,13 +61,9 @@ public class ServiceOrchestrator {
         if (executor != null && !executor.isTerminated()) {
             System.out.println("Executor is running");
             return;
-        }else if(!firstTime && configuration.getSendMailUpdates()){
-            sendStatusLog();
-            this.statusLog = new ArrayList<String>();
         }
         //Start Thread Pooling with services
         int totalSub = 0;
-        firstTime = false;
         //TODO:Use configuration parameter for pooling
         executor = Executors.newFixedThreadPool(configuration.getConcurrentThreads());
         for (int i=0; i<configuration.getServiceParameters().size() ;i++){
@@ -106,9 +101,14 @@ public class ServiceOrchestrator {
         serviceTableModel.initFromConfiguration(configuration);
         setServiceTableModel(serviceTableModel);
         setConfiguration(configuration);
-        
-}
-
+    }
+    
+    /**
+     * Cleans log
+     */
+    public void cleanLog(){
+        this.statusLog = new ArrayList<String>();
+    }
     
     public Boolean isRunning(){
         Boolean running;

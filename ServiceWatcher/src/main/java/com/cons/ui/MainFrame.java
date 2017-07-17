@@ -33,6 +33,7 @@ public class MainFrame extends javax.swing.JFrame {
     ServiceOrchestrator serviceOrchestrator;
     Configuration configuration;
     private int interval=200;
+    private boolean send=false;
     private Timer generic_timer;
     private long diff;
 
@@ -44,16 +45,31 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
 
     }
-    public void initialization(){
-            generic_timer=new Timer( interval ,new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    checkAutoRefresh();
-                }
-            });
-            generic_timer.start();          
+    public void initialization() {
+        generic_timer = new Timer(interval, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                checkSendMail();
+                checkAutoRefresh();
+            }
+        });
+        generic_timer.start();
+    }
+    
+    
+    /**
+     * Checks if it should send emails for the current run.
+     */
+    private void checkSendMail(){
+        if(this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator.getConfiguration().getSendMailUpdates()){
+            this.send = false;
+            this.serviceOrchestrator.sendStatusLog();
+            this.serviceOrchestrator.cleanLog();
         }
+    }
+    
     private void RefreshServices() {
+        this.send = true;
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
         serviceOrchestrator.start();
@@ -74,12 +90,13 @@ public class MainFrame extends javax.swing.JFrame {
                     RefreshServices();
                 }
             } else {
+                this.send = true;
                 //The refresh never executed (execute it now)
                 currentRefreshFireTime = new Date(); //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
                 nextRefreshFireTime =
                     DateUtils.addMinutesToDate(currentRefreshFireTime,
-                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                    Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 serviceOrchestrator.start();
             }
         } else {
@@ -305,6 +322,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
        //TODO: Disable button, check if orchestrator is running, display a message if it is already running
+       this.send = true;
        serviceOrchestrator.start();
        
     }//GEN-LAST:event_buttonRefresh

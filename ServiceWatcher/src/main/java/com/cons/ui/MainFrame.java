@@ -51,6 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 checkSendMail();
                 checkAutoRefresh();
+                statusMsg.setText((serviceOrchestrator.getStatus()).toString());
             }
         });
         generic_timer.start();
@@ -129,7 +130,7 @@ public class MainFrame extends javax.swing.JFrame {
         setColumnsWidth();
         servicesTable.setColumnSelectionAllowed(true);
         servicesTable.setRowSelectionAllowed(true);
-        statusMsg.setText((serviceOrchestrator.getStatus()).toString());
+        
  
            if (servicesTable.getCellEditor() != null) {
              servicesTable.getCellEditor().stopCellEditing();

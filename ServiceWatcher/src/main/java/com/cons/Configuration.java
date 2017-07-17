@@ -12,8 +12,12 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import javax.mail.internet.InternetAddress;
+
 public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
+    private boolean sendMailUpdates = false;
+    private List<String> recipients = new ArrayList<String>();
     private int concurrentThreads = 5;
     private int httpResponseTimeout = 5000;
     private int socketDieInterval = 5000;
@@ -58,18 +62,33 @@ public class Configuration {
                 serviceParameter.setGroup(prop.getProperty("group." + i));
                 serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                 serviceParameter.setUsername(prop.getProperty("username." + i));
-                    //add each param based on the sequence number of the parameter
-                    serviceParameters.add(serviceParameter);
+                
+                //add each param based on the sequence number of the parameter
+                serviceParameters.add(serviceParameter);
 
                 } else {
                     hasMore = false;
                 }
             }
+            
+            
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"),5));
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"),5000));
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
-
+            this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
+            
+            if(getSendMailUpdates()){
+                String emails = prop.getProperty("to");
+                if(emails != null){
+                    String[] emailArr = emails.split(",");
+                    for(String email: emailArr){
+                        this.addRecipients(email);
+                    }
+                }else{
+                    this.setSendMailUpdates(false);
+                }
+            }
         } catch (FileNotFoundException e) {
             setValid(false);
             setError("Property file " + fileName + " does not exist");
@@ -104,6 +123,23 @@ public class Configuration {
         return intValue;
         
     }
+    
+    private boolean getBooleanProperty(String value, boolean defaultValue) {
+        boolean booleanValue = false;
+        if (value != null) {
+            try {
+                 booleanValue = Boolean.parseBoolean(value);
+             } catch (NumberFormatException nfe) {
+                 booleanValue = defaultValue;
+                 System.out.println("NumberFormatException reading property value " + value + ". Set to default (" + defaultValue + ")");
+             }
+            
+        } else {
+            booleanValue = defaultValue;
+        }
+        return booleanValue;
+        
+    }
 
     public void save() {
         //to do
@@ -117,6 +153,14 @@ public class Configuration {
         return this.serviceParameters;
     }
 
+    public void setSendMailUpdates(boolean sendMailUpdates){
+        this.sendMailUpdates = sendMailUpdates;
+    }
+    
+    public boolean getSendMailUpdates(){
+        return this.sendMailUpdates;
+    }
+    
     public void setConcurrentThreads(int concurentThreads) {
         this.concurrentThreads = concurentThreads;
     }
@@ -147,6 +191,14 @@ public class Configuration {
 
     public String getError() {
         return error;
+    }
+    
+    public void addRecipients(String recipient){
+        this.recipients.add(recipient);
+    }
+    
+    public List<String> getRecipients(){
+        return this.recipients;
     }
     
     public void setHttpResponseTimeout(int httpResponseTimeout) {

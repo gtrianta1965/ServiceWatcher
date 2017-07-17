@@ -2,19 +2,25 @@
 package com.cons.ui;
 
 
+import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.DateUtils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.File;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+
 
 /**
  *
@@ -25,7 +31,9 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
+    Configuration configuration;
     private int interval=200;
+    private boolean send=false;
     private Timer generic_timer;
     private long diff;
 
@@ -37,19 +45,41 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
 
     }
-    public void initialization(){
-            generic_timer=new Timer( interval ,new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    checkAutoRefresh();
-                }
-            });
-            generic_timer.start();          
+    public void initialization() {
+        generic_timer = new Timer(interval, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                checkSendMail();
+                checkAutoRefresh();
+                updateStatusBar();
+            }
+        });
+        generic_timer.start();
+    }
+    
+    /**
+     * Updates status bar.
+     */
+    private void updateStatusBar(){
+        statusMsg.setText((serviceOrchestrator.getStatus()).toString());
+        statusRun.setText(getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?"RUNNING":"IDLE"):"IDLE");
+    }
+    
+    /**
+     * Checks if it should send emails for the current run.
+     */
+    private void checkSendMail(){
+        if(this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator.getConfiguration().getSendMailUpdates()){
+            this.send = false;
+            this.serviceOrchestrator.sendStatusLog();
+            this.serviceOrchestrator.cleanLog();
         }
+    }
+    
     private void RefreshServices() {
+        this.send = true;
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
-        System.out.println("yolo");
         serviceOrchestrator.start();
     }
     
@@ -68,12 +98,13 @@ public class MainFrame extends javax.swing.JFrame {
                     RefreshServices();
                 }
             } else {
+                this.send = true;
                 //The refresh never executed (execute it now)
                 currentRefreshFireTime = new Date(); //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
                 nextRefreshFireTime =
                     DateUtils.addMinutesToDate(currentRefreshFireTime,
-                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                    Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 serviceOrchestrator.start();
             }
         } else {
@@ -85,7 +116,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
-        float[] columnWidthPercentage = {2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f};
+        float[] columnWidthPercentage = {2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f, 35.0f};
         
         int tW = servicesTable.getWidth();
             TableColumn column;
@@ -104,6 +135,13 @@ public class MainFrame extends javax.swing.JFrame {
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
+        servicesTable.setColumnSelectionAllowed(true);
+        servicesTable.setRowSelectionAllowed(true);
+        
+ 
+           if (servicesTable.getCellEditor() != null) {
+             servicesTable.getCellEditor().stopCellEditing();
+            }
  
     }
     /** This method is called from within the constructor to
@@ -123,6 +161,12 @@ public class MainFrame extends javax.swing.JFrame {
         checkAutoRefresh = new javax.swing.JCheckBox();
         cbAutoRefreshInterval = new javax.swing.JComboBox<>();
         next_refresh = new javax.swing.JLabel();
+        statusBar = new javax.swing.JPanel();
+        statusBarSection2 = new javax.swing.JPanel();
+        statusRun = new javax.swing.JLabel();
+        statusBarSection1 = new javax.swing.JPanel();
+        statusMsg = new javax.swing.JLabel();
+        btnLoad = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Service Watcher");
@@ -164,6 +208,68 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        statusRun.setText(getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?"RUNNING":"IDLE"):"IDLE");
+
+        javax.swing.GroupLayout statusBarSection2Layout = new javax.swing.GroupLayout(statusBarSection2);
+        statusBarSection2.setLayout(statusBarSection2Layout);
+        statusBarSection2Layout.setHorizontalGroup(
+            statusBarSection2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarSection2Layout.createSequentialGroup()
+                .addGap(128, 128, 128)
+                .addComponent(statusRun)
+                .addContainerGap(99, Short.MAX_VALUE))
+        );
+        statusBarSection2Layout.setVerticalGroup(
+            statusBarSection2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarSection2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(statusRun)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        statusMsg.setText("jLabel1");
+
+        javax.swing.GroupLayout statusBarSection1Layout = new javax.swing.GroupLayout(statusBarSection1);
+        statusBarSection1.setLayout(statusBarSection1Layout);
+        statusBarSection1Layout.setHorizontalGroup(
+            statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(statusMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        statusBarSection1Layout.setVerticalGroup(
+            statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarSection1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(statusMsg)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout statusBarLayout = new javax.swing.GroupLayout(statusBar);
+        statusBar.setLayout(statusBarLayout);
+        statusBarLayout.setHorizontalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusBarLayout.createSequentialGroup()
+                .addComponent(statusBarSection1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusBarSection2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        statusBarLayout.setVerticalGroup(
+            statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statusBarLayout.createSequentialGroup()
+                .addGroup(statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(statusBarSection2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(statusBarSection1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        btnLoad.setIcon(new ImageIcon(this.getClass().getResource("/src/images/add.png")));
+        btnLoad.setText("Add File");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonLoadProperties(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -172,41 +278,47 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(checkAutoRefresh)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cbAutoRefreshInterval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(next_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 425, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 330, Short.MAX_VALUE)
+                        .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(17, 17, 17))))
+                        .addGap(17, 17, 17))
+                    .addComponent(statusBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(lblVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(43, 43, 43))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(checkAutoRefresh)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbAutoRefreshInterval)
-                            .addComponent(next_refresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(30, 30, 30))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbAutoRefreshInterval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(next_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnLoad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        btnLoad.getAccessibleContext().setAccessibleName("");
 
         pack();
     }//GEN-END:initComponents
@@ -218,14 +330,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
        //TODO: Disable button, check if orchestrator is running, display a message if it is already running
+       this.send = true;
        serviceOrchestrator.start();
        
     }//GEN-LAST:event_buttonRefresh
 
     private void checkAutoRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkAutoRefreshActionPerformed
         // TODO add your handling code here:
-      
-        
         if (checkAutoRefresh.isSelected()) {
             cbAutoRefreshInterval.setEnabled(false);
             String time_value= String.valueOf(cbAutoRefreshInterval.getSelectedItem());           
@@ -241,8 +352,24 @@ public class MainFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_cbAutoRefreshIntervalActionPerformed
         
+    private void buttonLoadProperties(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoadProperties
+        if (!serviceOrchestrator.isRunning()) {
+            JFileChooser fc = new JFileChooser();
+            javax.swing.JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
+            int returnVal = fc.showOpenDialog(jFileChooser1);
         
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                serviceOrchestrator.loadNewFile(file);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Services are currently running. Please wait to finish.");
+            System.out.println("running!whait to finish!"); //popup to be implemented
+        }
+    }//GEN-LAST:event_buttonLoadProperties
 
+    
+    
     
     
     
@@ -318,6 +445,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JComboBox<String> cbAutoRefreshInterval;
     private javax.swing.JCheckBox checkAutoRefresh;
@@ -325,6 +453,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblVersion;
     public javax.swing.JLabel next_refresh;
     private javax.swing.JTable servicesTable;
+    private javax.swing.JPanel statusBar;
+    private javax.swing.JPanel statusBarSection1;
+    private javax.swing.JPanel statusBarSection2;
+    private javax.swing.JLabel statusMsg;
+    private javax.swing.JLabel statusRun;
     // End of variables declaration//GEN-END:variables
 
     public void setServicesTableModel(ServicesTableModel servicesTableModel) {

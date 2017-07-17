@@ -51,12 +51,19 @@ public class MainFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 checkSendMail();
                 checkAutoRefresh();
-                statusMsg.setText((serviceOrchestrator.getStatus()).toString());
+                updateStatusBar();
             }
         });
         generic_timer.start();
     }
     
+    /**
+     * Updates status bar.
+     */
+    private void updateStatusBar(){
+        statusMsg.setText((serviceOrchestrator.getStatus()).toString());
+        statusRun.setText(getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?"RUNNING":"IDLE"):"IDLE");
+    }
     
     /**
      * Checks if it should send emails for the current run.

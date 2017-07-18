@@ -92,7 +92,12 @@ public class ServiceOrchestrator {
 
     
     public void sendStatusLog(){
-        Reporter.sendMail(configuration.getRecipients().toArray(new String[0]), this.statusLog);
+        Reporter.sendMail(configuration.getRecipients().toArray(new String[0]),
+                          this.statusLog,
+                          configuration.getSmtpHost(),
+                          configuration.getSmtpPort(),
+                          configuration.getSmtpUsername(),
+                          configuration.getSmtpPassword());
     }
     
     public ExecutorService getExecutor() {

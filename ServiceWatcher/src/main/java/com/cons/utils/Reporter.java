@@ -20,6 +20,7 @@ import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -49,7 +50,7 @@ public class Reporter {
      * @param recipients is a string array which includes all the recipients e-mails.
      * @param log is a string array which includes the log to be sent via e-mail.
      */
-    public static void sendMail(String[] recipients, List<String> log) {
+    public static void sendMail(String[] recipients, List<String> log, String host, int port, String username, String password) {
         List<InternetAddress> addresses = new ArrayList<InternetAddress>();
         // Recipient's email ID needs to be mentioned.
         InternetAddress[] to;
@@ -58,12 +59,21 @@ public class Reporter {
 
         // Get system properties
         Properties props = new Properties();
-        props.setProperty("mail.smtp.ssl.enable", "false");
-        props.setProperty("mail.smtp.auth", "flase");
-        props.setProperty("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.socketFactory.port",Integer.toString(port));
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", Integer.toString(port));
+        //get Session
+        Session session = Session.getDefaultInstance(props,    
+            new javax.mail.Authenticator() {    
+            protected PasswordAuthentication getPasswordAuthentication() {    
+                return new PasswordAuthentication(username, password);  
+                }
+            }
+        );
 
         //Session session = Session.getDefaultInstance(props);
-        Session session = Session.getInstance(props);
 
         try {
             // Create a default MimeMessage object.

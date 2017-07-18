@@ -69,6 +69,7 @@ public class MainFrame extends javax.swing.JFrame {
      * Checks if it should send emails for the current run.
      */
     private void checkSendMail(){
+        
         if(this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator.getConfiguration().getSendMailUpdates()){
             this.send = false;
             this.serviceOrchestrator.sendStatusLog();
@@ -91,7 +92,14 @@ public class MainFrame extends javax.swing.JFrame {
         if (checkAutoRefresh.isSelected()) {
             //Check if we are running, that is the current time is not null
             if (currentRefreshFireTime != null) {
-                diff = Math.abs(DateUtils.getDateDiff(nextRefreshFireTime, new Date(), TimeUnit.SECONDS));
+                diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
+                //The diff should be positive (as the nextRefreshDate points in the future
+                //In case the diff is negative then force a refresh. This might happen if 
+                //we put the PC in a sleep mode. When it wakes up the diff is negative
+                if (diff < 0) {
+                    nextRefreshFireTime = DateUtils.addMinutesToDate(new Date(), Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));                    
+                    diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
+                }
                 next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
                 if (diff == 0) {
                     next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
@@ -373,6 +381,7 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (checkAutoRefresh.isSelected()) {
             cbAutoRefreshInterval.setEnabled(false);
+            btnRefresh.setEnabled(false);
             String time_value= String.valueOf(cbAutoRefreshInterval.getSelectedItem());           
             //serviceOrchestrator.start();
         } else {

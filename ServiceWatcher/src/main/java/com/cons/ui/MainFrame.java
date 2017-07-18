@@ -65,8 +65,10 @@ public class MainFrame extends javax.swing.JFrame {
         statusRun.setText(getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?"RUNNING":"IDLE"):"IDLE");
         if (serviceOrchestrator.isRunning()) {
             btnRefresh.setEnabled(false);
+            btnLoad.setEnabled(false);
         } else {
             btnRefresh.setEnabled(true);
+            btnLoad.setEnabled(true);
         }
     }
     

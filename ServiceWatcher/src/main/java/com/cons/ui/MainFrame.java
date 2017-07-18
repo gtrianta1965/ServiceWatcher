@@ -243,7 +243,7 @@ public class MainFrame extends javax.swing.JFrame {
         statusRun.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         statusRun.setIcon(this.getImg());
         statusRun.setText(getServiceOrchestrator()!=null?(!serviceOrchestrator.isRunning()?"IDLE":""):"IDLE");
-        statusRun.setAlignmentX((float) 0.5);
+        statusRun.setAlignmentX(0.5F);
 
         javax.swing.GroupLayout statusBarSection2Layout = new javax.swing.GroupLayout(statusBarSection2);
         statusBarSection2.setLayout(statusBarSection2Layout);
@@ -267,7 +267,7 @@ public class MainFrame extends javax.swing.JFrame {
         statusBarSection1.setLayout(statusBarSection1Layout);
         statusBarSection1Layout.setHorizontalGroup(
             statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+            .addComponent(statusMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
         );
         statusBarSection1Layout.setVerticalGroup(
             statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -298,9 +298,9 @@ public class MainFrame extends javax.swing.JFrame {
             statusBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statusBarLayout.createSequentialGroup()
                 .addComponent(statusBarSection1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(statusBarSection2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         statusBarLayout.setVerticalGroup(
@@ -329,7 +329,7 @@ public class MainFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 956, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1018, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -352,7 +352,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(checkAutoRefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbAutoRefreshInterval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 506, Short.MAX_VALUE)
                         .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)

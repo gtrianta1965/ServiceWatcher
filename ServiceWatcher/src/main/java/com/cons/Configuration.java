@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.mail.internet.InternetAddress;
 
 public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
@@ -25,7 +24,7 @@ public class Configuration {
 
     Logger clientLog = null;
     boolean valid;
-    String  error;
+    String error;
 
     public Configuration() {
         super();
@@ -39,10 +38,10 @@ public class Configuration {
 
     public void init(String fileName) {
         this.serviceParameters.clear();
-        
+
         Properties prop = new Properties();
         InputStream input = null;
-        
+
         setValid(true);
         setError(null);
         try {
@@ -57,35 +56,36 @@ public class Configuration {
                 serviceParameter.setUrl(prop.getProperty("url." + i));
                 if (serviceParameter.getUrl() != null) {
                     serviceParameter.setId(i);
-                serviceParameter.setDescription(prop.getProperty("description." + i));
-                serviceParameter.setType(prop.getProperty("type." + i));
-                serviceParameter.setGroup(prop.getProperty("group." + i));
-                serviceParameter.setSearchString(prop.getProperty("searchString." + i));
-                serviceParameter.setUsername(prop.getProperty("username." + i));
-                
-                //add each param based on the sequence number of the parameter
-                serviceParameters.add(serviceParameter);
+                    serviceParameter.setDescription(prop.getProperty("description." + i));
+                    serviceParameter.setType(prop.getProperty("type." + i));
+                    serviceParameter.setGroup(prop.getProperty("group." + i));
+                    serviceParameter.setSearchString(prop.getProperty("searchString." + i));
+                    serviceParameter.setUsername(prop.getProperty("username." + i));
+                    serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
+
+                    //add each param based on the sequence number of the parameter
+                    serviceParameters.add(serviceParameter);
 
                 } else {
                     hasMore = false;
                 }
             }
-            
-            
+
+
             //Read single value properties
-            this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"),5));
-            this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"),5000));
+            this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"), 5));
+            this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"), 5000));
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
-            
-            if(getSendMailUpdates()){
+
+            if (getSendMailUpdates()) {
                 String emails = prop.getProperty("to");
-                if(emails != null){
+                if (emails != null) {
                     String[] emailArr = emails.split(",");
-                    for(String email: emailArr){
+                    for (String email : emailArr) {
                         this.addRecipients(email);
                     }
-                }else{
+                } else {
                     this.setSendMailUpdates(false);
                 }
             }
@@ -94,14 +94,14 @@ public class Configuration {
             setError("Property file " + fileName + " does not exist");
         } catch (IOException io) {
             setValid(false);
-            setError("Error reading from Property file " + fileName );
+            setError("Error reading from Property file " + fileName);
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
                     setValid(false);
-                    setError("Error closing Property file " + fileName );
+                    setError("Error closing Property file " + fileName);
                 }
             }
         }
@@ -111,34 +111,36 @@ public class Configuration {
         int intValue = 0;
         if (value != null) {
             try {
-                 intValue = Integer.parseInt(value);
-             } catch (NumberFormatException nfe) {
-                 intValue = defaultValue;
-                 System.out.println("NumberFormatException reading property value " + value + ". Set to default (" + defaultValue + ")");
-             }
-            
+                intValue = Integer.parseInt(value);
+            } catch (NumberFormatException nfe) {
+                intValue = defaultValue;
+                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                                   defaultValue + ")");
+            }
+
         } else {
             intValue = defaultValue;
         }
         return intValue;
-        
+
     }
-    
+
     private boolean getBooleanProperty(String value, boolean defaultValue) {
         boolean booleanValue = false;
         if (value != null) {
             try {
-                 booleanValue = Boolean.parseBoolean(value);
-             } catch (NumberFormatException nfe) {
-                 booleanValue = defaultValue;
-                 System.out.println("NumberFormatException reading property value " + value + ". Set to default (" + defaultValue + ")");
-             }
-            
+                booleanValue = Boolean.parseBoolean(value);
+            } catch (NumberFormatException nfe) {
+                booleanValue = defaultValue;
+                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                                   defaultValue + ")");
+            }
+
         } else {
             booleanValue = defaultValue;
         }
         return booleanValue;
-        
+
     }
 
     public void save() {
@@ -153,14 +155,14 @@ public class Configuration {
         return this.serviceParameters;
     }
 
-    public void setSendMailUpdates(boolean sendMailUpdates){
+    public void setSendMailUpdates(boolean sendMailUpdates) {
         this.sendMailUpdates = sendMailUpdates;
     }
-    
-    public boolean getSendMailUpdates(){
+
+    public boolean getSendMailUpdates() {
         return this.sendMailUpdates;
     }
-    
+
     public void setConcurrentThreads(int concurentThreads) {
         this.concurrentThreads = concurentThreads;
     }
@@ -168,15 +170,15 @@ public class Configuration {
     public int getConcurrentThreads() {
         return concurrentThreads;
     }
-    
-    public void setSocketDieInterval(int socketDieInterval){
+
+    public void setSocketDieInterval(int socketDieInterval) {
         this.socketDieInterval = socketDieInterval;
     }
-    
-    public int getSocketDieInterval(){
+
+    public int getSocketDieInterval() {
         return socketDieInterval;
     }
-    
+
     public void setValid(boolean valid) {
         this.valid = valid;
     }
@@ -192,15 +194,15 @@ public class Configuration {
     public String getError() {
         return error;
     }
-    
-    public void addRecipients(String recipient){
+
+    public void addRecipients(String recipient) {
         this.recipients.add(recipient);
     }
-    
-    public List<String> getRecipients(){
+
+    public List<String> getRecipients() {
         return this.recipients;
     }
-    
+
     public void setHttpResponseTimeout(int httpResponseTimeout) {
         this.httpResponseTimeout = httpResponseTimeout;
     }

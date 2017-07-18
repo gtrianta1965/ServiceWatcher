@@ -2,6 +2,7 @@ package com.cons.ui;
 
 import com.cons.Configuration;
 import com.cons.services.ServiceParameter;
+import com.cons.utils.GenericUtils;
 import com.cons.utils.SWConstants;
 
 import java.util.List;
@@ -44,9 +45,7 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
-            data[i][SWConstants.TABLE_PASSWORD_INDEX] = new String();
-            setValueAt(data[i][SWConstants.TABLE_PASSWORD_INDEX], i, SWConstants.TABLE_PASSWORD_INDEX);
-            sp.setPassword(data[i][SWConstants.TABLE_PASSWORD_INDEX].toString());
+            data[i][SWConstants.TABLE_PASSWORD_INDEX] = GenericUtils.nvl(sp.getPassword(),"");
         }    
         
         fireTableDataChanged();

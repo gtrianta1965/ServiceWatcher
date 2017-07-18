@@ -187,8 +187,11 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="statusRun">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="this.getImg()" type="code"/>
+                </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?&quot;RUNNING&quot;:&quot;IDLE&quot;):&quot;IDLE&quot;" type="code"/>
+                  <Connection code="getServiceOrchestrator()!=null?(!serviceOrchestrator.isRunning()?&quot;IDLE&quot;:&quot;&quot;):&quot;IDLE&quot;" type="code"/>
                 </Property>
               </Properties>
             </Component>

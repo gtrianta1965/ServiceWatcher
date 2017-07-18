@@ -16,6 +16,10 @@ import java.util.logging.Logger;
 public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private boolean sendMailUpdates = false;
+    private String smtpHost = "smtp.gmail.com";
+    private int smtpPort = 465;
+    private String smtpUsername = "";
+    private String smtpPassword = "";
     private List<String> recipients = new ArrayList<String>();
     private int concurrentThreads = 5;
     private int httpResponseTimeout = 5000;
@@ -77,7 +81,11 @@ public class Configuration {
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"), 5000));
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
-
+            this.setSmtpHost(prop.getProperty("smtpHost"));
+            this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
+            this.setSmtpUsername(prop.getProperty("smtpUsername"));
+            this.setSmtpPassword(prop.getProperty("smtpPassword"));
+            
             if (getSendMailUpdates()) {
                 String emails = prop.getProperty("to");
                 if (emails != null) {
@@ -146,7 +154,40 @@ public class Configuration {
     public void save() {
         //to do
     }
-
+    
+    
+    public void setSmtpHost(String smtpHost){
+        this.smtpHost = smtpHost;
+    }
+    
+    public String getSmtpHost(){
+        return this.smtpHost;
+    }
+    
+    public void setSmtpPort(int smtpPort){
+        this.smtpPort = smtpPort;
+    }
+    
+    public int getSmtpPort(){
+        return this.smtpPort;
+    }
+    
+    public void setSmtpUsername(String smtpUsername){
+        this.smtpUsername = smtpUsername;
+    }
+    
+    public String getSmtpUsername(){
+        return this.smtpUsername;
+    }
+    
+    public void setSmtpPassword(String smtpPassword){
+        this.smtpPassword = smtpPassword;
+    }
+    
+    public String getSmtpPassword(){
+        return this.smtpPassword;
+    }
+    
     public void setserviceParameters(List<ServiceParameter> serviceParameters) {
         this.serviceParameters = serviceParameters;
     }

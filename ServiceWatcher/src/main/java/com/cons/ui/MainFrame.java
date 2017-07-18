@@ -56,13 +56,32 @@ public class MainFrame extends javax.swing.JFrame {
         });
         generic_timer.start();
     }
-    
+    public ImageIcon getImg(){
+        if(serviceOrchestrator.isRunning()){
+            return new ImageIcon(this.getClass().getResource("/src/images/active.gif"));
+        }else{
+            return new ImageIcon();
+        }
+    }
     /**
      * Updates status bar.
      */
     private void updateStatusBar(){
         statusMsg.setText((serviceOrchestrator.getStatus()).toHTML());
-        statusRun.setText(getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?"RUNNING":"IDLE"):"IDLE");
+        if(statusRun.getIcon() == null && serviceOrchestrator.isRunning()){
+            statusRun.setIcon(getImg());
+        }else if(!serviceOrchestrator.isRunning()){
+            statusRun.setIcon(null);
+        }
+        
+        statusRun.setText(getServiceOrchestrator()!=null?(!serviceOrchestrator.isRunning()?"IDLE":""):"IDLE");
+        if (serviceOrchestrator.isRunning()) {
+            btnRefresh.setEnabled(false);
+            btnLoad.setEnabled(false);
+        } else {
+            btnRefresh.setEnabled(true);
+            btnLoad.setEnabled(true);
+        }
     }
     
     /**
@@ -221,7 +240,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         statusBarSection2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        statusRun.setText(getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?"RUNNING":"IDLE"):"IDLE");
+        statusRun.setIcon(this.getImg());
+        statusRun.setText(getServiceOrchestrator()!=null?(!serviceOrchestrator.isRunning()?"IDLE":""):"IDLE");
 
         javax.swing.GroupLayout statusBarSection2Layout = new javax.swing.GroupLayout(statusBarSection2);
         statusBarSection2.setLayout(statusBarSection2Layout);
@@ -405,10 +425,10 @@ public class MainFrame extends javax.swing.JFrame {
                 File file = fc.getSelectedFile();
                 serviceOrchestrator.loadNewFile(file);
             }
-        } else {
+        } /*else {
             JOptionPane.showMessageDialog(null, "Services are currently running. Please wait to finish.");
             System.out.println("running!whait to finish!"); //popup to be implemented
-        }
+        }*/
     }//GEN-LAST:event_buttonLoadProperties
 
     

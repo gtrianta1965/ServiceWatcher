@@ -11,3 +11,16 @@ git reset --hard HEAD~1
 Pull a branch from remote (when the branch does not exist in local repository)
 git branch -f PingService origin/PingService
 
+
+όποιος έχει problems με dependences που δεν είναι για κάποιο λόγο included στο jar μετά από:
+
+mvn clean compile package
+
+do:
+
+mvn clean compile assembly:single
+java -jar target/ServiceWatcher-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+από το folder ServiceWatcher.
+
+

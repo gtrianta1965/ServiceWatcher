@@ -55,7 +55,7 @@ public class OrchestratorStatus {
     }
 
     public void reset(){
-        
+        this.totalSubmitted = 0;
         this.totalServices = 0;
         this.totalRunning = 0;
         this.totalRunning = 0;

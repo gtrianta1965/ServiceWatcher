@@ -57,6 +57,10 @@ public class ServiceOrchestrator {
     
     public void start() {
         
+        //Reset all counters
+        orchestratorStatus.reset();
+ 
+        
         //Check if we are running
         if (executor != null && !executor.isTerminated()) {
             System.out.println("Executor is running");

@@ -20,7 +20,7 @@ public class ServiceFactory {
             }else if (serviceParameter.getType().equals("SFTP")){
                 serviceToBeCreated = new SFTPService(serviceParameter);
             }else if (serviceParameter.getType().equals("LDAP")){
-                serviceToBeCreated = new SFTPService(serviceParameter);
+                serviceToBeCreated = new LDAPService(serviceParameter);
             }
             
         }else{

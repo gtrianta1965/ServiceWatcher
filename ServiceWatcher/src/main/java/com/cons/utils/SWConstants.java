@@ -17,7 +17,7 @@ public class SWConstants {
     public final static String RUNNING_STATUS ="RUNNING";
     public final static String IDLE_STATUS ="IDLE";
     public final static String SERVICE_SOCKET_UNREACHABLE_MSG = "Remote is unreachable at IP:PORT -> ";
-
+    public final static String SERVICE_LDAP_ERROR_MSG="LDAP Connection Error";
         
 
         
@@ -43,4 +43,5 @@ public class SWConstants {
     public final static String REPORTER_NAME = "reporter@servicewatcher.com";
     public final static String REPORTER_MSG_SUBJECT = "Service Watcher Report";
 
+    
 }

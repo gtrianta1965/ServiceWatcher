@@ -19,6 +19,8 @@ public class ServiceFactory {
                 serviceToBeCreated = new SocketService(serviceParameter);
             }else if (serviceParameter.getType().equals("SFTP")){
                 serviceToBeCreated = new SFTPService(serviceParameter);
+            }else if (serviceParameter.getType().equals("LDAP")){
+                serviceToBeCreated = new SFTPService(serviceParameter);
             }
             
         }else{

@@ -135,6 +135,7 @@ public class MainFrame extends javax.swing.JFrame {
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
         initComponents();  
         setColumnsWidth();
+        servicesTable.getTableHeader().setReorderingAllowed(false);
         servicesTable.setColumnSelectionAllowed(true);
         servicesTable.setRowSelectionAllowed(true);
         
@@ -172,6 +173,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Service Watcher");
+        setMinimumSize(new java.awt.Dimension(1004, 439));
 
         btnRefresh.setIcon(new ImageIcon(this.getClass().getResource("/src/images/refresh.png")));
         btnRefresh.setText("Refresh");
@@ -230,6 +232,7 @@ public class MainFrame extends javax.swing.JFrame {
         statusBarSection1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         statusMsg.setText("jLabel1");
+        statusMsg.setMinimumSize(new java.awt.Dimension(0, 0));
 
         javax.swing.GroupLayout statusBarSection1Layout = new javax.swing.GroupLayout(statusBarSection1);
         statusBarSection1.setLayout(statusBarSection1Layout);

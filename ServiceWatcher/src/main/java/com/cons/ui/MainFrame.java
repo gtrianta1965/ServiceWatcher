@@ -403,10 +403,10 @@ public class MainFrame extends javax.swing.JFrame {
                 File file = fc.getSelectedFile();
                 serviceOrchestrator.loadNewFile(file);
             }
-        } else {
+        } /*else {
             JOptionPane.showMessageDialog(null, "Services are currently running. Please wait to finish.");
             System.out.println("running!whait to finish!"); //popup to be implemented
-        }
+        }*/
     }//GEN-LAST:event_buttonLoadProperties
 
     

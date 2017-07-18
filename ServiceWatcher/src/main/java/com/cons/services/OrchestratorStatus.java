@@ -1,5 +1,6 @@
 package com.cons.services;
 
+
 public class OrchestratorStatus {
     
     private int totalServices;
@@ -73,8 +74,9 @@ public class OrchestratorStatus {
     }
     
     public String toHTML(){
-        //soon to be added. 
-        return null;
+        //soon to be added.
+        String statusBarMsg = ("<html>"+"Total services : %d "+ "  Submited :<font color=blue> %d </font>" +"  Running : %d" +"  Successful :<font color=green> %d</font>"+ "  Failed : <font color=red> %d </font>"+"</html>");
+        return String.format(statusBarMsg, this.totalServices,this.totalSubmitted, this.totalRunning, this.totalSuccess, this.totalFailed);
     }
     
 }

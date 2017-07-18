@@ -8,7 +8,7 @@
     <name>ServiceWatcher</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <project.build.sourceEncoding>cp1253</project.build.sourceEncoding>
+        <project.build.sourceEncoding>cp1252</project.build.sourceEncoding>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.json/json -->
@@ -23,11 +23,11 @@
             <artifactId>jsoup</artifactId>
             <version>1.8.3</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4</version>
+            <version>1.4.7</version>
+            <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
         <dependency>
@@ -48,6 +48,7 @@
         </dependency>
     </dependencies>
     <build>
+    
         <resources>
             <resource>
                 <directory>src/images/</directory>

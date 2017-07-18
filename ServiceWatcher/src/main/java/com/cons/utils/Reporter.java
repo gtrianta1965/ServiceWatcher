@@ -58,7 +58,7 @@ public class Reporter {
 
         // Get system properties
         Properties props = new Properties();
-        props.setProperty("mail.smtp.ssl.enable", "true");
+        props.setProperty("mail.smtp.ssl.enable", "false");
         props.setProperty("mail.smtp.auth", "flase");
         props.setProperty("mail.transport.protocol", "smtp");
 

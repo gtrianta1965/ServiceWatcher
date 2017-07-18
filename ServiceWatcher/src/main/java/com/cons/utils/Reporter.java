@@ -50,7 +50,7 @@ public class Reporter {
      * @param recipients is a string array which includes all the recipients e-mails.
      * @param log is a string array which includes the log to be sent via e-mail.
      */
-    public static void sendMail(String[] recipients, List<String> log, String host, int port, String username, String password) {
+    public static void sendMail(String[] recipients, List<String> log, final String host, int port, final String username, final String password) {
         List<InternetAddress> addresses = new ArrayList<InternetAddress>();
         // Recipient's email ID needs to be mentioned.
         InternetAddress[] to;

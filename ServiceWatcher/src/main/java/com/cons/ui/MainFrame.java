@@ -63,6 +63,11 @@ public class MainFrame extends javax.swing.JFrame {
     private void updateStatusBar(){
         statusMsg.setText((serviceOrchestrator.getStatus()).toHTML());
         statusRun.setText(getServiceOrchestrator()!=null?(serviceOrchestrator.isRunning()?"RUNNING":"IDLE"):"IDLE");
+        if (serviceOrchestrator.isRunning()) {
+            btnRefresh.setEnabled(false);
+        } else {
+            btnRefresh.setEnabled(true);
+        }
     }
     
     /**

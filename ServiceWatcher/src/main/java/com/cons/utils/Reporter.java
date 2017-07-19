@@ -95,7 +95,7 @@ public class Reporter {
             message.setSubject(SWConstants.REPORTER_MSG_SUBJECT);
 
             // Set HTML message
-            msgBodyPart.setContent(makePage("../report_template.html", log).toString(), "text/html");
+            msgBodyPart.setContent(makePage("report_template.html", log).toString(), "text/html");
 
             // Add HTML to multipart
             multipart.addBodyPart(msgBodyPart);

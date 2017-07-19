@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 public class Configuration {
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private boolean sendMailUpdates = false;
+    private boolean smtpSendEmailOnSuccess = false;
+    private int smtpSendActivityEmailInterval = 60000;
     private String smtpHost = "smtp.gmail.com";
     private int smtpPort = 465;
     private String smtpUsername = "";
@@ -82,6 +84,8 @@ public class Configuration {
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"), 5000));
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
+            this.setSmtpSendEmailOnSuccess(getBooleanProperty(prop.getProperty("smtpSendMailOnSuccess"), false));
+            this.setSmtpSendActivityEmailInterval(getNumberProperty(prop.getProperty("smtpSendActivityEmailInterval"), 5)*1000);
             this.setSmtpHost(getStringProperty(prop.getProperty("smtpHost"), "smtp.gmail.com"));
             this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
             this.setSmtpUsername(getStringProperty(prop.getProperty("smtpUsername"), ""));
@@ -241,6 +245,22 @@ public class Configuration {
 
     public boolean getSendMailUpdates() {
         return this.sendMailUpdates;
+    }
+    
+    public void setSmtpSendEmailOnSuccess(boolean smtpSendEmailOnSuccess){
+        this.smtpSendEmailOnSuccess = smtpSendEmailOnSuccess;
+    }
+    
+    public boolean getSmtpSendEmailOnSuccess(){
+        return this.smtpSendEmailOnSuccess;
+    }
+    
+    public void setSmtpSendActivityEmailInterval(int smtpSendActivityEmailInterval){
+        this.smtpSendActivityEmailInterval = smtpSendActivityEmailInterval;
+    }
+    
+    public int getSmtpSendActivityEmailInterval(){
+        return this.smtpSendActivityEmailInterval;
     }
 
     public void setConcurrentThreads(int concurentThreads) {

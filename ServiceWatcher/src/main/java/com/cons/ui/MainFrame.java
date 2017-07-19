@@ -49,9 +49,9 @@ public class MainFrame extends javax.swing.JFrame {
         generic_timer = new Timer(interval, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                checkSendMail();
                 checkAutoRefresh();
                 updateStatusBar();
+                checkSendMail();
             }
         });
         generic_timer.start();
@@ -95,8 +95,12 @@ public class MainFrame extends javax.swing.JFrame {
      * Checks if it should send emails for the current run.
      */
     private void checkSendMail(){
-        
-        if(this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator.getConfiguration().getSendMailUpdates()){
+        if(this.send && 
+           !this.serviceOrchestrator.isRunning() && 
+           this.serviceOrchestrator.getConfiguration().getSendMailUpdates() && 
+           (this.serviceOrchestrator.getConfiguration().getSmtpSendEmailOnSuccess() || 
+            this.serviceOrchestrator.getOrchestratorStatus().getTotalSubmitted()!=this.serviceOrchestrator.getOrchestratorStatus().getTotalSuccess())){
+            
             this.send = false;
             this.serviceOrchestrator.sendStatusLog();
             this.serviceOrchestrator.cleanLog();
@@ -106,7 +110,8 @@ public class MainFrame extends javax.swing.JFrame {
     private void RefreshServices() {
         this.send = true;
         currentRefreshFireTime = nextRefreshFireTime;
-        nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+        nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, 
+                                                         Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
         serviceOrchestrator.start();
     }
     

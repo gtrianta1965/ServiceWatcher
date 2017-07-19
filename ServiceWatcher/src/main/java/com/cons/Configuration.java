@@ -25,6 +25,7 @@ public class Configuration {
     private int httpResponseTimeout = 5000;
     private int socketDieInterval = 5000;
     private final static String configFile = "config.properties";
+    private String[] autoRefreshIntervals=null;
 
     Logger clientLog = null;
     boolean valid;
@@ -85,6 +86,7 @@ public class Configuration {
             this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
             this.setSmtpUsername(getStringProperty(prop.getProperty("smtpUsername"), ""));
             this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
+            this.setAutoRefreshIntervals(getStringArrayProperty(prop.getProperty("autoRefreshIntervals"),new String[] {"1","2","3"}));
             
             if (getSendMailUpdates()) {
                 String emails = prop.getProperty("to");
@@ -150,6 +152,25 @@ public class Configuration {
         return intValue;
 
     }
+    
+    private String[] getStringArrayProperty(String value, String[] defaultValue) {
+        String[] strValue = {""};
+        if (value != null) {
+            try {
+                strValue = value.split(",");
+            } catch (NumberFormatException nfe) {
+                strValue = defaultValue;
+                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                                   defaultValue + ")");
+            }
+
+        } else {
+            strValue = defaultValue;
+        }
+        return strValue;
+
+    }
+    
 
     private boolean getBooleanProperty(String value, boolean defaultValue) {
         boolean booleanValue = false;
@@ -268,5 +289,13 @@ public class Configuration {
 
     public int getHttpResponseTimeout() {
         return httpResponseTimeout;
+    }
+    
+    public String[] getAutoRefreshIntervals(){
+        return this.autoRefreshIntervals;
+    }
+    
+    public void setAutoRefreshIntervals(String[] autoRefreshIntervals){
+        this.autoRefreshIntervals=autoRefreshIntervals;        
     }
 }

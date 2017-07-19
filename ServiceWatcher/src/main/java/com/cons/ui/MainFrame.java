@@ -63,6 +63,13 @@ public class MainFrame extends javax.swing.JFrame {
             return new ImageIcon();
         }
     }
+    
+    public String[] getIntervalnumbers(){
+        String[] intervals = this.serviceOrchestrator.getConfiguration().getAutoRefreshIntervals();
+        
+        return intervals;
+    }
+    
     /**
      * Updates status bar.
      */
@@ -230,7 +237,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        cbAutoRefreshInterval.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1","2","3"}));
+        cbAutoRefreshInterval.setModel(new javax.swing.DefaultComboBoxModel<>(this.getIntervalnumbers()));
         cbAutoRefreshInterval.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbAutoRefreshIntervalActionPerformed(evt);

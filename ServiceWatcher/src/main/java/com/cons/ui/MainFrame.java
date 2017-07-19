@@ -417,6 +417,8 @@ public class MainFrame extends javax.swing.JFrame {
             String time_value= String.valueOf(cbAutoRefreshInterval.getSelectedItem());           
             //serviceOrchestrator.start();
         } else {
+            //Clean up
+            next_refresh.setText("");
             cbAutoRefreshInterval.setEnabled(true);
             btnRefresh.setEnabled(true);
         }

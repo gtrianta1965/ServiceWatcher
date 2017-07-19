@@ -81,10 +81,10 @@ public class Configuration {
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"), 5000));
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
-            this.setSmtpHost(prop.getProperty("smtpHost"));
+            this.setSmtpHost(getStringProperty(prop.getProperty("smtpHost"), "smtp.gmail.com"));
             this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
-            this.setSmtpUsername(prop.getProperty("smtpUsername"));
-            this.setSmtpPassword(prop.getProperty("smtpPassword"));
+            this.setSmtpUsername(getStringProperty(prop.getProperty("smtpUsername"), ""));
+            this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
             
             if (getSendMailUpdates()) {
                 String emails = prop.getProperty("to");
@@ -114,7 +114,25 @@ public class Configuration {
             }
         }
     }
+    
+    private String getStringProperty(String value, String defaultValue) {
+        String strValue = "";
+        if (value != null) {
+            try {
+                strValue = value;
+            } catch (NumberFormatException nfe) {
+                strValue = defaultValue;
+                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                                   defaultValue + ")");
+            }
 
+        } else {
+            strValue = defaultValue;
+        }
+        return strValue;
+
+    }
+    
     private int getNumberProperty(String value, int defaultValue) {
         int intValue = 0;
         if (value != null) {

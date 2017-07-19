@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
 
-public class Class1 extends JFrame {
+public class EncryptPasswordAuthentication extends JFrame {
 	private JLabel labelIV = new JLabel("Enter IV:");
 	private JLabel labelKey = new JLabel("Enter Key:");
 	
@@ -22,7 +22,7 @@ public class Class1 extends JFrame {
 	
 	private JButton buttonOK = new JButton("OK");
 	
-	public Class1() {
+	public EncryptPasswordAuthentication() {
 		super("Setting Key and IV");
 		
 		setLayout(new GridBagLayout());
@@ -72,11 +72,11 @@ public class Class1 extends JFrame {
 		char[] password2 = passwordField2.getPassword();
 
 		if (password1.length==16 && password2.length==16) {
-		    JOptionPane.showMessageDialog(Class1.this, 
+		    JOptionPane.showMessageDialog(EncryptPasswordAuthentication.this, 
 		            "Setting Password Completed!");
 		    CloseFrame();
 		} else {
-		    JOptionPane.showMessageDialog(Class1.this, 
+		    JOptionPane.showMessageDialog(EncryptPasswordAuthentication.this, 
 		                    "Password Should be 16 Characters");
 		    return;
 		}

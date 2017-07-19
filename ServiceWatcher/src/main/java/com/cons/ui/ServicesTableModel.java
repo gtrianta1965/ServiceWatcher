@@ -86,7 +86,10 @@ public class ServicesTableModel extends AbstractTableModel {
      */
     public boolean isCellEditable(int row, int col) {
         //Nothing is editable
-        if(col==SWConstants.TABLE_PASSWORD_INDEX && (data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB"))){
+        if(col==SWConstants.TABLE_PASSWORD_INDEX && (
+            (data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB")) ||
+            (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")))
+        ){
             return true;            
             }
         return false;

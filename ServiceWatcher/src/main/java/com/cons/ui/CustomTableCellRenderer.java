@@ -2,9 +2,11 @@ package com.cons.ui;
 
 import com.cons.utils.SWConstants;
 
-import javax.swing.table.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class CustomTableCellRenderer extends DefaultTableCellRenderer {
     public CustomTableCellRenderer() {
@@ -31,10 +33,15 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(Color.green);
             } else if (value.toString().startsWith(SWConstants.SERVICE_FAILED)) {
                 c.setBackground(Color.red);
-            } 
-                
+            }     
             
-        }          
+        }
+        if(column ==SWConstants.TABLE_PASSWORD_INDEX){
+            if(table.isCellEditable(row,column)== false){
+                c.setBackground(Color.lightGray);
+                }
+            
+        }
         return c;
       }
         

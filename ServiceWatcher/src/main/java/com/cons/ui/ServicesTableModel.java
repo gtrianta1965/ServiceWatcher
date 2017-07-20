@@ -36,7 +36,6 @@ public class ServicesTableModel extends AbstractTableModel {
         data = new Object[rows][SWConstants.TABLE_NUMBER_OF_COLUMNS];
         
         
-        
         for (int i=0 ; i< rows ; i++) {
             sp = (ServiceParameter)spl.get(i);
             data[i][SWConstants.TABLE_ID_INDEX] = sp.getId();
@@ -46,7 +45,9 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
             String password_ast = "";
-            for(int j=0; j< GenericUtils.nvl(sp.getPassword(),"").toString().length(); j++){
+            for (int j = 0; j < GenericUtils.nvl(sp.getPassword(), "")
+                                            .toString()
+                                            .length(); j++) {
                 password_ast += "*";
             }
             data[i][SWConstants.TABLE_PASSWORD_INDEX] = password_ast;
@@ -84,12 +85,12 @@ public class ServicesTableModel extends AbstractTableModel {
     /*
      * Don't need to implement this method unless your table's editable.
      */
-    public boolean isCellEditable(int row, int col) {
+    public boolean isCellEditable(int row,
+                                  int col) {
         //Nothing is editable
-        if(col==SWConstants.TABLE_PASSWORD_INDEX && (
-            (data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB")) ||
-            (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")))
-        ){
+        if (col == SWConstants.TABLE_PASSWORD_INDEX &&
+            ((data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB")) ||
+             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")))) {
             return true;            
             }
         return false;

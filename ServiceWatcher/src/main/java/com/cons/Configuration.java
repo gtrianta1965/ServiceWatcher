@@ -1,6 +1,7 @@
 package com.cons;
 
 import com.cons.services.ServiceParameter;
+import com.cons.utils.CryptoUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,11 +41,14 @@ public class Configuration {
 
     public void init() {
         //Initialize from the factory default configuration file (configFile)
+        CryptoUtils.obfuscatePasswordInConfig(configFile);
         init(configFile);
     }
 
     public void init(String fileName) {
         this.serviceParameters.clear();
+
+        //CryptoUtils.deObfuscatePasswordInConfig(fileName);
 
         Properties prop = new Properties();
         InputStream input = null;
@@ -68,7 +72,13 @@ public class Configuration {
                     serviceParameter.setGroup(prop.getProperty("group." + i));
                     serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                     serviceParameter.setUsername(prop.getProperty("username." + i));
-                    serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
+                    if (prop.getProperty("password." + i) != null) {
+                        serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." +
+                                                                                          i))); //Read the password, g30 18/7/2017
+                    } else {
+                        serviceParameter.setPassword(prop.getProperty("password." +
+                                                                      i)); //Read the password, g30 18/7/2017
+                    }
 
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
@@ -77,7 +87,6 @@ public class Configuration {
                     hasMore = false;
                 }
             }
-
 
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"), 5));
@@ -119,6 +128,7 @@ public class Configuration {
                 }
             }
         }
+        //CryptoUtils.obfuscatePasswordInConfig(fileName);
     }
     
     private String getStringProperty(String value, String defaultValue) {
@@ -156,7 +166,7 @@ public class Configuration {
         return intValue;
 
     }
-    
+
     private String[] getStringArrayProperty(String value, String[] defaultValue) {
         String[] strValue = {""};
         if (value != null) {
@@ -246,7 +256,7 @@ public class Configuration {
     public boolean getSendMailUpdates() {
         return this.sendMailUpdates;
     }
-    
+
     public void setSmtpSendEmailOnSuccess(boolean smtpSendEmailOnSuccess){
         this.smtpSendEmailOnSuccess = smtpSendEmailOnSuccess;
     }
@@ -313,7 +323,7 @@ public class Configuration {
     
     public String[] getAutoRefreshIntervals(){
         return this.autoRefreshIntervals;
-    }
+}
     
     public void setAutoRefreshIntervals(String[] autoRefreshIntervals){
         this.autoRefreshIntervals=autoRefreshIntervals;        

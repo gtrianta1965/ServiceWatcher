@@ -1,7 +1,9 @@
 package com.cons;
+
 import com.cons.services.ServiceOrchestrator;
 import com.cons.ui.MainFrame;
 import com.cons.ui.ServicesTableModel;
+import com.cons.utils.CryptoUtils;
 
 
 /**
@@ -15,6 +17,7 @@ public class Main {
             //Read Configuration (From Property File)
             Configuration conf = new Configuration();
         if (externalConfigFile != null) {
+            CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
             conf.init(externalConfigFile);
         } else {
             conf.init();

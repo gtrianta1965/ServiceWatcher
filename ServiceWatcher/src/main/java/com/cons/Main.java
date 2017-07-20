@@ -17,7 +17,7 @@ public class Main {
             //Read Configuration (From Property File)
             Configuration conf = new Configuration();
         if (externalConfigFile != null) {
-            CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
+            //CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
             conf.init(externalConfigFile);
         } else {
             conf.init();

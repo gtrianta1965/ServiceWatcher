@@ -42,7 +42,7 @@ public class Configuration {
 
     public void init() {
         //Initialize from the factory default configuration file (configFile)
-        CryptoUtils.obfuscatePasswordInConfig(configFile);
+        //CryptoUtils.obfuscatePasswordInConfig(configFile);
         init(configFile);
     }
 

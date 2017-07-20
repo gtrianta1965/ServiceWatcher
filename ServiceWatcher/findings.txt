@@ -23,4 +23,11 @@ java -jar target/ServiceWatcher-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 από το folder ServiceWatcher.
 
+Update dependencies local reposititory after adding dependencies in pom.xml
+
+
+mvn dependency:resolve
+or
+mvn install (or mvn package) will always work.
+
 

@@ -170,7 +170,7 @@ public class Reporter extends Thread{
      * @param log is the log to be added in the log section of the page
      * @return returns an HTML page type of Document.
      */
-    private static Document makePage(String templatePath, List<String> log){
+    private Document makePage(String templatePath, List<String> log){
         Document doc = null;
         File input = null;
         try{
@@ -184,6 +184,9 @@ public class Reporter extends Thread{
             // Add log
             element = doc.select("p#field").first().appendElement("h4 id=\"logtlt\" align=\"center\"");
             element.text("Log");
+            
+            element = doc.select("p#field").last().appendElement("p id=\"stsBarResult\" align=\"center\"");
+            element.text(this.serviceOrchestrator.getStatus().toString());
             
             int id=0;
             for(String report:log){

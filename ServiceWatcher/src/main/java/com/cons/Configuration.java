@@ -330,4 +330,8 @@ public class Configuration {
     public void setAutoRefreshIntervals(String[] autoRefreshIntervals) {
         this.autoRefreshIntervals = autoRefreshIntervals;
     }
+
+    public String getFileName() {
+        return Configuration.configFile;
+    }
 }

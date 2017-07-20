@@ -34,11 +34,8 @@ public class CryptoUtils {
                                             .replaceAll(System.getProperty("file.separator"), "")
                                             .trim()
                                             .substring(17, 33); */
-    private static String initializationVector =
-        System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
-    private static String key =
-        System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
-
+    private static String initializationVector = getIV();
+    private static String key = getKey();
     private static boolean valid;
     private static String error;
 
@@ -105,7 +102,7 @@ public class CryptoUtils {
 
     public static void deObfuscatePasswordInConfig(String fileName) {
         init();
-            
+
         // This will reference one line at a time
         String line = null;
         StringBuilder sb = new StringBuilder();
@@ -259,9 +256,30 @@ public class CryptoUtils {
         if (initializationVector == null) {
             CryptoUtils.initializationVector = "1234567890123456";
         }
-        
-        System.out.println("KEY: "+key);
-        System.out.println("IV: "+initializationVector);
+
+        System.out.println("KEY: " + key);
+        System.out.println("IV: " + initializationVector);
     }
 
+    private static String getIV() {
+        String toPad = System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
+        if (toPad.length() < 16) {
+            String padded = String.format("%16s", toPad).replace(' ', '0');
+            System.out.println(padded);
+        } else {
+            toPad = toPad.substring(0, 16);
+        }
+        return toPad;
+    }
+
+    private static String getKey() {
+        String toPad = System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
+        if (toPad.length() < 16) {
+            String padded = String.format("%16s", toPad).replace(' ', '0');
+            System.out.println(padded);
+        } else {
+            toPad = toPad.substring(0, 16);
+        }
+        return toPad;
+    }
 }

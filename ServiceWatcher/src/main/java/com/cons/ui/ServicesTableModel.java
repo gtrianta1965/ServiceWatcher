@@ -14,13 +14,13 @@ public class ServicesTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private boolean DEBUG = false;
 
-    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status","Password"};
+    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group", "Status", "Password" };
 
     private Object[][] data;
-    
+
     private ServiceParameter sp;
-    
-    
+
+
     /*
      * Row is zero indexed!!!!
      */
@@ -28,17 +28,16 @@ public class ServicesTableModel extends AbstractTableModel {
         data[row][SWConstants.TABLE_STATUS_INDEX] = status;
         fireTableDataChanged();
     }
-    
+
     public void initFromConfiguration(Configuration configuration) {
         int rows = configuration.getServiceParameters().size();
-        
+
         List<ServiceParameter> spl = configuration.getServiceParameters();
         data = new Object[rows][SWConstants.TABLE_NUMBER_OF_COLUMNS];
-        
-        
-        
-        for (int i=0 ; i< rows ; i++) {
-            sp = (ServiceParameter)spl.get(i);
+
+
+        for (int i = 0; i < rows; i++) {
+            sp = (ServiceParameter) spl.get(i);
             data[i][SWConstants.TABLE_ID_INDEX] = sp.getId();
             data[i][SWConstants.TABLE_URL_INDEX] = sp.getUrl();
             data[i][SWConstants.TABLE_DESCRIPTION_INDEX] = sp.getDescription();
@@ -46,12 +45,14 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
             String password_ast = "";
-            for(int j=0; j< GenericUtils.nvl(sp.getPassword(),"").toString().length(); j++){
+            for (int j = 0; j < GenericUtils.nvl(sp.getPassword(), "")
+                                            .toString()
+                                            .length(); j++) {
                 password_ast += "*";
             }
             data[i][SWConstants.TABLE_PASSWORD_INDEX] = password_ast;
-        }    
-        
+        }
+
         fireTableDataChanged();
     }
 
@@ -76,19 +77,22 @@ public class ServicesTableModel extends AbstractTableModel {
      * each cell. If we didn't implement this method, then the last column
      * would contain text ("true"/"false"), rather than a check box.
      */
-    
+
     public Class getColumnClass(int c) {
         return getValueAt(0, c).getClass();
     }
-    
+
     /*
      * Don't need to implement this method unless your table's editable.
      */
-    public boolean isCellEditable(int row, int col) {
+    public boolean isCellEditable(int row,
+                                  int col) {
         //Nothing is editable
-        if(col==SWConstants.TABLE_PASSWORD_INDEX && (data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB"))){
-            return true;            
-            }
+        if (col == SWConstants.TABLE_PASSWORD_INDEX &&
+            ((data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB")) ||
+             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")))) {
+            return true;
+        }
         return false;
     }
 

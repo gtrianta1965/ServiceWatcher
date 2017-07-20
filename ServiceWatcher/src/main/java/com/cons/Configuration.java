@@ -1,6 +1,7 @@
 package com.cons;
 
 import com.cons.services.ServiceParameter;
+import com.cons.utils.CryptoUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,11 +38,14 @@ public class Configuration {
 
     public void init() {
         //Initialize from the factory default configuration file (configFile)
+        CryptoUtils.obfuscatePasswordInConfig(configFile);
         init(configFile);
     }
 
     public void init(String fileName) {
         this.serviceParameters.clear();
+
+        //CryptoUtils.deObfuscatePasswordInConfig(fileName);
 
         Properties prop = new Properties();
         InputStream input = null;
@@ -65,7 +69,13 @@ public class Configuration {
                     serviceParameter.setGroup(prop.getProperty("group." + i));
                     serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                     serviceParameter.setUsername(prop.getProperty("username." + i));
-                    serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
+                    if (prop.getProperty("password." + i) != null) {
+                        serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." +
+                                                                                          i))); //Read the password, g30 18/7/2017
+                    } else {
+                        serviceParameter.setPassword(prop.getProperty("password." +
+                                                                      i)); //Read the password, g30 18/7/2017
+                    }
 
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
@@ -74,7 +84,6 @@ public class Configuration {
                     hasMore = false;
                 }
             }
-
 
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"), 5));
@@ -85,7 +94,7 @@ public class Configuration {
             this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
             this.setSmtpUsername(getStringProperty(prop.getProperty("smtpUsername"), ""));
             this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
-            
+
             if (getSendMailUpdates()) {
                 String emails = prop.getProperty("to");
                 if (emails != null) {
@@ -113,8 +122,9 @@ public class Configuration {
                 }
             }
         }
+        //CryptoUtils.obfuscatePasswordInConfig(fileName);
     }
-    
+
     private String getStringProperty(String value, String defaultValue) {
         String strValue = "";
         if (value != null) {
@@ -132,7 +142,7 @@ public class Configuration {
         return strValue;
 
     }
-    
+
     private int getNumberProperty(String value, int defaultValue) {
         int intValue = 0;
         if (value != null) {
@@ -172,40 +182,40 @@ public class Configuration {
     public void save() {
         //to do
     }
-    
-    
-    public void setSmtpHost(String smtpHost){
+
+
+    public void setSmtpHost(String smtpHost) {
         this.smtpHost = smtpHost;
     }
-    
-    public String getSmtpHost(){
+
+    public String getSmtpHost() {
         return this.smtpHost;
     }
-    
-    public void setSmtpPort(int smtpPort){
+
+    public void setSmtpPort(int smtpPort) {
         this.smtpPort = smtpPort;
     }
-    
-    public int getSmtpPort(){
+
+    public int getSmtpPort() {
         return this.smtpPort;
     }
-    
-    public void setSmtpUsername(String smtpUsername){
+
+    public void setSmtpUsername(String smtpUsername) {
         this.smtpUsername = smtpUsername;
     }
-    
-    public String getSmtpUsername(){
+
+    public String getSmtpUsername() {
         return this.smtpUsername;
     }
-    
-    public void setSmtpPassword(String smtpPassword){
+
+    public void setSmtpPassword(String smtpPassword) {
         this.smtpPassword = smtpPassword;
     }
-    
-    public String getSmtpPassword(){
+
+    public String getSmtpPassword() {
         return this.smtpPassword;
     }
-    
+
     public void setserviceParameters(List<ServiceParameter> serviceParameters) {
         this.serviceParameters = serviceParameters;
     }

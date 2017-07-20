@@ -3,7 +3,8 @@ package com.cons;
 import com.cons.services.ServiceParameter;
 import com.cons.utils.CryptoUtils;
 
-import org.junit.Before;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 /**
@@ -12,17 +13,20 @@ import org.junit.Before;
 
 public class CryptoUtilsTest {
 
-    private CryptoUtils cu;
     private ServiceParameter s;
 
     public CryptoUtilsTest() {
         super();
     }
 
+    @Test
+    public void testValidDecryption() {
+        Assert.assertEquals(CryptoUtils.decrypt("AmSQIbkENly0RnG7GtfMwQ=="), "Manager1");
+    }
 
-    @Before
-    public void createHTTPService() {
-        cu = new CryptoUtils("", "");
+    @Test
+    public void testInvalidDecryption() {
+        Assert.assertEquals(CryptoUtils.decrypt("Manager1"), null);
     }
 
 }

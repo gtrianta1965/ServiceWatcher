@@ -27,22 +27,26 @@ public class LDAPService extends Service {
     @Override
     public void service() {
 
-        LdapContext ctx = null;
-        try {
-            Hashtable<String, String> env = new Hashtable<>();
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-            env.put(Context.SECURITY_AUTHENTICATION, "Simple");
-            env.put(Context.SECURITY_PRINCIPAL, serviceParameter.getUsername()); //user DN is the right name
-            env.put(Context.SECURITY_CREDENTIALS, serviceParameter.getPassword());
-            env.put(Context.PROVIDER_URL, serviceParameter.getUrl());
-            ctx = new InitialLdapContext(env, null);
+        if (configuration != null) {
 
-            this.setSuccessfulCall(true);
+            LdapContext ctx = null;
 
-        } catch (NamingException ex) {
-            this.setSuccessfulCall(false);
-            this.setErrorCall(SWConstants.SERVICE_LDAP_ERROR_MSG + ex.getMessage());
+            try {
+                Hashtable<String, String> env = new Hashtable<>();
+                env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+                env.put(Context.SECURITY_AUTHENTICATION, "Simple");
+                env.put(Context.SECURITY_PRINCIPAL, serviceParameter.getUsername()); //user DN is the right name
+                env.put(Context.SECURITY_CREDENTIALS, serviceParameter.getPassword());
+                env.put(Context.PROVIDER_URL, serviceParameter.getUrl());
+                env.put("com.sun.jndi.ldap.connect.timeout", "" + configuration.getHttpResponseTimeout());
+                ctx = new InitialLdapContext(env, null);
+
+                this.setSuccessfulCall(true);
+
+            } catch (NamingException ex) {
+                this.setSuccessfulCall(false);
+                this.setErrorCall(SWConstants.SERVICE_LDAP_ERROR_MSG + ex.getMessage());
+            }
         }
     }
-
 }

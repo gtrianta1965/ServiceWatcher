@@ -1,16 +1,16 @@
 package com.cons.utils;
 
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
-import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -26,57 +26,134 @@ import org.apache.commons.codec.binary.Base64;
  * Helper Class for obfuscating passwords in a config file
  */
 public class CryptoUtils {
-    private static String fileName;
-    private String initializationVector;
-    private String key;
-    private boolean valid;
-    private String error;
+    private String fileName;
+    private static final String initializationVector = System.getProperty("java.class.path")
+                                                             .replaceAll(System.getProperty("file.separator"), "")
+                                                             .trim()
+                                                             .substring(0, 16);
+    private static final String key = System.getProperty("java.class.path")
+                                            .replaceAll(System.getProperty("file.separator"), "")
+                                            .trim()
+                                            .substring(17, 33);
+    private static boolean valid;
+    private static String error;
 
-    public CryptoUtils(String key, String initializationVector) {
-        this.initializationVector = initializationVector;
-        this.key = key;
+    public CryptoUtils() {
     }
 
     public CryptoUtils(String fileName) {
-        CryptoUtils.fileName = fileName;
+        this.fileName = fileName;
     }
 
-    public void obfuscatePasswordInConfig() {
+    public static void obfuscatePasswordInConfig(String fileName) {
 
-        Properties prop = new Properties();
-        InputStream input = null;
-
+        // This will reference one line at a time
+        String line = null;
+        StringBuilder sb = new StringBuilder();
         try {
-            input = new FileInputStream(CryptoUtils.fileName);
-            prop.load(input);
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = new FileReader(fileName);
 
-            int i = 0;
-            boolean hasMore = true;
-            while (hasMore) {
-                i++;
-                prop.setProperty("password." + i, encrypt(prop.getProperty("password." + i)));
+            // Always wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("password.")) {
+                    if (CryptoUtils.decrypt(line.split("=", 2)[1]) == null) {
+                        line = line.split("=", 2)[0] + "=" + CryptoUtils.encrypt(line.split("=", 2)[1]);
+                    }
+                }
+                sb.append(line);
+                sb.append(System.getProperty("line.separator"));
             }
 
-        } catch (FileNotFoundException e) {
-            setValid(false);
-            setError("Property file " + CryptoUtils.fileName + " does not exist");
-        } catch (IOException io) {
-            setValid(false);
-            setError("Error reading from Property file " + CryptoUtils.fileName);
+            // Always close files.
+            bufferedReader.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("Property file " + fileName + " not found.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("Error reading file '" + fileName + "'");
+        }
+
+        FileWriter fileWriter;
+        BufferedWriter bufferedWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+
+            // Always wrap FileReader in BufferedReader.
+            bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write(sb.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("Error reading file '" + fileName + "'");
         } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    setValid(false);
-                    setError("Error closing Property file " + CryptoUtils.fileName);
-                }
+            try {
+                bufferedWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
 
-    public String getPassword(String obfuscatedPassword) {
-        return decrypt(obfuscatedPassword);
+    public static void deObfuscatePasswordInConfig(String fileName) {
+        // This will reference one line at a time
+        String line = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = new FileReader(fileName);
+
+            // Always wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("password.")) {
+                    if (CryptoUtils.decrypt(line.split("=", 2)[1]) != null) {
+                        line = line.split("=", 2)[0] + "=" + CryptoUtils.decrypt(line.split("=", 2)[1]);
+                    }
+                }
+                sb.append(line);
+                sb.append(System.getProperty("line.separator"));
+            }
+
+            // Always close files.
+            bufferedReader.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("Property file " + fileName + " not found.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("Error reading file '" + fileName + "'");
+        }
+
+        FileWriter fileWriter;
+        BufferedWriter bufferedWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+
+            // Always wrap FileReader in BufferedReader.
+            bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write(sb.toString());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("Error reading file '" + fileName + "'");
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -85,7 +162,7 @@ public class CryptoUtils {
      * @param value String to encrypt
      * @return Encrypted string
      */
-    private String encrypt(String value) {
+    private static String encrypt(String value) {
 
         IvParameterSpec iv;
         try {
@@ -101,21 +178,22 @@ public class CryptoUtils {
             return new String(Base64.encodeBase64(encrypted), "UTF-8");
 
         } catch (UnsupportedEncodingException ex) {
-            setValid(false);
-            setError("UnsupportedEncodingException " + ex.getMessage());
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("UnsupportedEncodingException " + ex.getMessage());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
-            setValid(false);
-            setError("NoSuchAlgorithmException | NoSuchPaddingException " + ex.getMessage());
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("NoSuchAlgorithmException | NoSuchPaddingException " + ex.getMessage());
         } catch (InvalidAlgorithmParameterException | InvalidKeyException ex) {
-            setValid(false);
-            setError("InvalidAlgorithmParameterException | InvalidKeyException " + ex.getMessage());
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("InvalidAlgorithmParameterException | InvalidKeyException " + ex.getMessage());
         } catch (BadPaddingException | IllegalBlockSizeException ex) {
-            setValid(false);
-            setError("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
+            CryptoUtils.setValid(false);
+            CryptoUtils.setError("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
         }
 
         return null;
     }
+
 
     /**
      * Decrypts given string value end returns decrypted string.
@@ -123,8 +201,7 @@ public class CryptoUtils {
      * @param value Encrypted string to decrypt
      * @return Decryprted string
      */
-    private String decrypt(String value) {
-
+    public static String decrypt(String value) {
 
         IvParameterSpec iv;
         try {
@@ -156,25 +233,19 @@ public class CryptoUtils {
     }
 
     public String getError() {
-        return error;
+        return CryptoUtils.error;
     }
 
-    public void setValid(boolean valid) {
-        this.valid = valid;
+    public static void setValid(boolean valid) {
+        CryptoUtils.valid = valid;
     }
 
     public boolean isValid() {
-        return valid;
+        return CryptoUtils.valid;
     }
 
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new CryptoUtils("1234567891234567", "1234567891234567").encrypt("Hello World!"));
-        System.out.println(new CryptoUtils("1234567891234567", "1234567891234567").decrypt("wIK+ZM8VNYT2U/YaTYbAjg=="));
-        System.out.println(new CryptoUtils("1234567891234567", "1234567891234567").decrypt(""));
+    public static void setError(String error) {
+        CryptoUtils.error = error;
     }
 
 }

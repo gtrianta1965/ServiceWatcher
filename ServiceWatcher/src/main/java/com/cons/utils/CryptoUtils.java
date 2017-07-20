@@ -42,8 +42,7 @@ public class CryptoUtils {
     public CryptoUtils() {
     }
 
-    public static boolean obfuscatePasswordInConfig(String fileName) {
-        boolean flag = false;
+    public static void obfuscatePasswordInConfig(String fileName) {
         System.out.println("Initializing Obfuscation procedure");
         // This will reference one line at a time
         String line = null;
@@ -67,14 +66,12 @@ public class CryptoUtils {
             }
             System.out.println("File: " + fileName + " obfuscated");
         } catch (FileNotFoundException ex) {
-            flag = false;
             System.out.println("Property file '" + fileName + "' not found.\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(flag);
+            CryptoUtils.setValid(false);
             CryptoUtils.setError("Property file " + fileName + " not found.");
         } catch (IOException ex) {
-            flag = false;
             System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(flag);
+            CryptoUtils.setValid(false);
             CryptoUtils.setError("Error reading file '" + fileName + "'");
         } finally {
             try {
@@ -98,11 +95,9 @@ public class CryptoUtils {
             bufferedWriter.write(sb.toString());
 
             System.out.println("Obfuscation procedure finished");
-            flag = true;
         } catch (IOException ex) {
-            flag = false;
             System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(flag);
+            CryptoUtils.setValid(false);
             CryptoUtils.setError("Error reading file '" + fileName + "'");
         } finally {
             try {
@@ -111,11 +106,9 @@ public class CryptoUtils {
                 System.out.println("Error while closing bufferWriter\nIOException: " + ex.getMessage());
             }
         }
-        return flag;
     }
 
-    public static boolean deObfuscatePasswordInConfig(String fileName) {
-        boolean flag = false;
+    public static void deObfuscatePasswordInConfig(String fileName) {
         System.out.println("Initializing Deobfuscation procedure");
         // This will reference one line at a time
         String line = null;
@@ -142,14 +135,12 @@ public class CryptoUtils {
             // Always close files.
             bufferedReader.close();
         } catch (FileNotFoundException ex) {
-            flag = false;
             System.out.println("Property file '" + fileName + "' not found.\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(flag);
+            CryptoUtils.setValid(false);
             CryptoUtils.setError("Property file " + fileName + " not found.");
         } catch (IOException ex) {
-            flag = false;
             System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(flag);
+            CryptoUtils.setValid(false);
             CryptoUtils.setError("Error reading file '" + fileName + "'");
         } finally {
             try {
@@ -173,11 +164,9 @@ public class CryptoUtils {
             bufferedWriter.write(sb.toString());
 
             System.out.println("Obfuscation procedure finished");
-            flag = true;
         } catch (IOException ex) {
-            flag = false;
             System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(flag);
+            CryptoUtils.setValid(false);
             CryptoUtils.setError("Error reading file '" + fileName + "'");
         } finally {
             try {
@@ -186,7 +175,6 @@ public class CryptoUtils {
                 System.out.println("Error while closing bufferWriter\nIOException: " + ex.getMessage());
             }
         }
-        return flag;
     }
 
     /**

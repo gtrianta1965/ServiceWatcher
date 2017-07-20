@@ -12,18 +12,17 @@ import com.cons.utils.CryptoUtils;
  */
 public class Main {
     public static void main(String[] args) {
-        boolean encryptFlag = false;
         String externalConfigFile = getConfigurationFileFromCommandLine(args);
 
         //Read Configuration (From Property File)
         Configuration conf = new Configuration();
         if (externalConfigFile != null) {
             // CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
-            encryptFlag = getencryptFromCommandLine(args, externalConfigFile);
+            getencryptFromCommandLine(args, externalConfigFile);
             conf.init(externalConfigFile);
         } else {
             conf.init();
-            encryptFlag = getencryptFromCommandLine(args, conf.getFileName());
+            getencryptFromCommandLine(args, conf.getFileName());
         }
         if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
@@ -67,18 +66,15 @@ public class Main {
         return configFile;
     }
 
-    private static boolean getencryptFromCommandLine(String[] args, String configFile) {
-        boolean flag = false;
+    private static void getencryptFromCommandLine(String[] args, String configFile) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equalsIgnoreCase("-encrypt")) {
-                flag = CryptoUtils.obfuscatePasswordInConfig(configFile);
                 System.out.println("Encrypt passwords on " + configFile + " file");
+                CryptoUtils.obfuscatePasswordInConfig(configFile);
             } else if (args[i].equalsIgnoreCase("-decrypt")) {
-                flag = CryptoUtils.deObfuscatePasswordInConfig(configFile);
                 System.out.println("Decrypt passwords on " + configFile + " file");
+                CryptoUtils.deObfuscatePasswordInConfig(configFile);
             }
         }
-
-        return flag;
     }
 }

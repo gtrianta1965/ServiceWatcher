@@ -84,12 +84,12 @@ public class Reporter extends Thread{
      */
     private void sendMail() {
         // Mail Header
-        String[] recipients = this.configuration.getRecipients().toArray(new String[0]);
-        List<String> log = this.serviceOrchestrator.getStatusLog();
-        String host = this.configuration.getSmtpHost();
-        int port = this.configuration.getSmtpPort();
-        String username = this.configuration.getSmtpUsername();
-        String password = this.configuration.getSmtpPassword();
+        final String[] recipients = this.configuration.getRecipients().toArray(new String[0]);
+        final List<String> log = this.serviceOrchestrator.getStatusLog();
+        final String host = this.configuration.getSmtpHost();
+        final int port = this.configuration.getSmtpPort();
+        final String username = this.configuration.getSmtpUsername();
+        final String password = this.configuration.getSmtpPassword();
         
         // IP resolve
         List<InternetAddress> addresses = new ArrayList<InternetAddress>();

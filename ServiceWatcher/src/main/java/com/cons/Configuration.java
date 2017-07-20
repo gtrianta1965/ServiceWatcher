@@ -67,7 +67,7 @@ public class Configuration {
                     serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                     serviceParameter.setUsername(prop.getProperty("username." + i));
                     serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
-
+                    serviceParameter.setQuery(prop.getProperty("query." + i));
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
 

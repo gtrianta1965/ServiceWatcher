@@ -17,6 +17,15 @@ public class ServiceParameter {
     private String password;
     private String status;
     private String error;
+    private String query;
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+    public String getQuery() {
+        return query;
+    }
 
     public void setError(String error) {
         this.error = error;

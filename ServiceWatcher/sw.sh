@@ -1,1 +1,7 @@
-java -cp target/ServiceWatcher-1.0-SNAPSHOT.jar:target/lib/mail-1.4.7.jar:target/lib/jsoup-1.8.3.jar:target/lib/ojdbc6-11.2.0.3.jar:target/lib/jsch-0.1.54.jar:target/lib/json-20170516.jar com.cons.Main $1 $2 $3 $4 $5 $6
+ if [ "$1" != null ] || ["$2" == null];                                                                
+then
+	java -cp /home/Akorilli/jdeveloper/mywork/ServiceWatcher_2/ServiceWatcher/target/ServiceWatcher-1.0-SNAPSHOT.jar:./target/lib/* com.cons.Main $1 $2
+elif (["$1" != null ] && ["$2" == null]) || (["$1" == "" ] && ["$2" != null])
+then
+	echo "File name cant be null Give -conf <propertiefile>"
+fi

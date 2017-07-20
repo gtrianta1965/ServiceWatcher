@@ -34,7 +34,8 @@ public abstract class Service implements Runnable {
             serviceParameter.setError(getErrorCall());
             printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
             if(serviceOrchestrator != null){
-                serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is DOWN");
+                serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is DOWN (" +
+                                                  serviceParameter.getError() + ")");
             }
         }
     }

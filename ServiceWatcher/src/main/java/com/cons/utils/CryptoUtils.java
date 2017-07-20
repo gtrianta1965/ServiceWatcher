@@ -26,26 +26,28 @@ import org.apache.commons.codec.binary.Base64;
  * Helper Class for obfuscating passwords in a config file
  */
 public class CryptoUtils {
-    private String fileName;
-    private static final String initializationVector = System.getProperty("java.class.path")
+    /* private static final String initializationVector = System.getProperty("java.class.path")
                                                              .replaceAll(System.getProperty("file.separator"), "")
                                                              .trim()
                                                              .substring(0, 16);
     private static final String key = System.getProperty("java.class.path")
                                             .replaceAll(System.getProperty("file.separator"), "")
                                             .trim()
-                                            .substring(17, 33);
+                                            .substring(17, 33); */
+    private static String initializationVector =
+        System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
+    private static String key =
+        System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
+
     private static boolean valid;
     private static String error;
 
     public CryptoUtils() {
     }
 
-    public CryptoUtils(String fileName) {
-        this.fileName = fileName;
-    }
-
     public static void obfuscatePasswordInConfig(String fileName) {
+
+        init();
 
         // This will reference one line at a time
         String line = null;
@@ -102,6 +104,8 @@ public class CryptoUtils {
     }
 
     public static void deObfuscatePasswordInConfig(String fileName) {
+        init();
+            
         // This will reference one line at a time
         String line = null;
         StringBuilder sb = new StringBuilder();
@@ -163,7 +167,7 @@ public class CryptoUtils {
      * @return Encrypted string
      */
     private static String encrypt(String value) {
-
+        init();
         IvParameterSpec iv;
         try {
             iv = new IvParameterSpec((initializationVector).getBytes("UTF-8"));
@@ -202,7 +206,7 @@ public class CryptoUtils {
      * @return Decryprted string
      */
     public static String decrypt(String value) {
-
+        init();
         IvParameterSpec iv;
         try {
             iv = new IvParameterSpec((initializationVector).getBytes("UTF-8"));
@@ -246,6 +250,18 @@ public class CryptoUtils {
 
     public static void setError(String error) {
         CryptoUtils.error = error;
+    }
+
+    private static void init() {
+        if (key == null) {
+            CryptoUtils.key = "1234567890123456";
+        }
+        if (initializationVector == null) {
+            CryptoUtils.initializationVector = "1234567890123456";
+        }
+        
+        System.out.println("KEY: "+key);
+        System.out.println("IV: "+initializationVector);
     }
 
 }

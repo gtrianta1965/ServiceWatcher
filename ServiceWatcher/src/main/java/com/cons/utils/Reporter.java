@@ -1,5 +1,11 @@
 package com.cons.utils;
 
+import com.cons.Configuration;
+import com.cons.services.ServiceOrchestrator;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.io.File;
 
 import java.io.IOException;
@@ -31,6 +37,8 @@ import javax.mail.internet.MimeMultipart;
 
 import javax.mail.internet.MimeUtility;
 
+import javax.swing.Timer;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -39,10 +47,34 @@ import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
-public class Reporter {
-
-    public Reporter() {
+public class Reporter extends Thread{
+    private Timer mailTimer;
+    private ServiceOrchestrator serviceOrchestrator;
+    private Configuration configuration;
+    
+    public Reporter(ServiceOrchestrator serviceOrchestrator) {
         super();
+        this.serviceOrchestrator = serviceOrchestrator;
+        this.configuration = this.serviceOrchestrator.getConfiguration();
+    }
+    
+    @Override
+    public void run() {
+        if(this.mailTimer == null){
+            mailTimer = new Timer(this.configuration.getSmtpSendActivityEmailInterval(), new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    if(serviceOrchestrator.checkSendMail()){
+                        try{
+                            sendMail();
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }
+        mailTimer.start();
     }
     
     /**
@@ -50,7 +82,16 @@ public class Reporter {
      * @param recipients is a string array which includes all the recipients e-mails.
      * @param log is a string array which includes the log to be sent via e-mail.
      */
-    public static void sendMail(String[] recipients, List<String> log, final String host, int port, final String username, final String password) {
+    private void sendMail() {
+        // Mail Header
+        String[] recipients = this.configuration.getRecipients().toArray(new String[0]);
+        List<String> log = this.serviceOrchestrator.getStatusLog();
+        String host = this.configuration.getSmtpHost();
+        int port = this.configuration.getSmtpPort();
+        String username = this.configuration.getSmtpUsername();
+        String password = this.configuration.getSmtpPassword();
+        
+        // IP resolve
         List<InternetAddress> addresses = new ArrayList<InternetAddress>();
         // Recipient's email ID needs to be mentioned.
         InternetAddress[] to;
@@ -117,6 +158,7 @@ public class Reporter {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        this.serviceOrchestrator.cleanLog();
     }
     
     /**

@@ -85,7 +85,7 @@ public class Configuration {
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
             this.setSmtpSendEmailOnSuccess(getBooleanProperty(prop.getProperty("smtpSendMailOnSuccess"), false));
-            this.setSmtpSendActivityEmailInterval(getNumberProperty(prop.getProperty("smtpSendActivityEmailInterval"), 5)*1000);
+            this.setSmtpSendActivityEmailInterval(getNumberProperty(prop.getProperty("smtpSendActivityEmailInterval"), 200));
             this.setSmtpHost(getStringProperty(prop.getProperty("smtpHost"), "smtp.gmail.com"));
             this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
             this.setSmtpUsername(getStringProperty(prop.getProperty("smtpUsername"), ""));

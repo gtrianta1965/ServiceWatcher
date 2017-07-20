@@ -26,6 +26,7 @@ public class Configuration {
     private List<String> recipients = new ArrayList<String>();
     private int concurrentThreads = 5;
     private int httpResponseTimeout = 5000;
+    private int ldapResponseTimeout = 5000;
     private int socketDieInterval = 5000;
     private final static String configFile = "config.properties";
     private String[] autoRefreshIntervals=null;
@@ -91,6 +92,7 @@ public class Configuration {
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"), 5));
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"), 5000));
+            this.setLdapResponseTimeout(getNumberProperty(prop.getProperty("ldapResponseTimeout"), 5000));
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
             this.setSmtpSendEmailOnSuccess(getBooleanProperty(prop.getProperty("smtpSendMailOnSuccess"), false));
@@ -319,6 +321,14 @@ public class Configuration {
 
     public int getHttpResponseTimeout() {
         return httpResponseTimeout;
+    }
+    
+    public void setLdapResponseTimeout(int ldapResponseTimeout){
+        this.ldapResponseTimeout = ldapResponseTimeout;
+    }
+    
+    public int getLdapResponseTimeout(){
+        return this.ldapResponseTimeout;
     }
     
     public String[] getAutoRefreshIntervals(){

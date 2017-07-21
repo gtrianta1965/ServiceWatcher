@@ -15,8 +15,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
+import java.util.Timer;
 import java.util.TimeZone;
+
+import java.util.TimerTask;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -37,7 +39,6 @@ import javax.mail.internet.MimeMultipart;
 
 import javax.mail.internet.MimeUtility;
 
-import javax.swing.Timer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -61,9 +62,10 @@ public class Reporter extends Thread{
     @Override
     public void run() {
         if(this.mailTimer == null){
-            mailTimer = new Timer(this.configuration.getSmtpSendActivityEmailInterval(), new ActionListener() {
+            this.mailTimer = new Timer();
+            mailTimer.scheduleAtFixedRate(new TimerTask(){
                 @Override
-                public void actionPerformed(ActionEvent actionEvent) {
+                public void run() {
                     if(serviceOrchestrator.checkSendMail()){
                         try{
                             sendMail();
@@ -72,9 +74,8 @@ public class Reporter extends Thread{
                         }
                     }
                 }
-            });
+            }, 0, this.configuration.getSmtpSendActivityEmailInterval());
         }
-        mailTimer.start();
     }
     
     /**

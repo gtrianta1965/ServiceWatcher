@@ -48,8 +48,6 @@ public class Configuration {
     public void init(String fileName) {
         this.serviceParameters.clear();
 
-        //CryptoUtils.deObfuscatePasswordInConfig(fileName);
-
         Properties prop = new Properties();
         InputStream input = null;
 
@@ -73,7 +71,7 @@ public class Configuration {
                     serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                     serviceParameter.setUsername(prop.getProperty("username." + i));
                     serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
-                    /* if (prop.getProperty("password." + i) != null) {
+                    /*        if (prop.getProperty("password." + i) != null) {
                         serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." +
                                                                                           i))); //Read the password, g30 18/7/2017
                     } else {
@@ -132,7 +130,6 @@ public class Configuration {
                 }
             }
         }
-        //CryptoUtils.obfuscatePasswordInConfig(fileName);
     }
     
     private String getStringProperty(String value, String defaultValue) {

@@ -117,6 +117,8 @@ public class Reporter extends Thread{
         //Session session = Session.getDefaultInstance(props);
 
         try {
+            int failed = 0;
+            String appendSubjectStatus = "";
             // Create a default MimeMessage object.
             MimeMessage message = new MimeMessage(session);
             // Init message parts
@@ -132,8 +134,17 @@ public class Reporter extends Thread{
             // Set To: header field of the header.
             message.addRecipients(Message.RecipientType.TO, to);
 
+            for(String report:log){
+                if(report.contains("DOWN")){
+                    ++failed;
+                }
+            }
+            
+            if(failed > 0){
+                appendSubjectStatus = " (" + failed + " of " + log.size() + " have failed)";
+            }
             // Set Subject: header field
-            message.setSubject(SWConstants.REPORTER_MSG_SUBJECT);
+            message.setSubject(SWConstants.REPORTER_MSG_SUBJECT + appendSubjectStatus);
 
             // Set HTML message
             msgBodyPart.setContent(makePage("report_template.html", log).toString(), "text/html");

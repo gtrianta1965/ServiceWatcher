@@ -38,7 +38,7 @@ public class LDAPService extends Service {
                 env.put(Context.SECURITY_PRINCIPAL, serviceParameter.getUsername()); //user DN is the right name
                 env.put(Context.SECURITY_CREDENTIALS, serviceParameter.getPassword());
                 env.put(Context.PROVIDER_URL, serviceParameter.getUrl());
-                env.put("com.sun.jndi.ldap.connect.timeout", "" + configuration.getHttpResponseTimeout());
+                env.put("com.sun.jndi.ldap.connect.timeout", "" + configuration.getLdapResponseTimeout());
                 ctx = new InitialLdapContext(env, null);
 
                 this.setSuccessfulCall(true);

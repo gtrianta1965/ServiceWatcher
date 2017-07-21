@@ -8,11 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -115,7 +110,7 @@ public class CryptoUtils {
     private static String encrypt(String value) {
         System.out.println(key);
         System.out.println(initializationVector);
-        
+
         IvParameterSpec iv;
         try {
             iv = new IvParameterSpec((initializationVector).getBytes("UTF-8"));
@@ -202,41 +197,27 @@ public class CryptoUtils {
 
     private static String getIV() {
         System.out.println("Initializing key parameter");
-        String paddedIV = new StringBuilder(initSecretFromMACAddress()).reverse().toString();
+        String paddedIV = new StringBuilder(initSecretFromSystem()).reverse().toString();
         return paddedIV != null ? paddedIV : "1234567890123456";
     }
 
     private static String getKey() {
         System.out.println("Initializing key parameter");
-        String paddedKey = initSecretFromMACAddress();
+        String paddedKey = initSecretFromSystem();
         return paddedKey != null ? paddedKey : "1234567890123456";
     }
 
-    private static String initSecretFromMACAddress() {
-        System.out.println("Retrieving MAC Address");
-        StringBuilder sb = new StringBuilder();
-        InetAddress ip;
-        try {
-            ip = InetAddress.getLocalHost();
-            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-            byte[] mac = network.getHardwareAddress();
+    private static String initSecretFromSystem() {
+        System.out.println("Retrieving Secrets from System");
 
-            for (int i = 0; i < mac.length; i++) {
-                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-            }
+        String padded =
+            getStringto16Length(System.getProperty("user.name") + System.getProperty("os.name") +
+                                System.getProperty("os.version") + System.getProperty("os.arch"));
 
-            String padded = getStringto16Length(sb.toString().replaceAll("-", "0").trim());
+        System.out.println("Secrets from System Retrieved");
 
-            System.out.println("MAC Address Retrieved");
 
-            return padded;
-        } catch (UnknownHostException ex) {
-            System.out.println("Error while retrieving MAC Address\nUnknownHostException: " + ex.getMessage());
-        } catch (SocketException ex) {
-            System.out.println("Error while retrieving MAC Address\nSocketException: " + ex.getMessage());
-        }
-        System.out.println("Error while getting secret from MAC address");
-        return null;
+        return padded;
     }
 
     private static String getStringto16Length(String toPad) {

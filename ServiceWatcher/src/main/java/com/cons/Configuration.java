@@ -1,6 +1,7 @@
 package com.cons;
 
 import com.cons.services.ServiceParameter;
+import com.cons.utils.CryptoUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -71,14 +72,13 @@ public class Configuration {
                     serviceParameter.setGroup(prop.getProperty("group." + i));
                     serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                     serviceParameter.setUsername(prop.getProperty("username." + i));
-                    serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
-                    /*  if (prop.getProperty("password." + i) != null) {
+                    if (prop.getProperty("password." + i) != null) {
                         serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." +
                                                                                           i))); //Read the password, g30 18/7/2017
                     } else {
                         serviceParameter.setPassword(prop.getProperty("password." +
                                                                       i)); //Read the password, g30 18/7/2017
-                    } */
+                    }
 
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
@@ -331,7 +331,7 @@ public class Configuration {
         this.autoRefreshIntervals = autoRefreshIntervals;
     }
 
-    public String getFileName() {
+    public String getConfigFileName() {
         return Configuration.configFile;
     }
 }

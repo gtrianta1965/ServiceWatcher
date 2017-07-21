@@ -22,7 +22,7 @@ public class Main {
             conf.init(externalConfigFile);
         } else {
             conf.init();
-            getencryptFromCommandLine(args, conf.getFileName());
+            getencryptFromCommandLine(args, conf.getConfigFileName());
         }
         if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
@@ -71,9 +71,6 @@ public class Main {
             if (args[i].equalsIgnoreCase("-encrypt")) {
                 System.out.println("Encrypt passwords on " + configFile + " file");
                 CryptoUtils.obfuscatePasswordInConfig(configFile);
-            } else if (args[i].equalsIgnoreCase("-decrypt")) {
-                System.out.println("Decrypt passwords on " + configFile + " file");
-                CryptoUtils.deObfuscatePasswordInConfig(configFile);
             }
         }
     }

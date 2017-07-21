@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -65,75 +70,6 @@ public class CryptoUtils {
                 sb.append(System.getProperty("line.separator"));
             }
             System.out.println("File: " + fileName + " obfuscated");
-        } catch (FileNotFoundException ex) {
-            System.out.println("Property file '" + fileName + "' not found.\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(false);
-            CryptoUtils.setError("Property file " + fileName + " not found.");
-        } catch (IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(false);
-            CryptoUtils.setError("Error reading file '" + fileName + "'");
-        } finally {
-            try {
-                // Always close files.
-                bufferedReader.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        System.out.println("Writing changes to file");
-
-        FileWriter fileWriter;
-        BufferedWriter bufferedWriter = null;
-        try {
-            fileWriter = new FileWriter(fileName);
-
-            // Always wrap FileReader in BufferedReader.
-            bufferedWriter = new BufferedWriter(fileWriter);
-
-            bufferedWriter.write(sb.toString());
-
-            System.out.println("Obfuscation procedure finished");
-        } catch (IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
-            CryptoUtils.setValid(false);
-            CryptoUtils.setError("Error reading file '" + fileName + "'");
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException ex) {
-                System.out.println("Error while closing bufferWriter\nIOException: " + ex.getMessage());
-            }
-        }
-    }
-
-    public static void deObfuscatePasswordInConfig(String fileName) {
-        System.out.println("Initializing Deobfuscation procedure");
-        // This will reference one line at a time
-        String line = null;
-        StringBuilder sb = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            // FileReader reads text files in the default encoding.
-            FileReader fileReader = new FileReader(fileName);
-
-            // Always wrap FileReader in BufferedReader.
-            bufferedReader = new BufferedReader(fileReader);
-
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains("password.")) {
-                    if (CryptoUtils.decrypt(line.split("=", 2)[1]) != null) {
-                        line = line.split("=", 2)[0] + "=" + CryptoUtils.decrypt(line.split("=", 2)[1]);
-                    }
-                }
-                sb.append(line);
-                sb.append(System.getProperty("line.separator"));
-            }
-            System.out.println("File: " + fileName + " deobfuscated");
-
-            // Always close files.
-            bufferedReader.close();
         } catch (FileNotFoundException ex) {
             System.out.println("Property file '" + fileName + "' not found.\nIOException: " + ex.getMessage());
             CryptoUtils.setValid(false);
@@ -271,25 +207,51 @@ public class CryptoUtils {
 
     private static String getIV() {
         System.out.println("Initializing key parameter");
-        String toPad = System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
-        if (toPad.length() < 16) {
-            String padded = String.format("%16s", toPad).replace(' ', '0');
-            System.out.println(padded);
-        } else if (toPad.length() > 16) {
-            toPad = toPad.substring(0, 16);
-        }
-        return toPad;
+        String paddedIV = initSecretFromMACAddress();
+        return paddedIV != null ? paddedIV : "1234567890123456";
     }
 
     private static String getKey() {
-        System.out.println("Initializing iv parameter");
-        String toPad = System.getProperty("user.name") + System.getProperty("os.name") + System.getProperty("os.arch");
+        System.out.println("Initializing key parameter");
+        String paddedKey = initSecretFromMACAddress();
+        return paddedKey != null ? paddedKey : "1234567890123456";
+    }
+
+    private static String initSecretFromMACAddress() {
+        System.out.println("Retrieving MAC Address");
+        StringBuilder sb = new StringBuilder();
+        InetAddress ip;
+        try {
+            ip = InetAddress.getLocalHost();
+            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            byte[] mac = network.getHardwareAddress();
+
+            for (int i = 0; i < mac.length; i++) {
+                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+            }
+
+            String padded = getStringto16Length(sb.toString());
+
+            System.out.println("MAC Address Retrieved");
+
+            return padded;
+        } catch (UnknownHostException ex) {
+            System.out.println("Error while retrieving MAC Address\nUnknownHostException: " + ex.getMessage());
+        } catch (SocketException ex) {
+            System.out.println("Error while retrieving MAC Address\nSocketException: " + ex.getMessage());
+        }
+
+        return null;
+    }
+
+    private static String getStringto16Length(String toPad) {
         if (toPad.length() < 16) {
             String padded = String.format("%16s", toPad).replace(' ', '0');
-            System.out.println(padded);
+            return padded;
         } else if (toPad.length() > 16) {
             toPad = toPad.substring(0, 16);
+            return toPad;
         }
-        return toPad;
+        return null;
     }
 }

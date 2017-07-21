@@ -56,7 +56,8 @@ public class ServiceOrchestrator {
     
     
     public void start() {
-        
+        //Reset all services status
+        resetServicesStatus();
         //Reset all counters
         orchestratorStatus.reset();
  
@@ -149,11 +150,21 @@ public class ServiceOrchestrator {
             }else if(s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED)){
                 getValue = orchestratorStatus.getTotalFailed();
                 orchestratorStatus.setTotalFailed(++getValue);
-            }   
+            }
         }
         
         return orchestratorStatus;
     }
-
     
+    /**
+     * Resets all services status
+     */
+    private void resetServicesStatus(){
+        List<ServiceParameter> lsp = configuration.getServiceParameters();
+        for(ServiceParameter s :lsp){
+            if(!this.isRunning()){
+                s.setStatus("NA");
+            }
+        }
+    }
 }

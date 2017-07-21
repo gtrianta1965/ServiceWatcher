@@ -59,14 +59,10 @@ public class OrchestratorStatus {
         this.totalSubmitted = 0;
         this.totalServices = 0;
         this.totalRunning = 0;
-        this.totalRunning = 0;
         this.totalFailed = 0;
-        this.totalSuccess = 0;    
-        
+        this.totalSuccess = 0;        
     }
     
-
-
     @Override
     public String toString() {
         String statusBarMsg = "Total services : %d "+ "  Submited : %d" +"  Running : %d" +"  Successful : %d"+ "  Failed : %d";

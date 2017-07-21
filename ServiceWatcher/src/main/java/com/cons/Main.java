@@ -18,11 +18,11 @@ public class Main {
             Configuration conf = new Configuration();
         if (externalConfigFile != null) {
             // CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
-            getencryptFromCommandLine(args, externalConfigFile);
+            //getencryptFromCommandLine(args, externalConfigFile);
             conf.init(externalConfigFile);
         } else {
             conf.init();
-            getencryptFromCommandLine(args, conf.getConfigFileName());
+            //getencryptFromCommandLine(args, conf.getConfigFileName());
         }
             if (!conf.isValid()) {
                 System.out.println("Error reading configuration (" + conf.getError() + ")");

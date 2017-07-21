@@ -31,16 +31,9 @@ import org.apache.commons.codec.binary.Base64;
  * Helper Class for obfuscating passwords in a config file
  */
 public class CryptoUtils {
-    /* private static final String initializationVector = System.getProperty("java.class.path")
-                                                             .replaceAll(System.getProperty("file.separator"), "")
-                                                             .trim()
-                                                             .substring(0, 16);
-    private static final String key = System.getProperty("java.class.path")
-                                            .replaceAll(System.getProperty("file.separator"), "")
-                                            .trim()
-                                            .substring(17, 33); */
-    private static String initializationVector = getIV();
-    private static String key = getKey();
+
+    private static final String initializationVector = getIV();
+    private static final String key = getKey();
     private static boolean valid;
     private static String error;
 

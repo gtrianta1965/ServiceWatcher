@@ -113,7 +113,9 @@ public class CryptoUtils {
      * @return Encrypted string
      */
     private static String encrypt(String value) {
-
+        System.out.println(key);
+        System.out.println(initializationVector);
+        
         IvParameterSpec iv;
         try {
             iv = new IvParameterSpec((initializationVector).getBytes("UTF-8"));
@@ -200,7 +202,7 @@ public class CryptoUtils {
 
     private static String getIV() {
         System.out.println("Initializing key parameter");
-        String paddedIV = initSecretFromMACAddress();
+        String paddedIV = new StringBuilder(initSecretFromMACAddress()).reverse().toString();
         return paddedIV != null ? paddedIV : "1234567890123456";
     }
 
@@ -223,7 +225,7 @@ public class CryptoUtils {
                 sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
             }
 
-            String padded = getStringto16Length(sb.toString());
+            String padded = getStringto16Length(sb.toString().replaceAll("-", "0").trim());
 
             System.out.println("MAC Address Retrieved");
 
@@ -233,7 +235,7 @@ public class CryptoUtils {
         } catch (SocketException ex) {
             System.out.println("Error while retrieving MAC Address\nSocketException: " + ex.getMessage());
         }
-
+        System.out.println("Error while getting secret from MAC address");
         return null;
     }
 
@@ -245,6 +247,7 @@ public class CryptoUtils {
             toPad = toPad.substring(0, 16);
             return toPad;
         }
+        System.out.println("Error while padding String");
         return null;
     }
 }

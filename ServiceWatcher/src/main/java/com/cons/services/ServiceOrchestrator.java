@@ -56,16 +56,16 @@ public class ServiceOrchestrator {
     
     
     public void start() {
-        
-        //Reset all counters
-        orchestratorStatus.reset();
-        
-        
+    
         //Check if we are running
         if (executor != null && !executor.isTerminated()) {
             System.out.println("Executor is running");
             return;
         }
+
+        //Reset all counters
+        orchestratorStatus.reset();
+        
         //Start Thread Pooling with services
         int totalSub = 0;
         //TODO:Use configuration parameter for pooling
@@ -157,5 +157,4 @@ public class ServiceOrchestrator {
         return orchestratorStatus;
     }
 
-    
 }

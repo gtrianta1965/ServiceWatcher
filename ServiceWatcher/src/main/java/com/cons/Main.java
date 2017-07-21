@@ -17,10 +17,12 @@ public class Main {
             //Read Configuration (From Property File)
             Configuration conf = new Configuration();
         if (externalConfigFile != null) {
-            //CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
+            // CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
+            getencryptFromCommandLine(args, externalConfigFile);
             conf.init(externalConfigFile);
         } else {
             conf.init();
+            getencryptFromCommandLine(args, conf.getConfigFileName());
         }
             if (!conf.isValid()) {
                 System.out.println("Error reading configuration (" + conf.getError() + ")");
@@ -42,8 +44,7 @@ public class Main {
             mf.setVisible(true);
         try{
         mf.initialization();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             }
     }
@@ -59,12 +60,18 @@ public class Main {
                 } else {
                     System.out.println("Arguments -conf must be followed By <config file Name>");
                 }
-
         }
         }
     
         return configFile;
 }
 
-
+    private static void getencryptFromCommandLine(String[] args, String configFile) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("-encrypt")) {
+                System.out.println("Encrypt passwords on " + configFile + " file");
+                CryptoUtils.obfuscatePasswordInConfig(configFile);
+}
+        }
+    }
 }

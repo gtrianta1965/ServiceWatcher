@@ -59,7 +59,7 @@ public class ServiceOrchestrator {
         
         //Reset all counters
         orchestratorStatus.reset();
- 
+        
         
         //Check if we are running
         if (executor != null && !executor.isTerminated()) {
@@ -74,7 +74,10 @@ public class ServiceOrchestrator {
             totalSub = orchestratorStatus.getTotalSubmitted();
             orchestratorStatus.setTotalSubmitted(++totalSub);
         
+            //Set the status submitted for both table model and serviceParameters array of ServiceParameter
             serviceTableModel.setStatus(i, SWConstants.SERVICE_SUBMITTED);
+            configuration.getServiceParameters().get(i).setStatus(SWConstants.SERVICE_SUBMITTED); //Fix bug with unxplainable behavior of status counters
+            
             Runnable serviceWorker = ServiceFactory.createService(configuration.getServiceParameters().get(i),configuration);
             ((Service)serviceWorker).setServiceOrchestrator(this);
             executor.execute(serviceWorker);
@@ -135,7 +138,6 @@ public class ServiceOrchestrator {
         int submitted = orchestratorStatus.getTotalSubmitted();
         orchestratorStatus.reset();
         orchestratorStatus.setTotalSubmitted(submitted);
-        
         List<ServiceParameter> lsp = configuration.getServiceParameters();
         orchestratorStatus.setTotalServices(lsp.size());
         int getValue = 0;
@@ -148,7 +150,7 @@ public class ServiceOrchestrator {
                 orchestratorStatus.setTotalSuccess(++getValue);
             }else if(s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED)){
                 getValue = orchestratorStatus.getTotalFailed();
-                orchestratorStatus.setTotalFailed(++getValue);
+                orchestratorStatus.setTotalFailed(getValue + 1);
             }   
         }
         

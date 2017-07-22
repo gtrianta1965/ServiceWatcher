@@ -42,7 +42,7 @@ public class Configuration {
 
     public void init() {
         //Initialize from the factory default configuration file (configFile)
-        CryptoUtils.obfuscatePasswordInConfig(configFile);
+        //CryptoUtils.obfuscatePasswordInConfig(configFile);
         init(configFile);
     }
 
@@ -73,8 +73,13 @@ public class Configuration {
                     serviceParameter.setUsername(prop.getProperty("username." + i));
                     //serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
                     if (prop.getProperty("password." + i) != null) {
-                        serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." +
-                                                                                          i))); //Read the password, g30 18/7/2017
+                        if (CryptoUtils.decrypt(prop.getProperty("password." + i)) != null) {
+                            serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." +
+                                                                                              i))); //Read the password, g30 18/7/2017
+                        } else {
+                            serviceParameter.setPassword(prop.getProperty("password." + i));
+                        }
+
                     } else {
                         serviceParameter.setPassword(prop.getProperty("password." +
                                                                       i)); //Read the password, g30 18/7/2017

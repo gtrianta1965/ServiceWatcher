@@ -108,8 +108,6 @@ public class CryptoUtils {
      * @return Encrypted string
      */
     private static String encrypt(String value) {
-        System.out.println(key);
-        System.out.println(initializationVector);
 
         IvParameterSpec iv;
         try {

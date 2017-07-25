@@ -49,7 +49,7 @@ public class CryptoUtils {
             bufferedReader = new BufferedReader(fileReader);
 
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains("password.")) {
+                if (line.contains("password") && !line.startsWith("#")) {
                     if (CryptoUtils.decrypt(line.split("=", 2)[1]) == null) {
                         line = line.split("=", 2)[0] + "=" + CryptoUtils.encrypt(line.split("=", 2)[1]);
                     }

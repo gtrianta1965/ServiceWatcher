@@ -24,7 +24,7 @@ public class Main {
         if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
             System.exit(1);
-        }else{
+        } else {
             getencryptFromCommandLine(args, conf.getConfigFile());
         }
 
@@ -37,14 +37,20 @@ public class Main {
         serviceOrchestrator.setConfiguration(conf);
         //serviceOrchestrator.start();
 
-        MainFrame mf = new MainFrame();
-        mf.setServiceOrchestrator(serviceOrchestrator);
-        mf.initModel(stm);
-        mf.setVisible(true);
-        try {
-            mf.initialization();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (getNoGuiFromCommandLine(args)) {
+           CommandLineRunner clr = new CommandLineRunner();
+           clr.setServiceOrchestrator(serviceOrchestrator);
+           clr.run();
+        } else {
+            MainFrame mf = new MainFrame();
+            mf.setServiceOrchestrator(serviceOrchestrator);
+            mf.initModel(stm);
+            mf.setVisible(true);
+            try {
+                mf.initialization();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -72,5 +78,16 @@ public class Main {
                 CryptoUtils.obfuscatePasswordInConfig(configFile);
             }
         }
+    }
+
+    private static boolean getNoGuiFromCommandLine(String[] args) {
+        boolean nogui = false;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("-nogui")) {
+                nogui = true;
+            }
+        }
+        System.out.println("The GUI is " + (nogui ? "disabled" : "enabled"));
+        return nogui;
     }
 }

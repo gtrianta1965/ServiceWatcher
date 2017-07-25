@@ -29,7 +29,7 @@ public class Configuration {
     private int httpResponseTimeout = 5000;
     private int ldapResponseTimeout = 5000;
     private int socketDieInterval = 5000;
-    private final static String configFile = "config.properties";
+    private String configFile = "config.properties";
     private String[] autoRefreshIntervals = null;
 
     Logger clientLog = null;
@@ -49,6 +49,8 @@ public class Configuration {
 
     public void init(String fileName) {
         this.serviceParameters.clear();
+
+        setConfigFile(fileName);
 
         Properties prop = new Properties();
         InputStream input = null;
@@ -357,7 +359,11 @@ public class Configuration {
         this.autoRefreshIntervals = autoRefreshIntervals;
     }
 
-    public String getConfigFileName() {
-        return Configuration.configFile;
+    private void setConfigFile(String configFile) {
+        this.configFile = configFile;
+    }
+
+    public String getConfigFile() {
+        return this.configFile;
     }
 }

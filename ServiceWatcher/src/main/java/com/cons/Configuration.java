@@ -137,9 +137,9 @@ public class Configuration {
                     setError("Error closing Property file " + fileName);
                 }
             }
-            if (isProduction()){
-                CryptoUtils.obfuscatePasswordInConfig(fileName);
-            }
+        }
+        if (isProduction()) {
+            CryptoUtils.obfuscatePasswordInConfig(fileName);
         }
     }
 

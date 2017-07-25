@@ -36,8 +36,21 @@ public class Main {
         ServiceOrchestrator serviceOrchestrator = new ServiceOrchestrator();
         serviceOrchestrator.setServiceTableModel(stm);
         serviceOrchestrator.setConfiguration(conf);
-        //serviceOrchestrator.start();
 
+        /*
+
+         if (noguiFlag){
+
+          */
+
+        // TODO: get -nogui
+        // TODO: check auto refresh value from args
+        //serviceOrchestrator.checkStartRefresh(1);
+        // TODO: If -autoRefresh = null .start();
+        //serviceOrchestrator.start();
+        /*
+ }else{
+ */
         MainFrame mf = new MainFrame();
         mf.setServiceOrchestrator(serviceOrchestrator);
         mf.initModel(stm);
@@ -47,8 +60,11 @@ public class Main {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
 
+    }
+    /*
+ }
+ */
     private static String getConfigurationFileFromCommandLine(String[] args) {
         String configFile = null;
         for (int i = 0; i < args.length; i++) {

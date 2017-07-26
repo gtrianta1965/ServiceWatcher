@@ -3,6 +3,8 @@ package com.cons.utils;
 import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
 
+import com.cons.services.ServiceParameter;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -48,7 +50,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
-public class Reporter extends Thread{
+public class Reporter{
+    protected List<String> statusLog;
     private Timer mailTimer;
     private ServiceOrchestrator serviceOrchestrator;
     private Configuration configuration;
@@ -57,9 +60,9 @@ public class Reporter extends Thread{
         super();
         this.serviceOrchestrator = serviceOrchestrator;
         this.configuration = this.serviceOrchestrator.getConfiguration();
+        this.statusLog = new ArrayList<String>();
     }
     
-    @Override
     public void run() {
         if(this.mailTimer == null){
             this.mailTimer = new Timer();
@@ -84,9 +87,10 @@ public class Reporter extends Thread{
      * @param log is a string array which includes the log to be sent via e-mail.
      */
     private void sendMail() {
+        makeLog();
         // Mail Header
         final String[] recipients = this.configuration.getRecipients().toArray(new String[0]);
-        final List<String> log = this.serviceOrchestrator.getStatusLog();
+        final List<String> log = this.statusLog;
         final String host = this.configuration.getSmtpHost();
         final int port = this.configuration.getSmtpPort();
         final String username = this.configuration.getSmtpUsername();
@@ -170,7 +174,6 @@ public class Reporter extends Thread{
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        this.serviceOrchestrator.cleanLog();
     }
     
     /**
@@ -241,6 +244,13 @@ public class Reporter extends Thread{
             ex.printStackTrace();
         }
         return msgBodyPart;
+    }
+    
+    private void makeLog(){
+        this.statusLog.clear();
+        for(ServiceParameter sp:this.serviceOrchestrator.getConfiguration().getServiceParameters()){
+            statusLog.add("Service: " + sp.getDescription() + " is " + (sp.getStatus() == SWConstants.SERVICE_SUCCESS?"UP":"DOWN"));
+        }
     }
     
     /**

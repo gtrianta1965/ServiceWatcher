@@ -13,25 +13,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServiceOrchestrator {
-    protected List<String> statusLog;
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
     private boolean send;
-    private Thread reporter;
+    private Reporter reporter;
     
     private OrchestratorStatus orchestratorStatus;
     
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();
-        this.statusLog = new ArrayList<String>();
+        //this.statusLog = new ArrayList<String>();
         this.send = false;
     }
     
-    public List<String> getStatusLog(){
-        return this.statusLog;
-    }
+//    public List<String> getStatusLog(){
+//        return this.statusLog;
+//    }
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
@@ -111,13 +110,6 @@ public class ServiceOrchestrator {
         serviceTableModel.initFromConfiguration(configuration);
         setServiceTableModel(serviceTableModel);
         setConfiguration(configuration);
-    }
-    
-    /**
-     * Cleans log
-     */
-    public void cleanLog(){
-        this.statusLog = new ArrayList<String>();
     }
     
     public Boolean isRunning(){

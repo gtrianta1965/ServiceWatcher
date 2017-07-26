@@ -18,16 +18,16 @@ public class CommandLineRunner extends Thread {
     
     @Override
     public void run() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         System.out.println("command line is Running");
-        System.out.println("-----Start execution dateinfo----- \n "+ dateFormat.format(date));
         serviceOrchestrator.start();
+        System.out.println("-----*Start execution*----- \n "+" Before execution Date-info: "+ dateFormat.format(date)+"\n"+serviceOrchestrator.getStatus().toString()+"\n");
         while (serviceOrchestrator.isRunning()) {
 
         }
         Date date1 = new Date();
-        System.out.println(serviceOrchestrator.getStatus().toString()+"\n -----dateinfo----- \n "+ dateFormat.format(date1)+"\n -----finished-----\n ");
+        System.out.println(" After execution Date-info: "+ dateFormat.format(date1)+"\n"+serviceOrchestrator.getStatus().toString()+"\n -----*finished*-----\n\n");
         //TODO: Send mail.
     }
 

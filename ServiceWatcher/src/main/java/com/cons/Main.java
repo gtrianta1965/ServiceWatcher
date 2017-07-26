@@ -40,7 +40,11 @@ public class Main {
         if (getNoGuiFromCommandLine(args)) {
            CommandLineRunner clr = new CommandLineRunner();
            clr.setServiceOrchestrator(serviceOrchestrator);
-           clr.run();
+           if(true){
+               clr.autorefresh();
+           }else{
+               clr.run();             
+           }
         } else {
             MainFrame mf = new MainFrame();
             mf.setServiceOrchestrator(serviceOrchestrator);

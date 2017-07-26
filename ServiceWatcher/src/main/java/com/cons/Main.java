@@ -90,4 +90,25 @@ public class Main {
         System.out.println("The GUI is " + (nogui ? "disabled" : "enabled"));
         return nogui;
     }
+    
+    private static long getAutoRefreshFromCommandLine(String[] args) {
+        long refreshTime = 0;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase("-autorefresh")) {
+                if (i + 1 < args.length) {
+                    try {
+                        refreshTime = Long.parseLong(args[i + 1]);
+                        System.out.println("Auto refresh time is: " + refreshTime);
+                    } catch (NumberFormatException e) {
+                        refreshTime = 1;
+                        System.out.println("Wrong value for auto refresh time, using the default one: " + refreshTime);
+                    }
+                } else {
+                    refreshTime = 1;
+                    System.out.println("Undefined value for auto refresh time, using the default one: 1");
+                }
+            }
+        }
+        return refreshTime;
+    }
 }

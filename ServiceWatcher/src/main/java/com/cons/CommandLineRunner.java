@@ -15,10 +15,11 @@ public class CommandLineRunner {
         serviceOrchestrator.start();
         while(serviceOrchestrator.isRunning()){
             
+            
+            
         }
         System.out.println(serviceOrchestrator.getStatus().toString());
         //TODO: Send mail.
-
     }
 
     public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {

@@ -15,6 +15,9 @@ import java.util.logging.Logger;
 
 
 public class Configuration {
+    private boolean nogui = false;
+    private long autoRefresh = 0;
+    private boolean encrypt = false;
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private boolean sendMailUpdates = false;
     private boolean smtpSendEmailOnSuccess = false;
@@ -39,8 +42,7 @@ public class Configuration {
     public Configuration() {
         super();
     }
-
-
+    
     public void init() {
         //Initialize from the factory default configuration file (configFile)
         //CryptoUtils.obfuscatePasswordInConfig(configFile);
@@ -222,7 +224,30 @@ public class Configuration {
         //to do
     }
 
-
+    public void setNoGUI(boolean nogui){
+        this.nogui = nogui;
+    }
+    
+    public boolean getNoGUI(){
+        return this.nogui;
+    }
+    
+    public void setAutoRefresh(long autoRefresh){
+        this.autoRefresh = autoRefresh;
+    }
+    
+    public long getAutoRefresh(){
+        return this.autoRefresh;
+    }
+    
+    public void setEncrypt(boolean encrypt){
+        this.encrypt = encrypt;
+    }
+    
+    public boolean getEncrypt(){
+        return this.encrypt;
+    }
+    
     public void setSmtpHost(String smtpHost) {
         this.smtpHost = smtpHost;
     }
@@ -359,7 +384,7 @@ public class Configuration {
         this.autoRefreshIntervals = autoRefreshIntervals;
     }
 
-    private void setConfigFile(String configFile) {
+    protected void setConfigFile(String configFile) {
         this.configFile = configFile;
     }
 

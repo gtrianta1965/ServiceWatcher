@@ -13,6 +13,7 @@ import com.cons.utils.CryptoUtils;
 public class Main {
     public static void main(String[] args) {
         String externalConfigFile = getConfigurationFileFromCommandLine(args);
+        CommandLineRunner clr = new CommandLineRunner();
 
         //Read Configuration (From Property File)
         Configuration conf = new Configuration();
@@ -37,14 +38,12 @@ public class Main {
         serviceOrchestrator.setConfiguration(conf);
         //serviceOrchestrator.start();
 
-        if (getNoGuiFromCommandLine(args)) {
-           CommandLineRunner clr = new CommandLineRunner();
-           clr.setServiceOrchestrator(serviceOrchestrator);
-           if(true){
-               clr.autorefresh();
-           }else{
-               clr.run();             
-           }
+        if (getNoGuiFromCommandLine(args)&& getAutoRefreshFromCommandLine(args) == 0) {
+            clr.setServiceOrchestrator(serviceOrchestrator);
+            clr.run();
+        } else if (getNoGuiFromCommandLine(args) && getAutoRefreshFromCommandLine(args) != 0) {
+            clr.setServiceOrchestrator(serviceOrchestrator);
+            clr.autorefresh();
         } else {
             MainFrame mf = new MainFrame();
             mf.setServiceOrchestrator(serviceOrchestrator);
@@ -94,7 +93,7 @@ public class Main {
         System.out.println("The GUI is " + (nogui ? "disabled" : "enabled"));
         return nogui;
     }
-    
+
     private static long getAutoRefreshFromCommandLine(String[] args) {
         long refreshTime = 0;
         for (int i = 0; i < args.length; i++) {

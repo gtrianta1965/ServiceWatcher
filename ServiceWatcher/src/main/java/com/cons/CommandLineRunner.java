@@ -2,6 +2,11 @@ package com.cons;
 
 import com.cons.services.ServiceOrchestrator;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+
 
 public class CommandLineRunner extends Thread {
     private ServiceOrchestrator serviceOrchestrator;
@@ -13,13 +18,16 @@ public class CommandLineRunner extends Thread {
     
     @Override
     public void run() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
         System.out.println("command line is Running");
-
+        System.out.println("-----Start execution dateinfo----- \n "+ dateFormat.format(date));
         serviceOrchestrator.start();
         while (serviceOrchestrator.isRunning()) {
 
         }
-        System.out.println(serviceOrchestrator.getStatus().toString());
+        Date date1 = new Date();
+        System.out.println(serviceOrchestrator.getStatus().toString()+"\n -----dateinfo----- \n "+ dateFormat.format(date1)+"\n -----finished-----\n ");
         //TODO: Send mail.
     }
 

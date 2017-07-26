@@ -32,19 +32,20 @@ public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
     Configuration configuration;
-    private int interval=200;
-    private boolean send=false;
+    private int interval = 200;
+    private boolean send = false;
     private Timer generic_timer;
     private long diff;
 
-    //The following variables control the fire times of the refresh timer.    
+    //The following variables control the fire times of the refresh timer.
     private Date currentRefreshFireTime = null;
     private Date nextRefreshFireTime = null;
-    
+
     /** Creates new form MainFrame */
     public MainFrame() {
 
     }
+
     public void initialization() {
         generic_timer = new Timer(interval, new ActionListener() {
             @Override
@@ -56,32 +57,35 @@ public class MainFrame extends javax.swing.JFrame {
         });
         generic_timer.start();
     }
-    public ImageIcon getImg(){
-        if(serviceOrchestrator.isRunning()){
+
+    public ImageIcon getImg() {
+        if (serviceOrchestrator.isRunning()) {
             return new ImageIcon(this.getClass().getResource("/src/images/active.gif"));
-        }else{
+        } else {
             return new ImageIcon();
         }
     }
-    
-    public String[] getIntervalnumbers(){
-        String[] intervals = this.serviceOrchestrator.getConfiguration().getAutoRefreshIntervals();
-        
+
+    public String[] getIntervalnumbers() {
+        String[] intervals = this.serviceOrchestrator
+                                 .getConfiguration()
+                                 .getAutoRefreshIntervals();
+
         return intervals;
     }
-    
+
     /**
      * Updates status bar.
      */
-    private void updateStatusBar(){
+    private void updateStatusBar() {
         statusMsg.setText((serviceOrchestrator.getStatus()).toHTML());
-        if(statusRun.getIcon() == null && serviceOrchestrator.isRunning()){
+        if (statusRun.getIcon() == null && serviceOrchestrator.isRunning()) {
             statusRun.setIcon(getImg());
-        }else if(!serviceOrchestrator.isRunning()){
+        } else if (!serviceOrchestrator.isRunning()) {
             statusRun.setIcon(null);
         }
-        
-        statusRun.setText(getServiceOrchestrator()!=null?(!serviceOrchestrator.isRunning()?"IDLE":""):"IDLE");
+
+        statusRun.setText(getServiceOrchestrator() != null ? (!serviceOrchestrator.isRunning() ? "IDLE" : "") : "IDLE");
         if (serviceOrchestrator.isRunning()) {
             btnRefresh.setEnabled(false);
             btnLoad.setEnabled(false);
@@ -90,50 +94,78 @@ public class MainFrame extends javax.swing.JFrame {
             btnLoad.setEnabled(true);
         }
     }
-    
+
     /**
      * Checks if it should send emails for the current run.
      */
-    private void checkSendMail(){
-        if(this.send && 
-           !this.serviceOrchestrator.isRunning() && 
-           this.serviceOrchestrator.getConfiguration().getSendMailUpdates() && 
-           (this.serviceOrchestrator.getConfiguration().getSmtpSendEmailOnSuccess() || 
-            this.serviceOrchestrator.getOrchestratorStatus().getTotalSubmitted()!=this.serviceOrchestrator.getOrchestratorStatus().getTotalSuccess())){
-            
+    private void checkSendMail() {
+        if (this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator
+                                                                      .getConfiguration()
+                                                                      .getSendMailUpdates() &&
+            (this.serviceOrchestrator
+                                                                                                    .getConfiguration()
+                                                                                                    .getSmtpSendEmailOnSuccess() ||
+             this.serviceOrchestrator
+                                                                                                                                        .getOrchestratorStatus()
+                                                                                                                                        .getTotalSubmitted() !=
+                           this.serviceOrchestrator
+                                                                                                                                                                    .getOrchestratorStatus()
+                                                                                                                                                                    .getTotalSuccess())) {
+
             this.send = false;
             this.serviceOrchestrator.sendStatusLog();
             this.serviceOrchestrator.cleanLog();
         }
     }
-    
+
     private void RefreshServices() {
         this.send = true;
         currentRefreshFireTime = nextRefreshFireTime;
-        nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, 
-                                                         Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+        nextRefreshFireTime =
+            DateUtils.addMinutesToDate(currentRefreshFireTime,
+                                       Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
         serviceOrchestrator.start();
     }
-    
-    /*
+
+    public void setAutoRefreshEnabled() {
+        long refTime = serviceOrchestrator.getConfiguration().getAutoRefresh();
+        if (refTime != 0) {
+            boolean flag = false;
+            for (int i = 0; i < cbAutoRefreshInterval.getItemCount(); i++) {
+                if (Long.parseLong(cbAutoRefreshInterval.getItemAt(i)) == refTime) {
+                    flag = true;
+                }
+            }
+            if (flag) {
+                cbAutoRefreshInterval.setSelectedItem("" + refTime);
+            } else {
+                cbAutoRefreshInterval.addItem("" + refTime);
+                cbAutoRefreshInterval.setSelectedItem("" + refTime);
+            }
+            checkAutoRefresh.doClick();
+        }
+    }
+
+    /**
      * CheckForAutoRefresh
      */
-    
-    public void checkAutoRefresh(){
+    public void checkAutoRefresh() {
         if (checkAutoRefresh.isSelected()) {
             //Check if we are running, that is the current time is not null
             if (currentRefreshFireTime != null) {
                 diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
                 //The diff should be positive (as the nextRefreshDate points in the future
-                //In case the diff is negative then force a refresh. This might happen if 
+                //In case the diff is negative then force a refresh. This might happen if
                 //we put the PC in a sleep mode. When it wakes up the diff is negative
                 if (diff < 0) {
-                    nextRefreshFireTime = DateUtils.addMinutesToDate(new Date(), Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));                    
+                    nextRefreshFireTime =
+                        DateUtils.addMinutesToDate(new Date(),
+                                                   Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                     diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
                 }
-                next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                next_refresh.setText("Next refresh in " + String.valueOf(diff) + " s");
                 if (diff == 0) {
-                    next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                    next_refresh.setText("Next refresh in " + String.valueOf(diff) + " s");
                     RefreshServices();
                 }
             } else {
@@ -143,7 +175,7 @@ public class MainFrame extends javax.swing.JFrame {
                 //Set the next fire time according to interval specified
                 nextRefreshFireTime =
                     DateUtils.addMinutesToDate(currentRefreshFireTime,
-                    Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 serviceOrchestrator.start();
             }
         } else {
@@ -155,35 +187,36 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
-        float[] columnWidthPercentage = {2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f, 35.0f};
-        
+        float[] columnWidthPercentage = { 2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f, 35.0f };
+
         int tW = servicesTable.getWidth();
-            TableColumn column;
-            TableColumnModel jTableColumnModel = servicesTable.getColumnModel();
-            int cantCols = jTableColumnModel.getColumnCount();
-            for (int i = 0; i < cantCols; i++) {
-                column = jTableColumnModel.getColumn(i);
-                int pWidth = Math.round(columnWidthPercentage[i] * tW);
-                column.setPreferredWidth(pWidth);
-            }
+        TableColumn column;
+        TableColumnModel jTableColumnModel = servicesTable.getColumnModel();
+        int cantCols = jTableColumnModel.getColumnCount();
+        for (int i = 0; i < cantCols; i++) {
+            column = jTableColumnModel.getColumn(i);
+            int pWidth = Math.round(columnWidthPercentage[i] * tW);
+            column.setPreferredWidth(pWidth);
+        }
     }
 
     public void initModel(ServicesTableModel stm) {
-        servicesTableModel = stm;       
-        
+        servicesTableModel = stm;
+
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
-        initComponents();  
+        initComponents();
         setColumnsWidth();
         servicesTable.getTableHeader().setReorderingAllowed(false);
         servicesTable.setColumnSelectionAllowed(true);
         servicesTable.setRowSelectionAllowed(true);
-        
- 
-           if (servicesTable.getCellEditor() != null) {
-             servicesTable.getCellEditor().stopCellEditing();
-            }
- 
+
+
+        if (servicesTable.getCellEditor() != null) {
+            servicesTable.getCellEditor().stopCellEditing();
+        }
+
     }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -398,14 +431,14 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-END:initComponents
 
     private void ButtonExit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExit
-      this.dispose();  //Remove JFrame 
-      System.exit(0);
+        this.dispose(); //Remove JFrame
+        System.exit(0);
     }//GEN-LAST:event_ButtonExit
 
     private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
-       //TODO: Disable button, check if orchestrator is running, display a message if it is already running
-       this.send = true;
-       serviceOrchestrator.start();
+        //TODO: Disable button, check if orchestrator is running, display a message if it is already running
+        this.send = true;
+        serviceOrchestrator.start();
        
     }//GEN-LAST:event_buttonRefresh
 
@@ -414,7 +447,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (checkAutoRefresh.isSelected()) {
             cbAutoRefreshInterval.setEnabled(false);
             btnRefresh.setEnabled(false);
-            String time_value= String.valueOf(cbAutoRefreshInterval.getSelectedItem());           
+            String time_value = String.valueOf(cbAutoRefreshInterval.getSelectedItem());
             //serviceOrchestrator.start();
         } else {
             //Clean up
@@ -434,7 +467,7 @@ public class MainFrame extends javax.swing.JFrame {
             JFileChooser fc = new JFileChooser();
             javax.swing.JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
             int returnVal = fc.showOpenDialog(jFileChooser1);
-        
+
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 serviceOrchestrator.loadNewFile(file);

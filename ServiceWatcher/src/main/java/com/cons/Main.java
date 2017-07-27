@@ -12,6 +12,11 @@ import com.cons.utils.CryptoUtils;
  */
 public class Main {
     public static void main(String[] args) {
+
+        CommandLineArgs cla = new CommandLineArgs();
+        cla.setCommandLineArgs(args);
+
+
         String externalConfigFile = getConfigurationFileFromCommandLine(args);
 
         //Read Configuration (From Property File)
@@ -24,7 +29,7 @@ public class Main {
         if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
             System.exit(1);
-        }else{
+        } else {
             getencryptFromCommandLine(args, conf.getConfigFile());
         }
 

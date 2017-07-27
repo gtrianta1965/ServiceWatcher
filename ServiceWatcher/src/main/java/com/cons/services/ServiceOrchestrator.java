@@ -2,48 +2,28 @@ package com.cons.services;
 
 import com.cons.Configuration;
 import com.cons.ui.ServicesTableModel;
-import com.cons.utils.DateUtils;
 import com.cons.utils.Reporter;
 import com.cons.utils.SWConstants;
 
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class ServiceOrchestrator {
     protected List<String> statusLog;
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
-    private Timer refreshClock;
 
-    //The following variables control the fire times of the refresh timer.
-    private Date currentRefreshFireTime = null;
-    private Date nextRefreshFireTime = null;
     private OrchestratorStatus orchestratorStatus;
-    private long diff;
 
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();
         this.statusLog = new ArrayList<String>();
-        this.refreshClock = new Timer();
-    }
-
-    public void checkStartRefresh(final long refreshTime) {
-        refreshClock.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println(checkRefreshClock(refreshTime));
-            }
-        }, 0, 200);
     }
 
     public void setConfiguration(Configuration configuration) {
@@ -175,47 +155,5 @@ public class ServiceOrchestrator {
         }
 
         return orchestratorStatus;
-    }
-
-    public void disableRefresh() {
-        //Autorefresh is disabled. Nullify current and next fire times
-        currentRefreshFireTime = null;
-        nextRefreshFireTime = null;
-    }
-
-    public boolean checkRefreshClock(long refreshIn) {
-        //Check if we are running, that is the current time is not null
-        if (currentRefreshFireTime != null) {
-            diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
-            //The diff should be positive (as the nextRefreshDate points in the future
-            //In case the diff is negative then force a refresh. This might happen if
-            //we put the PC in a sleep mode. When it wakes up the diff is negative
-            if (diff < 0) {
-                nextRefreshFireTime = DateUtils.addMinutesToDate(new Date(), refreshIn);
-                diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
-            }
-            if (diff == 0) {
-                refreshServices(refreshIn);
-                return true;
-            }
-        } else {
-            //The refresh never executed (execute it now)
-            currentRefreshFireTime = new Date(); //Set the current to NOW!!!
-            //Set the next fire time according to interval specified
-            nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, refreshIn);
-            this.start();
-            return true;
-        }
-        return false;
-    }
-
-    private void refreshServices(long refreshIn) {
-        currentRefreshFireTime = nextRefreshFireTime;
-        nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, refreshIn);
-        this.start();
-    }
-
-    public long getDiff() {
-        return this.diff;
     }
 }

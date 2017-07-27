@@ -15,9 +15,7 @@ import java.util.logging.Logger;
 
 
 public class Configuration {
-    private boolean nogui = false;
-    private long autoRefresh = 0;
-    private boolean encrypt = false;
+    private CommandLineArgs cmdArgs;
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private boolean sendMailUpdates = false;
     private boolean smtpSendEmailOnSuccess = false;
@@ -223,29 +221,13 @@ public class Configuration {
     public void save() {
         //to do
     }
-
-    public void setNoGUI(boolean nogui){
-        this.nogui = nogui;
+    
+    public void setCmdArguments(CommandLineArgs cmdArgs){
+        this.cmdArgs = cmdArgs;
     }
     
-    public boolean getNoGUI(){
-        return this.nogui;
-    }
-    
-    public void setAutoRefresh(long autoRefresh){
-        this.autoRefresh = autoRefresh;
-    }
-    
-    public long getAutoRefresh(){
-        return this.autoRefresh;
-    }
-    
-    public void setEncrypt(boolean encrypt){
-        this.encrypt = encrypt;
-    }
-    
-    public boolean getEncrypt(){
-        return this.encrypt;
+    public CommandLineArgs getCmdArguments(){
+        return this.cmdArgs;
     }
     
     public void setSmtpHost(String smtpHost) {

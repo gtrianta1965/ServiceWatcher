@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -128,7 +127,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     public void setAutoRefreshEnabled() {
-        long refTime = serviceOrchestrator.getConfiguration().getAutoRefresh();
+        long refTime = serviceOrchestrator.getConfiguration().getCmdArguments().getAutoRefreshTime();
         if (refTime != 0) {
             boolean flag = false;
             for (int i = 0; i < cbAutoRefreshInterval.getItemCount(); i++) {
@@ -147,10 +146,9 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     /**
-    
      * CheckForAutoRefresh
      */
-    public void checkAutoRefresh(){
+    public void checkAutoRefresh() {
         if (checkAutoRefresh.isSelected()) {
             //Check if we are running, that is the current time is not null
             if (currentRefreshFireTime != null) {
@@ -170,8 +168,19 @@ public class MainFrame extends javax.swing.JFrame {
                     RefreshServices();
                 }
             } else {
-            serviceOrchestrator.disableRefresh();
+                this.send = true;
+                //The refresh never executed (execute it now)
+                currentRefreshFireTime = new Date(); //Set the current to NOW!!!
+                //Set the next fire time according to interval specified
+                nextRefreshFireTime =
+                    DateUtils.addMinutesToDate(currentRefreshFireTime,
+                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                serviceOrchestrator.start();
             }
+        } else {
+            //Autorefresh is disabled. Nullify current and next fire times
+            currentRefreshFireTime = null;
+            nextRefreshFireTime = null;
         }
     }
         

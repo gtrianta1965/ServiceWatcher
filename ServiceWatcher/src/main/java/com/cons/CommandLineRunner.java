@@ -12,6 +12,10 @@ public class CommandLineRunner extends Thread {
     private ServiceOrchestrator serviceOrchestrator;
     private long autoRefresh;
     
+    public CommandLineRunner() {
+        this(0);
+    }
+    
     public CommandLineRunner(long autoRefresh) {
         this.autoRefresh = autoRefresh;    
     }

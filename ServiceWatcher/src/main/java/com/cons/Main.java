@@ -9,12 +9,12 @@ public class Main {
     public static void main(String[] args) {
         CommandLineRunner clr = null;
         Configuration conf = new Configuration();
-        
+
         if (args.length != 0) {
             getCommandLineArgs(args, conf);
             clr = new CommandLineRunner(conf.getAutoRefresh());
         }
-        
+
         conf.init();
 
         // Open the UI and initialize it with a custom TableModel
@@ -25,6 +25,19 @@ public class Main {
         serviceOrchestrator.setServiceTableModel(stm);
         serviceOrchestrator.setConfiguration(conf);
 
+        /*
+
+         if (noguiFlag){
+
+          */
+
+        // TODO: get -nogui
+        // TODO: check auto refresh value from args
+        //serviceOrchestrator.checkStartRefresh(1);
+        // TODO: If -autoRefresh = null .start();
+        /*
+ }else{
+ */
         if (conf.getNoGUI() && conf.getAutoRefresh() == 0) {
             clr.setServiceOrchestrator(serviceOrchestrator);
             clr.run();
@@ -32,19 +45,21 @@ public class Main {
             clr.setServiceOrchestrator(serviceOrchestrator);
             clr.autorefresh();
         } else {
-            MainFrame mf = new MainFrame();
-            mf.setServiceOrchestrator(serviceOrchestrator);
-            mf.initModel(stm);
-            mf.setVisible(true);
-            try {
-                mf.initialization();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            mf.setAutoRefreshEnabled();
+        MainFrame mf = new MainFrame();
+        mf.setServiceOrchestrator(serviceOrchestrator);
+        mf.initModel(stm);
+        mf.setVisible(true);
+        try {
+            mf.initialization();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+            mf.setAutoRefreshEnabled();
     }
-    
+    }
+    /*
+ }
+ */
     private static void getCommandLineArgs(String[] args, Configuration conf) {
         // for each argument
         for (int i = 0; i < args.length; i++) {
@@ -62,7 +77,7 @@ public class Main {
             if (args[i].equalsIgnoreCase("-encrypt")) {
                 System.out.println("Encrypt passwords on " + conf.getConfigFile() + " file");
                 conf.setEncrypt(true);
-            }
+        }
             // -autorefresh
             if (args[i].equalsIgnoreCase("-autorefresh")) {
                 if (i + 1 < args.length) {
@@ -72,16 +87,16 @@ public class Main {
                     } catch (NumberFormatException e) {
                         conf.setAutoRefresh(1);
                         System.out.println("Wrong value for auto refresh time, using the default one: " + conf.getAutoRefresh());
-                    }
+    }
                 } else {
                     conf.setAutoRefresh(1);
                     System.out.println("Undefined value for auto refresh time, using the default one: " + conf.getAutoRefresh());
-                }
             }
+        }
             // -nogui
             if (args[i].equalsIgnoreCase("-nogui")) {
                 conf.setNoGUI(true);
-            }
-        }
+    }
+}
     }
 }

@@ -10,6 +10,11 @@ public class Main {
         CommandLineRunner clr = null;
         Configuration conf = new Configuration();
 
+        CommandLineArgs cla = new CommandLineArgs();
+        cla.setCommandLineArgs(args);
+
+
+
         if (args.length != 0) {
             getCommandLineArgs(args, conf);
             clr = new CommandLineRunner(conf.getAutoRefresh());

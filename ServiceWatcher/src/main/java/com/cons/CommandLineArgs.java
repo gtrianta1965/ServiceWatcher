@@ -6,7 +6,7 @@ public class CommandLineArgs {
     private String configFile = "config.properties";
     private boolean encrypt = false;
     private boolean noGUI = false;
-    private long autoRefreshTime = 1;
+    private long autoRefreshTime = 0;
 
     public CommandLineArgs() {
     }
@@ -46,13 +46,17 @@ public class CommandLineArgs {
                             setAutoRefreshTime(Long.parseLong(tmp));
                             System.out.println("Auto refresh time is: " + getAutoRefreshTime());
                         } catch (NumberFormatException e) {
+                            setAutoRefreshTime(1);
                             System.out.println("Wrong value for auto refresh time, using the default one: " +
                                                getAutoRefreshTime());
                         }
                     } else {
+                        setAutoRefreshTime(1);
                         System.out.println("Undefined value for auto refresh time, using the default one: " +
                                            getAutoRefreshTime());
                     }
+                } else if (args[i].toLowerCase().equals("-autorefresh")) {
+                    setAutoRefreshTime(1);
                 } else {
                     System.out.println("Arguments -autorefresh must be followed by a colon (:) and the refreshTime value.");
                 }
@@ -63,7 +67,6 @@ public class CommandLineArgs {
                 }
             }
         }
-
     }
 
     public void setConfigFile(String configFile) {

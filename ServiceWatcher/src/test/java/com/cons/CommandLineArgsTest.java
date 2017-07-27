@@ -29,7 +29,7 @@ public class CommandLineArgsTest {
         Assert.assertEquals("config.properties", cla.getConfigFile());
         Assert.assertEquals(false, cla.getEncrypt());
         Assert.assertEquals(false, cla.isNoGUI());
-        Assert.assertEquals(1, cla.getAutoRefreshTime());
+        Assert.assertEquals(0, cla.getAutoRefreshTime());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class CommandLineArgsTest {
     public void testInvalidAutoRefreshTimeArg() {
         String[] args = { "-autorefresh4" };
         cla.setCommandLineArgs(args);
-        Assert.assertEquals(1, cla.getAutoRefreshTime());
+        Assert.assertEquals(0, cla.getAutoRefreshTime());
     }
 
 }

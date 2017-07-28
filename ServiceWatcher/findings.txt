@@ -30,4 +30,11 @@ mvn dependency:resolve
 or
 mvn install (or mvn package) will always work.
 
+View information about branches and what they track:
+
+git branch -vv
+
+View 20 most common git commands (https://github.com/git-tips/tips/blob/master/tips.json):
+git help everyday 
+
 

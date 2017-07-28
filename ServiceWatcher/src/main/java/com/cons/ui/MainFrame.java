@@ -107,7 +107,13 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-
+    private void RefreshServices() {
+        this.send = true;
+        currentRefreshFireTime = nextRefreshFireTime;
+        nextRefreshFireTime = DateUtils.addMinutesToDate(currentRefreshFireTime, 
+                                                         Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+        serviceOrchestrator.start();
+    }
     
     /*
      * CheckForAutoRefresh
@@ -115,10 +121,35 @@ public class MainFrame extends javax.swing.JFrame {
     
     public void checkAutoRefresh(){
         if (checkAutoRefresh.isSelected()) {
-            serviceOrchestrator.checkRefreshClock(Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
-            next_refresh.setText("Next refresh in "+String.valueOf(serviceOrchestrator.getDiff())+" s");
+            //Check if we are running, that is the current time is not null
+            if (currentRefreshFireTime != null) {
+                diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
+                //The diff should be positive (as the nextRefreshDate points in the future
+                //In case the diff is negative then force a refresh. This might happen if 
+                //we put the PC in a sleep mode. When it wakes up the diff is negative
+                if (diff < 0) {
+                    nextRefreshFireTime = DateUtils.addMinutesToDate(new Date(), Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));                    
+                    diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
+                }
+                next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                if (diff == 0) {
+                    next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
+                    RefreshServices();
+                }
+            } else {
+                this.send = true;
+                //The refresh never executed (execute it now)
+                currentRefreshFireTime = new Date(); //Set the current to NOW!!!
+                //Set the next fire time according to interval specified
+                nextRefreshFireTime =
+                    DateUtils.addMinutesToDate(currentRefreshFireTime,
+                    Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                serviceOrchestrator.start();
+            }
         } else {
-            serviceOrchestrator.disableRefresh();
+            //Autorefresh is disabled. Nullify current and next fire times
+            currentRefreshFireTime = null;
+            nextRefreshFireTime = null;
         }
     }
 

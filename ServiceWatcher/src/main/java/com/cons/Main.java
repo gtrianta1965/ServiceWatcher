@@ -12,21 +12,25 @@ import com.cons.utils.CryptoUtils;
  */
 public class Main {
     public static void main(String[] args) {
+
+        CommandLineArgs cla = new CommandLineArgs();
+        cla.setCommandLineArgs(args);
+
+
         String externalConfigFile = getConfigurationFileFromCommandLine(args);
 
         //Read Configuration (From Property File)
         Configuration conf = new Configuration();
         if (externalConfigFile != null) {
-            //CryptoUtils.obfuscatePasswordInConfig(externalConfigFile);
-            getencryptFromCommandLine(args, externalConfigFile);
             conf.init(externalConfigFile);
         } else {
             conf.init();
-            getencryptFromCommandLine(args, conf.getConfigFileName());
         }
         if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
             System.exit(1);
+        } else {
+            getencryptFromCommandLine(args, conf.getConfigFile());
         }
 
         // Open the UI and initialize it with a custom TableModel

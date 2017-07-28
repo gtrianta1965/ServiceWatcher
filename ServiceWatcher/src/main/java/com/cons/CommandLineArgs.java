@@ -7,32 +7,31 @@ public class CommandLineArgs {
     private boolean encrypt = false;
     private boolean noGUI = false;
     private long autoRefreshTime = 0;
-    private boolean help=false;
+
 
     public CommandLineArgs() {
     }
 
-    public void setCommandLineArgs(String[] args) {
-        init(args);
-    }
 
-    private void init(String[] args) {
+    public void init(String[] args) {
         if (args.length == 0) {
             System.out.println("Empty args.");
         } else {
             String tmp;
             for (int i = 0; i < args.length; i++) {
                 // -conf
-                if (args[i].toLowerCase().startsWith("-conf:")) {
-                    tmp = (args[i].split(":")[1]).trim();
-                    if (tmp.length() > 0) {
-                        setConfigFile(tmp);
-                        System.out.println("Custom configuration specified (" + getConfigFile() + ")");
+                if (args[i].toLowerCase().startsWith("-conf")) {
+                    if (args[i].split(":").length != 2) {
+                        System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");                        
                     } else {
-                        System.out.println("Invalid  <config file Name>");
+                        tmp = (args[i].split(":")[1]).trim();
+                        if (tmp.length() > 0) {
+                            setConfigFile(tmp);
+                            System.out.println("Custom configuration specified (" + getConfigFile() + ")");
+                        } else {
+                            System.out.println("Invalid  <config file Name>");
+                        }
                     }
-                } else {
-                    System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
                 }
                 // -encrypt
                 if (args[i].toLowerCase().equals("-encrypt")) {
@@ -40,35 +39,27 @@ public class CommandLineArgs {
                     System.out.println("Encrypt passwords: " + getEncrypt());
                 }
                 // -autorefresh
-                if (args[i].toLowerCase().startsWith("-autorefresh:")) {
-                    tmp = (args[i].split(":")[1]).trim();
-                    if (tmp.length() > 0) {
+                if (args[i].toLowerCase().startsWith("-autorefresh")) {
+                    long interval = 1;
+                    if (args[i].split(":").length == 2) {
+                        tmp = (args[i].split(":")[1]).trim(); 
                         try {
-                            setAutoRefreshTime(Long.parseLong(tmp));
-                            System.out.println("Auto refresh time is: " + getAutoRefreshTime());
+                           interval = Long.parseLong(tmp);
                         } catch (NumberFormatException e) {
-                            setAutoRefreshTime(1);
-                            System.out.println("Wrong value for auto refresh time, using the default one: " +
-                                               getAutoRefreshTime());
+                            System.out.println("Wrong value for auto refresh time (" + tmp + "), using the default one: " +
+                                  interval);
                         }
-                    } else {
-                        setAutoRefreshTime(1);
-                        System.out.println("Undefined value for auto refresh time, using the default one: " +
-                                           getAutoRefreshTime());
-                    }
-                } else if (args[i].toLowerCase().equals("-autorefresh")) {
-                    setAutoRefreshTime(1);
-                } else {
-                    System.out.println("Arguments -autorefresh must be followed by a colon (:) and the refreshTime value.");
-                }
+                    }                     
+                    setAutoRefreshTime(interval);
+                }                    
                 // -nogui
                 if (args[i].toLowerCase().equals("-nogui")) {
                     setNoGUI(true);
                     System.out.println("GUI is disabled.");
                 }
                 //-help
-                if(args[i].toLowerCase().startsWith("--help")){
-                    setHelp(true);
+                if (args[i].toLowerCase().equals("-help")) {
+                    help();
                 }
             }
         }
@@ -107,11 +98,16 @@ public class CommandLineArgs {
         return autoRefreshTime;
     }
 
-    public void setHelp(boolean help) {
-        this.help = help;
-        }
-        
-    public boolean setHelp() {
-        return help;
+
+    public void help() {
+        String NoGUI = "(-nogui) : runs the Service watcher without GUI(user interface\n ";
+        String AutoRefresh =
+            "(-autorefresh : X) : Starts the auto refresh. X sets the interval between the autorefreshes. \nIf you do not select an " +
+            "interval number the programme starts with a default interval.\n" +
+            "Also arguments -autorefresh must be followed by a colon (:) and the refreshTime value.\n";
+        String Encrypt = "(-encrypt) : Obfuscates the passwords of an unencrypted file\n";
+        String conf = "(-conf :) : loads a castum configuration file\n";
+        System.out.println("\n\n\n" + NoGUI + "\n" + AutoRefresh + "\n" + Encrypt + "\n" + conf + "\n");
+        System.exit(0);
     }
 }

@@ -3,19 +3,27 @@ package com.cons;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.ui.MainFrame;
 import com.cons.ui.ServicesTableModel;
+import com.cons.utils.GenericUtils;
 
 public class Main {
     public static void main(String[] args) {
+        
+
         CommandLineRunner clr = null;
-        CommandLineRunner cmdl= new CommandLineRunner();
-        Configuration conf = new Configuration();
+        Configuration conf = null;
 
+        //Read,parse and store command line options
         CommandLineArgs cla = new CommandLineArgs();
-        cla.setCommandLineArgs(args);
-        conf.setCmdArguments(cla);
-        conf.init();
-
-        // TODO: CommandLineRunner instantiate
+        cla.init(args);
+        
+        //Setup and initialize of configuration (Read property file)
+        conf = new Configuration();
+        conf.setCmdArguments(cla); //Pass command line arguments to configuration it might be helpful
+        conf.init(cla.getConfigFile()); 
+        if (!conf.isValid()){
+            System.out.println("Error reading configuration (" + conf.getError() + ")");
+            System.exit(1);
+        }
 
         // Open the UI and initialize it with a custom TableModel
         ServicesTableModel stm = new ServicesTableModel();
@@ -25,17 +33,12 @@ public class Main {
         serviceOrchestrator.setServiceTableModel(stm);
         serviceOrchestrator.setConfiguration(conf);
 
-        if (cla.isNoGUI() && cla.getAutoRefreshTime() == 0) {
-            clr = new CommandLineRunner();
-            clr.setServiceOrchestrator(serviceOrchestrator);
-            clr.run();
-        } else if (cla.isNoGUI() && cla.getAutoRefreshTime() != 0) {
+        if (cla.isNoGUI()) {
+            //Instanitiate command line runner
             clr = new CommandLineRunner(cla.getAutoRefreshTime());
             clr.setServiceOrchestrator(serviceOrchestrator);
-            clr.autorefresh();
-        } else if(cla.setHelp()){
-            cmdl.help();
-        }else{
+            clr.run();
+        } else {
             MainFrame mf = new MainFrame();
             mf.setServiceOrchestrator(serviceOrchestrator);
             mf.initModel(stm);

@@ -3,6 +3,8 @@ package com.cons;
 import com.cons.services.ServiceParameter;
 import com.cons.utils.CryptoUtils;
 
+import com.cons.utils.GenericUtils;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,7 +46,7 @@ public class Configuration {
     public void init() {
         //Initialize from the factory default configuration file (configFile)
         //CryptoUtils.obfuscatePasswordInConfig(configFile);
-        init(configFile);
+        init(getCmdArguments().getConfigFile());
     }
 
     public void init(String fileName) {
@@ -140,9 +142,11 @@ public class Configuration {
                 }
             }
         }
+
         if (isProduction()) {
             CryptoUtils.obfuscatePasswordInConfig(fileName);
         }
+
     }
 
     private String getStringProperty(String value, String defaultValue) {

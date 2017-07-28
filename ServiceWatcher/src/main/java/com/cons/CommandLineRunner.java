@@ -22,39 +22,41 @@ public class CommandLineRunner extends Thread {
     
     @Override
     public void run() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        System.out.println("command line is Running");
-        serviceOrchestrator.start();
-        System.out.println(dateFormat.format (new Date())+" : " +"RUNNING");
-        while (serviceOrchestrator.isRunning()) {
-
+        if (this.autoRefresh == 0) {
+            runOnce();
+        } else {
+            runPeriodically();
         }
-        System.out.println(dateFormat.format (new Date())+" : "+serviceOrchestrator.getStatus().toString());
-        //TODO: Send mail.
+ 
     }
 
-    public void autorefresh() {
+    private void runOnce() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        System.out.println(dateFormat.format (new Date())+" : " +"RUNNING");
+        serviceOrchestrator.start();
+        while (serviceOrchestrator.isRunning()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+        }
+        System.out.println(dateFormat.format (new Date())+" : "+serviceOrchestrator.getStatus().toString());
+        //TODO: Send mail.        
+    }
+    
+    private  void runPeriodically() {
         while (true) {
-            System.out.println("command line is auto-ref");
-            run();
+            runOnce();
             try {
                 sleep(autoRefresh * 60000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Interrupt requested.");
             }
         }
     }
     
-    public void help(){
-        String NoGUI ="(-nogui) : runs the Service watcher without GUI(user interface\n ";
-        String AutoRefresh="(-autorefresh : X) : Starts the auto refresh. X sets the interval between the autorefreshes. \nIf you do not select an " +
-            "interval number the programme starts with a default interval.\n" +
-            "Also arguments -autorefresh must be followed by a colon (:) and the refreshTime value.\n";
-        String Encrypt="(-encrypt) : Obfuscates the passwords of an unencrypted file\n";
-        String conf="(-conf :) : loads a castum configuration file\n";
-        System.out.println("\n\n\n"+NoGUI+"\n"+AutoRefresh+"\n"+Encrypt+"\n"+conf+"\n");
-        
-    }
+
     
 
     public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {

@@ -1,5 +1,10 @@
 package com.cons.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+
 public class GenericUtils {
     public GenericUtils() {
         super();
@@ -16,6 +21,11 @@ public class GenericUtils {
             }
         }
         return null;
+    }
+    
+    public static void printCurrentTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        System.out.println(dateFormat.format (new Date()));
     }
 
 }

@@ -7,6 +7,7 @@ public class CommandLineArgs {
     private boolean encrypt = false;
     private boolean noGUI = false;
     private long autoRefreshTime = 0;
+    private boolean help=false;
 
     public CommandLineArgs() {
     }
@@ -65,9 +66,14 @@ public class CommandLineArgs {
                     setNoGUI(true);
                     System.out.println("GUI is disabled.");
                 }
+                //-help
+                if(args[i].toLowerCase().startsWith("--help")){
+                    setHelp(true);
+                }
             }
         }
     }
+
 
     public void setConfigFile(String configFile) {
         this.configFile = configFile;
@@ -99,5 +105,13 @@ public class CommandLineArgs {
 
     public long getAutoRefreshTime() {
         return autoRefreshTime;
+    }
+
+    public void setHelp(boolean help) {
+        this.help = help;
+        }
+        
+    public boolean setHelp() {
+        return help;
     }
 }

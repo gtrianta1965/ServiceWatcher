@@ -44,6 +44,17 @@ public class CommandLineRunner extends Thread {
             }
         }
     }
+    
+    public void help(){
+        String NoGUI ="(-nogui) : runs the Service watcher without GUI(user interface ";
+        String AutoRefresh="(-autorefresh X) : Starts the auto refresh. X sets the interval between the autorefreshes. If you do not select an " +
+            "interval number the programme starts with a default interval.";
+        String Encrypt="(-encrypt) : Obfuscates the passwords of an unencrypted file ";
+        String conf="(-conf :) : loads a castum configuration file";
+        System.out.println(NoGUI+"\n"+AutoRefresh+"\n"+Encrypt+"\n"+conf+"\n");
+        
+    }
+    
 
     public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {
         this.serviceOrchestrator = serviceOrchestrator;

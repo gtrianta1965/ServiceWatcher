@@ -3,11 +3,11 @@ package com.cons;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.ui.MainFrame;
 import com.cons.ui.ServicesTableModel;
-import com.cons.utils.CryptoUtils;
 
 public class Main {
     public static void main(String[] args) {
         CommandLineRunner clr = null;
+        CommandLineRunner cmdl= new CommandLineRunner();
         Configuration conf = new Configuration();
 
         CommandLineArgs cla = new CommandLineArgs();
@@ -33,7 +33,9 @@ public class Main {
             clr = new CommandLineRunner(cla.getAutoRefreshTime());
             clr.setServiceOrchestrator(serviceOrchestrator);
             clr.autorefresh();
-        } else {
+        } else if(cla.setHelp()){
+            cmdl.help();
+        }else{
             MainFrame mf = new MainFrame();
             mf.setServiceOrchestrator(serviceOrchestrator);
             mf.initModel(stm);

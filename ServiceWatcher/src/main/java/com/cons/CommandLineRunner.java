@@ -46,12 +46,13 @@ public class CommandLineRunner extends Thread {
     }
     
     public void help(){
-        String NoGUI ="(-nogui) : runs the Service watcher without GUI(user interface ";
-        String AutoRefresh="(-autorefresh X) : Starts the auto refresh. X sets the interval between the autorefreshes. If you do not select an " +
-            "interval number the programme starts with a default interval.";
-        String Encrypt="(-encrypt) : Obfuscates the passwords of an unencrypted file ";
-        String conf="(-conf :) : loads a castum configuration file";
-        System.out.println(NoGUI+"\n"+AutoRefresh+"\n"+Encrypt+"\n"+conf+"\n");
+        String NoGUI ="(-nogui) : runs the Service watcher without GUI(user interface\n ";
+        String AutoRefresh="(-autorefresh : X) : Starts the auto refresh. X sets the interval between the autorefreshes. \nIf you do not select an " +
+            "interval number the programme starts with a default interval.\n" +
+            "Also arguments -autorefresh must be followed by a colon (:) and the refreshTime value.\n";
+        String Encrypt="(-encrypt) : Obfuscates the passwords of an unencrypted file\n";
+        String conf="(-conf :) : loads a castum configuration file\n";
+        System.out.println("\n\n\n"+NoGUI+"\n"+AutoRefresh+"\n"+Encrypt+"\n"+conf+"\n");
         
     }
     

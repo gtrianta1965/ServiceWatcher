@@ -3,8 +3,6 @@ package com.cons;
 import com.cons.services.ServiceParameter;
 import com.cons.utils.CryptoUtils;
 
-import com.cons.utils.GenericUtils;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,7 +40,7 @@ public class Configuration {
     public Configuration() {
         super();
     }
-    
+
     public void init() {
         //Initialize from the factory default configuration file (configFile)
         //CryptoUtils.obfuscatePasswordInConfig(configFile);
@@ -79,17 +77,11 @@ public class Configuration {
                     //serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
                     if (prop.getProperty("password." + i) != null) {
                         if (CryptoUtils.decrypt(prop.getProperty("password." + i)) != null) {
-                            serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." +
-                                                                                              i))); //Read the password, g30 18/7/2017
+                            serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." + i)));
                         } else {
                             serviceParameter.setPassword(prop.getProperty("password." + i));
                         }
-
-                    } else {
-                        serviceParameter.setPassword(prop.getProperty("password." +
-                                                                      i)); //Read the password, g30 18/7/2017
                     }
-
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
 
@@ -111,7 +103,13 @@ public class Configuration {
             this.setSmtpHost(getStringProperty(prop.getProperty("smtpHost"), "smtp.gmail.com"));
             this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
             this.setSmtpUsername(getStringProperty(prop.getProperty("smtpUsername"), ""));
-            this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
+            if (prop.getProperty("smtpPassword") != null) {
+                if (CryptoUtils.decrypt(prop.getProperty("smtpPassword")) != null) {
+                    this.setSmtpPassword(getStringProperty(CryptoUtils.decrypt(prop.getProperty("smtpPassword")), ""));
+                } else {
+                    this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
+                }
+            }
             this.setAutoRefreshIntervals(getStringArrayProperty(prop.getProperty("autoRefreshIntervals"),
                                                                 new String[] { "1", "2", "3" }));
 
@@ -143,7 +141,7 @@ public class Configuration {
             }
         }
 
-        if (isProduction()) {
+        if (isProduction() && !getCmdArguments().getEncrypt()) {
             CryptoUtils.obfuscatePasswordInConfig(fileName);
         }
 
@@ -225,15 +223,15 @@ public class Configuration {
     public void save() {
         //to do
     }
-    
-    public void setCmdArguments(CommandLineArgs cmdArgs){
+
+    public void setCmdArguments(CommandLineArgs cmdArgs) {
         this.cmdArgs = cmdArgs;
     }
-    
-    public CommandLineArgs getCmdArguments(){
+
+    public CommandLineArgs getCmdArguments() {
         return this.cmdArgs;
     }
-    
+
     public void setSmtpHost(String smtpHost) {
         this.smtpHost = smtpHost;
     }

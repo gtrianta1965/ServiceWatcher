@@ -12,11 +12,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -32,10 +27,19 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class CryptoUtils {
 
-    private static final String initializationVector = getIV();
-    private static final String key = getKey();
+    private static String initializationVector;
+    private static String key;
     private static boolean valid;
     private static String error;
+
+    static {
+        System.out.println("Initializing key and initialization vector.");
+        String systemProperties =
+            getStringto16Length(System.getProperty("user.name") + System.getProperty("os.name") +
+                                System.getProperty("os.version") + System.getProperty("os.arch"));
+        key = systemProperties;
+        initializationVector = new StringBuilder(systemProperties).reverse().toString();
+    }
 
     public CryptoUtils() {
     }
@@ -198,34 +202,6 @@ public class CryptoUtils {
         CryptoUtils.error = error;
     }
 
-    private static String getIV() {
-        System.out.println("Initializing IV parameter"); 
-        GenericUtils.printCurrentTime();
-        String paddedIV = new StringBuilder(initSecretFromSystem()).reverse().toString();
-        return paddedIV != null ? paddedIV : "1234567890123456";
-    }
-
-    private static String getKey() {
-        System.out.println("Initializing key parameter");
-        GenericUtils.printCurrentTime();
-        String paddedKey = initSecretFromSystem();
-        return paddedKey != null ? paddedKey : "1234567890123456";
-    }
-
-    private static String initSecretFromSystem() {
-        System.out.println("Retrieving Secrets from System");
-        GenericUtils.printCurrentTime();
-        String padded =
-            getStringto16Length(System.getProperty("user.name") + System.getProperty("os.name") +
-                                System.getProperty("os.version") + System.getProperty("os.arch"));
-
-        System.out.println("Secrets from System Retrieved");
-        GenericUtils.printCurrentTime();
-
-
-        return padded;
-    }
-
     private static String getStringto16Length(String toPad) {
         if (toPad.length() < 16) {
             String padded = String.format("%16s", toPad).replace(' ', '0');
@@ -237,5 +213,5 @@ public class CryptoUtils {
         System.out.println("Error while padding String");
         return null;
     }
-    
+
 }

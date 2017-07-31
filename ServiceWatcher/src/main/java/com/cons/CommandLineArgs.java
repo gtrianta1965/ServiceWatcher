@@ -1,5 +1,10 @@
 package com.cons;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 public class CommandLineArgs {
 
@@ -10,6 +15,7 @@ public class CommandLineArgs {
 
 
     public CommandLineArgs() {
+        
     }
 
 
@@ -100,14 +106,19 @@ public class CommandLineArgs {
 
 
     public void help() {
-        String NoGUI = "(-nogui) : runs the Service watcher without GUI(user interface\n ";
-        String AutoRefresh =
-            "(-autorefresh : X) : Starts the auto refresh. X sets the interval between the autorefreshes. \nIf you do not select an " +
-            "interval number the programme starts with a default interval.\n" +
-            "Also arguments -autorefresh must be followed by a colon (:) and the refreshTime value.\n";
-        String Encrypt = "(-encrypt) : Obfuscates the passwords of an unencrypted file\n";
-        String conf = "(-conf :) : loads a castum configuration file\n";
-        System.out.println("\n\n\n" + NoGUI + "\n" + AutoRefresh + "\n" + Encrypt + "\n" + conf + "\n");
-        System.exit(0);
+
+        try {
+            InputStream in = getClass().getResourceAsStream("/src/images/help.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in)) ;
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            System.exit(0);
+        } catch (IOException e) {
+            System.out.println("file does not exist.");
+        } catch (Exception e) {
+            System.out.println("Help is not available.");
+        }
     }
 }

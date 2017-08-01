@@ -31,3 +31,8 @@ or
 mvn install (or mvn package) will always work.
 
 
+How to delete local branches when remotes have been deleted. They still show up in git branch -r:
+
+git remote update --prune
+
+

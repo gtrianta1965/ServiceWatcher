@@ -7,7 +7,7 @@ import com.cons.utils.GenericUtils;
 
 public class Main {
     public static void main(String[] args) {
-        
+
 
         CommandLineRunner clr = null;
         Configuration conf = null;
@@ -15,12 +15,12 @@ public class Main {
         //Read,parse and store command line options
         CommandLineArgs cla = new CommandLineArgs();
         cla.init(args);
-        
+
         //Setup and initialize of configuration (Read property file)
         conf = new Configuration();
         conf.setCmdArguments(cla); //Pass command line arguments to configuration it might be helpful
         conf.init(cla.getConfigFile()); 
-        if (!conf.isValid()){
+        if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
             System.exit(1);
         }
@@ -32,6 +32,7 @@ public class Main {
         ServiceOrchestrator serviceOrchestrator = new ServiceOrchestrator();
         serviceOrchestrator.setServiceTableModel(stm);
         serviceOrchestrator.setConfiguration(conf);
+        //serviceOrchestrator.start();
 
         if (cla.isNoGUI()) {
             //Instanitiate command line runner
@@ -39,16 +40,17 @@ public class Main {
             clr.setServiceOrchestrator(serviceOrchestrator);
             clr.run();
         } else {
-            MainFrame mf = new MainFrame();
-            mf.setServiceOrchestrator(serviceOrchestrator);
-            mf.initModel(stm);
-            mf.setVisible(true);
-            try {
-                mf.initialization();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        MainFrame mf = new MainFrame();
+        mf.setServiceOrchestrator(serviceOrchestrator);
+        mf.initModel(stm);
+        mf.setVisible(true);
+        try {
+            mf.initialization();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
             mf.setAutoRefreshEnabled();
+    }
         }
     }
 }

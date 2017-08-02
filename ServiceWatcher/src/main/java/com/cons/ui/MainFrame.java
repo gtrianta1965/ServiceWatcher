@@ -125,7 +125,7 @@ public class MainFrame extends javax.swing.JFrame {
                                        Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
         serviceOrchestrator.start();
     }
-    
+
     public void setAutoRefreshEnabled() {
         long refTime = serviceOrchestrator.getConfiguration().getCmdArguments().getAutoRefreshTime();
         if (refTime != 0) {
@@ -144,11 +144,10 @@ public class MainFrame extends javax.swing.JFrame {
             checkAutoRefresh.doClick();
         }
     }
-
     /**
      * CheckForAutoRefresh
      */
-    public void checkAutoRefresh() {
+    public void checkAutoRefresh(){
         if (checkAutoRefresh.isSelected()) {
             //Check if we are running, that is the current time is not null
             if (currentRefreshFireTime != null) {
@@ -167,23 +166,23 @@ public class MainFrame extends javax.swing.JFrame {
                     next_refresh.setText("Next refresh in " + String.valueOf(diff) + " s");
                     RefreshServices();
                 }
-            } else {
+        } else {
                 this.send = true;
                 //The refresh never executed (execute it now)
                 currentRefreshFireTime = new Date(); //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
                 nextRefreshFireTime =
                     DateUtils.addMinutesToDate(currentRefreshFireTime,
-                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                    Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 serviceOrchestrator.start();
-            }
+        }
         } else {
             //Autorefresh is disabled. Nullify current and next fire times
             currentRefreshFireTime = null;
             nextRefreshFireTime = null;
-        }
     }
-        
+    }
+
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage

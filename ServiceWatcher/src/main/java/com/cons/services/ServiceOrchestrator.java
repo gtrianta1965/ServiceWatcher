@@ -17,9 +17,8 @@ public class ServiceOrchestrator {
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
-
     private OrchestratorStatus orchestratorStatus;
-
+    
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();

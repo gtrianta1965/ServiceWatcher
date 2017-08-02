@@ -1,5 +1,5 @@
 <b>-nogui</b>
-    runs the Service watcher without GUI(user interface.
+    runs the Service watcher without GUI (Graphical User Interface).
 
 <b>-autorefresh:X</b>
     Starts the auto refresh. X sets the interval between the autorefreshes.
@@ -10,4 +10,4 @@
     Obfuscates the passwords of an unencrypted file.
 
 <b>-conf:path</b>
-    loads a custom configuration file.
+    Loads a custom configuration file.

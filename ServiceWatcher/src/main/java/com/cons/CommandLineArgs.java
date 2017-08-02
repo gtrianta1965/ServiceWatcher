@@ -24,19 +24,25 @@ public class CommandLineArgs {
             System.out.println("Empty args.");
         } else {
             String tmp;
+            boolean confFlag = true;
+            boolean autoRefreshFlag = true;
             for (int i = 0; i < args.length; i++) {
                 // -conf
                 if (args[i].toLowerCase().startsWith("-conf")) {
-                    if (args[i].split(":").length != 2) {
-                        System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
-                        System.out.println("Using default configuration file: " + getConfigFile());
-                    } else {
-                        tmp = (args[i].split(":")[1]).trim();
-                        if (tmp.length() > 0) {
-                            setConfigFile(tmp);
-                            System.out.println("Custom configuration specified (" + getConfigFile() + ")");
+                    if (confFlag) {
+                        if (args[i].split(":").length != 2) {
+                            System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
+                            System.out.println("Using the default configuration file: " + getConfigFile());
+                            confFlag = false;
                         } else {
-                            System.out.println("Invalid  <config file Name>");
+                            tmp = (args[i].split(":")[1]).trim();
+                            if (tmp.length() > 0) {
+                                setConfigFile(tmp);
+                                System.out.println("Custom configuration specified (" + getConfigFile() + ")");
+                                confFlag = false;
+                            } else {
+                                System.out.println("Invalid  <config file Name>");
+                            }
                         }
                     }
                 }
@@ -47,17 +53,21 @@ public class CommandLineArgs {
                 }
                 // -autorefresh
                 if (args[i].toLowerCase().startsWith("-autorefresh")) {
-                    long interval = 1;
-                    if (args[i].split(":").length == 2) {
-                        tmp = (args[i].split(":")[1]).trim();
-                        try {
-                            interval = Long.parseLong(tmp);
-                        } catch (NumberFormatException e) {
-                            System.out.println("Wrong value for auto refresh time (" + tmp +
-                                               "), using the default one: " + interval);
+                    if (autoRefreshFlag) {
+                        long interval = 1;
+                        if (args[i].split(":").length == 2) {
+                            tmp = (args[i].split(":")[1]).trim();
+                            try {
+                                interval = Long.parseLong(tmp);
+                            } catch (NumberFormatException e) {
+                                System.out.println("Wrong value for auto refresh time (" + tmp +
+                                                   "), using the default one: " + interval);
+                            }
                         }
+                        setAutoRefreshTime(interval);
+                        System.out.println("Autorefresh enabled with: " + interval + " interval");
+                        autoRefreshFlag = false;
                     }
-                    setAutoRefreshTime(interval);
                 }
                 // -nogui
                 if (args[i].toLowerCase().equals("-nogui")) {

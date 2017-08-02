@@ -1,6 +1,13 @@
-NoGUI=          (-nogui):runs the Service watcher without GUI(user interface.
-AutoRefresh =   (-autorefresh:X):Starts the auto refresh. X sets the interval between the autorefreshes.
-                If you do not select an interval number the programme starts with a default interval.
-		Also arguments -autorefresh must be followed by a colon (:) and the refreshTime value.
-Encrypt=        (-encrypt):Obfuscates the passwords of an unencrypted file.
-conf=           (-conf :):loads a custom configuration file.
+-nogui
+    runs the Service watcher without GUI(user interface.
+
+-autorefresh:X
+    Starts the auto refresh. X sets the interval between the autorefreshes.
+    If you do not select an interval number the programme starts with a default interval.
+    Also arguments -autorefresh must be followed by a colon (:) and the refreshTime value.
+                    
+-encrypt
+    Obfuscates the passwords of an unencrypted file.
+
+-conf:path
+    loads a custom configuration file.

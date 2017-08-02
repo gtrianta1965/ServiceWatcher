@@ -112,6 +112,8 @@ public class CommandLineArgs {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in)) ;
             String line = null;
             while ((line = reader.readLine()) != null) {
+                line = line.replaceAll("<b>","\u001B[1m" );
+                line = line.replaceAll("</b>","\u001B[0m" );
                 System.out.println(line);
             }
             System.exit(0);

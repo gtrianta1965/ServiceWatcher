@@ -3,7 +3,6 @@ package com.cons;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.ui.MainFrame;
 import com.cons.ui.ServicesTableModel;
-import com.cons.utils.GenericUtils;
 
 public class Main {
     public static void main(String[] args) {
@@ -40,17 +39,16 @@ public class Main {
             clr.setServiceOrchestrator(serviceOrchestrator);
             clr.run();
         } else {
-        MainFrame mf = new MainFrame();
-        mf.setServiceOrchestrator(serviceOrchestrator);
-        mf.initModel(stm);
-        mf.setVisible(true);
-        try {
-            mf.initialization();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            MainFrame mf = new MainFrame();
+            mf.setServiceOrchestrator(serviceOrchestrator);
+            mf.initModel(stm);
+            mf.setVisible(true);
+            try {
+                mf.initialization();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             mf.setAutoRefreshEnabled();
-    }
         }
     }
 }

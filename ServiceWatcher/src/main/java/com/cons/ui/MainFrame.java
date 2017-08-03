@@ -30,9 +30,7 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
-    Configuration configuration;
     private int interval=200;
-    private boolean send=false;
     private Timer generic_timer;
     private long diff;
 
@@ -51,7 +49,6 @@ public class MainFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 checkAutoRefresh();
                 updateStatusBar();
-                checkSendMail();
             }
         });
         generic_timer.start();
@@ -94,38 +91,16 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-    /**
-     * Checks if it should send emails for the current run.
-     */
-    private void checkSendMail(){
-        if (this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator
-                                                                      .getConfiguration()
-                                                                      .getSendMailUpdates() &&
-            (this.serviceOrchestrator
-                                                                                                    .getConfiguration()
-                                                                                                    .getSmtpSendEmailOnSuccess() ||
-             this.serviceOrchestrator
-                                                                                                                                        .getOrchestratorStatus()
-                                                                                                                                        .getTotalSubmitted() !=
-                           this.serviceOrchestrator
-                                                                                                                                                                    .getOrchestratorStatus()
-                                                                                                                                                                    .getTotalSuccess())) {
             
-            this.send = false;
-            this.serviceOrchestrator.sendStatusLog();
-            this.serviceOrchestrator.cleanLog();
-        }
-    }
     
     private void RefreshServices() {
-        this.send = true;
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime =
             DateUtils.addMinutesToDate(currentRefreshFireTime,
-                                       Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                                                         Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
         serviceOrchestrator.start();
     }
-
+    
     public void setAutoRefreshEnabled() {
         long refTime = serviceOrchestrator.getConfiguration().getCmdArguments().getAutoRefreshTime();
         if (refTime != 0) {
@@ -153,7 +128,7 @@ public class MainFrame extends javax.swing.JFrame {
             if (currentRefreshFireTime != null) {
                 diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
                 //The diff should be positive (as the nextRefreshDate points in the future
-                //In case the diff is negative then force a refresh. This might happen if
+                //In case the diff is negative then force a refresh. This might happen if 
                 //we put the PC in a sleep mode. When it wakes up the diff is negative
                 if (diff < 0) {
                     nextRefreshFireTime =
@@ -161,13 +136,12 @@ public class MainFrame extends javax.swing.JFrame {
                                                    Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                     diff = DateUtils.getDateDiff(new Date(), nextRefreshFireTime, TimeUnit.SECONDS);
                 }
-                next_refresh.setText("Next refresh in " + String.valueOf(diff) + " s");
+                next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
                 if (diff == 0) {
-                    next_refresh.setText("Next refresh in " + String.valueOf(diff) + " s");
+                    next_refresh.setText("Next refresh in "+String.valueOf(diff)+" s");
                     RefreshServices();
                 }
-        } else {
-                this.send = true;
+            } else {
                 //The refresh never executed (execute it now)
                 currentRefreshFireTime = new Date(); //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
@@ -175,12 +149,12 @@ public class MainFrame extends javax.swing.JFrame {
                     DateUtils.addMinutesToDate(currentRefreshFireTime,
                     Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 serviceOrchestrator.start();
-        }
+            }
         } else {
             //Autorefresh is disabled. Nullify current and next fire times
             currentRefreshFireTime = null;
             nextRefreshFireTime = null;
-    }
+        }
     }
 
 
@@ -436,7 +410,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
        //TODO: Disable button, check if orchestrator is running, display a message if it is already running
-       this.send = true;
        serviceOrchestrator.start();
        
     }//GEN-LAST:event_buttonRefresh

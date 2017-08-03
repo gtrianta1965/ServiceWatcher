@@ -8,9 +8,10 @@ import java.io.InputStreamReader;
 
 public class CommandLineArgs {
 
-    private String configFile = "config.properties";
+    private String configFile = null;
     private boolean encrypt = false;
     private boolean noGUI = false;
+    private boolean help = false;
     private long autoRefreshTime = 0;
 
 
@@ -24,22 +25,18 @@ public class CommandLineArgs {
             System.out.println("Empty args.");
         } else {
             String tmp;
-            boolean confFlag = true;
-            boolean autoRefreshFlag = true;
             for (int i = 0; i < args.length; i++) {
                 // -conf
                 if (args[i].toLowerCase().startsWith("-conf")) {
-                    if (confFlag) {
+                    if (getConfigFile() == null) {
                         if (args[i].split(":").length != 2) {
                             System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
                             System.out.println("Using the default configuration file: " + getConfigFile());
-                            confFlag = false;
                         } else {
                             tmp = (args[i].split(":")[1]).trim();
                             if (tmp.length() > 0) {
                                 setConfigFile(tmp);
                                 System.out.println("Custom configuration specified (" + getConfigFile() + ")");
-                                confFlag = false;
                             } else {
                                 System.out.println("Invalid  <config file Name>");
                             }
@@ -48,12 +45,14 @@ public class CommandLineArgs {
                 }
                 // -encrypt
                 if (args[i].toLowerCase().equals("-encrypt")) {
-                    setEncrypt(true);
-                    System.out.println("Encrypt passwords: " + getEncrypt());
+                    if (!getEncrypt()) {
+                        setEncrypt(true);
+                        System.out.println("Encrypt passwords: " + getEncrypt());
+                    }
                 }
                 // -autorefresh
                 if (args[i].toLowerCase().startsWith("-autorefresh")) {
-                    if (autoRefreshFlag) {
+                    if (getAutoRefreshTime() == 0) {
                         long interval = 1;
                         if (args[i].split(":").length == 2) {
                             tmp = (args[i].split(":")[1]).trim();
@@ -66,17 +65,20 @@ public class CommandLineArgs {
                         }
                         setAutoRefreshTime(interval);
                         System.out.println("Autorefresh enabled with: " + interval + " interval");
-                        autoRefreshFlag = false;
                     }
                 }
                 // -nogui
                 if (args[i].toLowerCase().equals("-nogui")) {
-                    setNoGUI(true);
-                    System.out.println("GUI is disabled.");
+                    if (!isNoGUI()) {
+                        setNoGUI(true);
+                        System.out.println("GUI is disabled.");
+                    }
                 }
                 //-help
                 if (args[i].toLowerCase().equals("-help")) {
-                    help();
+                    if (!getHelp()) {
+                        help();
+                    }
                 }
             }
         }
@@ -115,6 +117,13 @@ public class CommandLineArgs {
         return autoRefreshTime;
     }
 
+    public void setHelp(boolean help) {
+        this.help = help;
+    }
+
+    public boolean getHelp() {
+        return help;
+    }
 
     public void help() {
 
@@ -134,4 +143,5 @@ public class CommandLineArgs {
             System.out.println("Help is not available.");
         }
     }
+
 }

@@ -1,5 +1,7 @@
 package com.cons;
 
+import com.cons.utils.GenericUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,18 +110,24 @@ public class CommandLineArgs {
     public void help() {
         String ANSI_RED_RESET = "\u001B[0m";
         String ANSI_RED = "\u001B[31m";
-        String ANSI_BOLD = "\u001B[1m";
-        String ANSI_BOLD_RESET = "\u001B[0m";
+        
         try {
             InputStream in = getClass().getResourceAsStream("/src/images/help.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line = null;
             while ((line = reader.readLine()) != null) {
-                line = line.replaceAll("<b>", ANSI_BOLD);
-                line = line.replaceAll("</b>", ANSI_BOLD_RESET);
-                line = line.replaceAll("<red>", ANSI_RED);
-                line = line.replaceAll("</red>", ANSI_RED_RESET);
-                System.out.println(line);
+                if(GenericUtils.isUnix()){
+                    line = line.replaceAll("<b>", "\u001B[1m");
+                    line = line.replaceAll("</b>", "\u001B[0m");
+                    line = line.replaceAll("<red>", ANSI_RED);
+                    line = line.replaceAll("</red>", ANSI_RED_RESET);
+                }else if (GenericUtils.isWindows()){
+                    line = line.replaceAll("<b>", "<Esc>[1m");
+                    line = line.replaceAll("</b>", "<Esc>[0m");
+                    line = line.replaceAll("<red>", "<Esc>[31m");
+                    line = line.replaceAll("</red>", "<Esc>[0m");
+                }
+                    System.out.println(line);
             }
             System.exit(0);
         } catch (IOException e) {

@@ -73,6 +73,7 @@ public class CommandLineArgs {
                 if (args[i].toLowerCase().equals("-version")) {
                     System.out.println("ServiceWatcher");
                     System.out.println("Version: 1.0");
+                    System.exit(0);
                 }
             }
         }

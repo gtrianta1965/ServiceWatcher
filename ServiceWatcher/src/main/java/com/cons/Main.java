@@ -7,7 +7,6 @@ import com.cons.ui.ServicesTableModel;
 public class Main {
     public static void main(String[] args) {
 
-
         CommandLineRunner clr = null;
         Configuration conf = null;
 

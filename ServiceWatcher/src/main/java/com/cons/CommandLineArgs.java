@@ -69,10 +69,14 @@ public class CommandLineArgs {
                 if (args[i].toLowerCase().equals("-help")) {
                     help();
                 }
+                //-version
+                if (args[i].toLowerCase().equals("-version")) {
+                    System.out.println("ServiceWatcher");
+                    System.out.println("Version: 1.0");
+                }
             }
         }
     }
-
 
     public void setConfigFile(String configFile) {
         this.configFile = configFile;
@@ -110,24 +114,24 @@ public class CommandLineArgs {
     public void help() {
         String ANSI_RED_RESET = "\u001B[0m";
         String ANSI_RED = "\u001B[31m";
-        
+
         try {
             InputStream in = getClass().getResourceAsStream("/src/images/help.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line = null;
             while ((line = reader.readLine()) != null) {
-                if(GenericUtils.isUnix()){
+                if (GenericUtils.isUnix()) {
                     line = line.replaceAll("<b>", "\u001B[1m");
                     line = line.replaceAll("</b>", "\u001B[0m");
                     line = line.replaceAll("<red>", ANSI_RED);
                     line = line.replaceAll("</red>", ANSI_RED_RESET);
-                }else if (GenericUtils.isWindows()){
-                    line = line.replaceAll("<b>", "<Esc>[1m");
-                    line = line.replaceAll("</b>", "<Esc>[0m");
-                    line = line.replaceAll("<red>", "<Esc>[31m");
-                    line = line.replaceAll("</red>", "<Esc>[0m");
+                } else if (GenericUtils.isWindows()) {
+                    line = line.replaceAll("<b>", "").trim();
+                    line = line.replaceAll("</b>", "").trim();
+                    line = line.replaceAll("<red>", "").trim();
+                    line = line.replaceAll("</red>", "").trim();
                 }
-                    System.out.println(line);
+                System.out.println(line);
             }
             System.exit(0);
         } catch (IOException e) {

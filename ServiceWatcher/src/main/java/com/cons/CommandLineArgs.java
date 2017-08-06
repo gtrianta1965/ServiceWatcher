@@ -1,7 +1,6 @@
 package com.cons;
 
 import com.cons.utils.GenericUtils;
-
 import com.cons.utils.SWConstants;
 
 import java.io.BufferedReader;
@@ -76,7 +75,7 @@ public class CommandLineArgs {
                 }
                 //-version
                 if (args[i].toLowerCase().equals("-version")) {
-                    System.out.println(SWConstants.PROGRAM_NAME + " " + "version: " + SWConstants.PROGRAM_VERSION);
+                    System.out.println(SWConstants.PROGRAM_NAME + "\n" + "Version: " + SWConstants.PROGRAM_VERSION);
                     System.exit(0); //Exit after displaying the version
                 }
             }
@@ -140,7 +139,7 @@ public class CommandLineArgs {
             }
             System.exit(0);
         } catch (IOException e) {
-            System.out.println("file does not exist.");
+            System.out.println("File does not exist.");
         } catch (Exception e) {
             System.out.println("Help is not available.");
         }

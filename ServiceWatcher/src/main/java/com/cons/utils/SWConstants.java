@@ -2,6 +2,9 @@ package com.cons.utils;
 
 
 public class SWConstants {
+    
+    public final static String PROGRAM_NAME = "ServiceWatcher";
+    public final static String PROGRAM_VERSION = "1.0b";
 
     public final static String LOG_FILE_NAME_CONFIQURATION = "configuration";
     public final static String LOG_FILE_NAME_SERVICE = "service";

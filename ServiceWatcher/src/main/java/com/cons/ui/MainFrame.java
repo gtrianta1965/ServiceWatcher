@@ -6,6 +6,8 @@ import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.DateUtils;
 
+import com.cons.utils.SWConstants;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -243,7 +245,7 @@ public class MainFrame extends javax.swing.JFrame {
         servicesTable.setDefaultRenderer(String.class, new CustomTableCellRenderer());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Service Watcher");
+        setTitle(SWConstants.PROGRAM_NAME + " " + "v" + SWConstants.PROGRAM_VERSION);
         setMinimumSize(new java.awt.Dimension(1004, 439));
 
         btnRefresh.setIcon(new ImageIcon(this.getClass().getResource("/src/images/refresh.png")));
@@ -265,7 +267,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblVersion.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.focus"));
         lblVersion.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lblVersion.setForeground(new java.awt.Color(102, 102, 255));
-        lblVersion.setText("Service Watcher v1.0");
+        lblVersion.setText("Available Services");
 
         checkAutoRefresh.setText("Auto-Refresh");
         checkAutoRefresh.addActionListener(new java.awt.event.ActionListener() {

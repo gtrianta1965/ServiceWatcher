@@ -2,6 +2,8 @@ package com.cons;
 
 import com.cons.utils.GenericUtils;
 
+import com.cons.utils.SWConstants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,10 +31,13 @@ public class CommandLineArgs {
             for (int i = 0; i < args.length; i++) {
                 // -conf
                 if (args[i].toLowerCase().startsWith("-conf")) {
-                    if (args[i].split(":").length != 2) {
+                    if (args[i].split(":").length < 2) {
                         System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
                     } else {
-                        tmp = (args[i].split(":")[1]).trim();
+                        //Fix bug with colon in file name (e.g. C:\something\config.properties)
+                        //This bug appears only in windows
+                        tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
+                        //tmp = (args[i].split(":")[1]).trim();
                         if (tmp.length() > 0) {
                             setConfigFile(tmp);
                             System.out.println("Custom configuration specified (" + getConfigFile() + ")");
@@ -71,8 +76,8 @@ public class CommandLineArgs {
                 }
                 //-version
                 if (args[i].toLowerCase().equals("-version")) {
-                    System.out.println("ServiceWatcher");
-                    System.out.println("Version: 1.0");
+                    System.out.println(SWConstants.PROGRAM_NAME + " " + "version: " + SWConstants.PROGRAM_VERSION);
+                    System.exit(0); //Exit after displaying the version
                 }
             }
         }

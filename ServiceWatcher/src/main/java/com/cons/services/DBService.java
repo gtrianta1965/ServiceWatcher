@@ -25,6 +25,7 @@ public class DBService extends Service {
         this.setSuccessfulCall(true);
         //String value = null;
         Statement stm = null;
+        ResultSet rs = null;
 
         try {
 
@@ -32,48 +33,33 @@ public class DBService extends Service {
             conn =
                 DriverManager.getConnection(serviceParameter.getUrl(), serviceParameter.getUsername(),
                                             serviceParameter.getPassword());
-            if (serviceParameter.getQuery().toString() != null) {
+            if (serviceParameter.getQuery() != null && serviceParameter.getQuery().length() != 0) {
                 stm = conn.createStatement();
-                ResultSet rs = stm.executeQuery(serviceParameter.getQuery());
+                rs = stm.executeQuery(serviceParameter.getQuery());
                 //ResultSetMetaData metaData = rs.getMetaData();
                 String msgSuccess = "";
                 if (rs.next()) {
                     msgSuccess = rs.getString(1);
-                    //                    int columnSize = metaData.getColumnCount();
-                    //                    for (int i = 1; i <= columnSize; i++) {
-                    //                        msgSuccess=msgSuccess+ metaData.getColumnName(i) + ":" + rs.getString(i);
-                    //                        System.out.println("Returned Query:" + metaData.getColumnName(i) + ":" + rs.getString(i));
-                    //                    }
                     this.setSuccessCall(msgSuccess);
                 }
 
             }
         } catch (ClassNotFoundException ex) {
-            this.setErrorCall(SWConstants.SERVICE_DB_ERROR_ORACLE_CLASS_MSG + ex.getMessage());
+            this.setErrorCall(SWConstants.SERVICE_DB_ERROR_ORACLE_CLASS_MSG + ":" + ex.getMessage());
             this.setSuccessfulCall(false);
         } catch (SQLException ex) {
-            this.setErrorCall(SWConstants.SERVICE_DB_ERROR_ORACLE_SQLEXCEPTION_MSG + ex.getMessage());
+            this.setErrorCall(SWConstants.SERVICE_DB_ERROR_ORACLE_SQLEXCEPTION_MSG + ":" + ex.getMessage());
             this.setSuccessfulCall(false);
+            System.out.println("Wrong Query=" + serviceParameter.getQuery() );
         } catch (Exception ex) {
-            this.setErrorCall(SWConstants.GENERIC_EXCEPTION_MSG + ex.getMessage());
+            ex.printStackTrace();
+            this.setErrorCall(SWConstants.GENERIC_EXCEPTION_MSG + ":" + ex.getMessage());
             this.setSuccessfulCall(false);
+        } finally {
+                if (rs != null) try {rs.close();} catch (Exception e) {};
+                if (stm != null) try {stm.close();} catch (Exception e) {};
+                if (conn != null) try {conn.close();} catch (Exception e) {};
         }
-
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        if (stm != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
     }
 
     public static void main(String args[]) {

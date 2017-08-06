@@ -35,8 +35,8 @@ public class CommandLineArgs {
                     } else {
                         //Fix bug with colon in file name (e.g. C:\something\config.properties)
                         //This bug appears only in windows
-                        tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
-                        //tmp = (args[i].split(":")[1]).trim();
+                        //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
+                        tmp = (args[i].split(":", 2)[1]).trim();
                         if (tmp.length() > 0) {
                             setConfigFile(tmp);
                             System.out.println("Custom configuration specified (" + getConfigFile() + ")");

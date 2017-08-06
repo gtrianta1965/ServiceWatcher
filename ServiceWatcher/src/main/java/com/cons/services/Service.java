@@ -9,6 +9,7 @@ public abstract class Service implements Runnable {
     ServiceOrchestrator serviceOrchestrator;
     Configuration configuration;
     private String errorCall;        //message for successful/unsuccessful call
+    private String successCall; //message for successful/unsuccessful call
     private boolean successfulCall;      //boolean for  for successful/unsuccessful call
     
     public Service(){   //default constructor
@@ -25,7 +26,14 @@ public abstract class Service implements Runnable {
         service();
         if (isSuccessfulCall()) {
             serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);
+
+            if (getSuccessCall() != null) {
+                printStatus(SWConstants.SERVICE_SUCCESS + ":" + getSuccessCall());
+
+            } else {
             printStatus(SWConstants.SERVICE_SUCCESS);
+            }
+
             if(serviceOrchestrator != null){
                 serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is UP");
             }
@@ -81,8 +89,7 @@ public abstract class Service implements Runnable {
     protected void printStatus(String status) {
         if (serviceOrchestrator != null ) {
            this.serviceOrchestrator.printStatus(serviceParameter.getId() - 1, status);
-        }
-        else {
+        } else {
             /* Uncomment for command line status
             System.out.println(status);
             */
@@ -95,5 +102,13 @@ public abstract class Service implements Runnable {
 
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    public void setSuccessCall(String successCall) {
+        this.successCall = successCall;
+}
+
+    public String getSuccessCall() {
+        return successCall;
     }
 }

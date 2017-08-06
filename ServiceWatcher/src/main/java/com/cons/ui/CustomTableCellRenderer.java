@@ -29,7 +29,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         if (column == SWConstants.TABLE_STATUS_INDEX) {
             if (value.equals(SWConstants.SERVICE_RUNNING)) {                 
                 c.setBackground(Color.yellow);
-            } else if (value.equals(SWConstants.SERVICE_SUCCESS)) {
+            } else if (value.toString().startsWith(SWConstants.SERVICE_SUCCESS)) {
                 c.setBackground(Color.green);
             } else if (value.toString().startsWith(SWConstants.SERVICE_FAILED)) {
                 c.setBackground(Color.red);

@@ -71,6 +71,8 @@
    <value n="defaultPackage" v=""/>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
       <list n="technologyScope">
+         <string v="HTML"/>
+         <string v="JAVASCRIPT"/>
          <string v="Java"/>
          <string v="Java-Modeling"/>
          <string v="Maven"/>

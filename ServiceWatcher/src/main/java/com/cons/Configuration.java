@@ -20,6 +20,7 @@ public class Configuration {
     private boolean sendMailUpdates = false;
     private boolean smtpSendEmailOnSuccess = false;
     private boolean isProduction = false;
+    private boolean isLogEnabled = false;
     private int smtpSendActivityEmailInterval = 60000;
     private String smtpHost = "smtp.gmail.com";
     private int smtpPort = 465;
@@ -100,6 +101,7 @@ public class Configuration {
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
             this.setSmtpSendEmailOnSuccess(getBooleanProperty(prop.getProperty("smtpSendMailOnSuccess"), false));
             this.setIsProduction(getBooleanProperty(prop.getProperty("isProduction"), false));
+            this.setIsLogEnabled(getBooleanProperty(prop.getProperty("isLogEnabled"), false));
             this.setSmtpSendActivityEmailInterval(getNumberProperty(prop.getProperty("smtpSendActivityEmailInterval"),
                                                                     5) * 1000);
             this.setSmtpHost(getStringProperty(prop.getProperty("smtpHost"), "smtp.gmail.com"));
@@ -296,6 +298,14 @@ public class Configuration {
 
     public boolean isProduction() {
         return this.isProduction;
+    }
+
+    public void setIsLogEnabled(boolean isLogEnabled){
+        this.isLogEnabled = isLogEnabled;
+    }
+    
+    public boolean isLogEnabled(){
+        return this.isLogEnabled;
     }
 
     public void setSmtpSendActivityEmailInterval(int smtpSendActivityEmailInterval) {

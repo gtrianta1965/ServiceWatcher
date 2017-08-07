@@ -2,7 +2,7 @@ package com.cons.utils;
 
 
 public class SWConstants {
-    
+
     public final static String PROGRAM_NAME = "ServiceWatcher";
     public final static String PROGRAM_VERSION = "1.0b";
 
@@ -21,6 +21,7 @@ public class SWConstants {
     public final static String IDLE_STATUS = "IDLE";
     public final static String SERVICE_SOCKET_UNREACHABLE_MSG = "Remote is unreachable at IP:PORT -> ";
     public final static String SERVICE_LDAP_ERROR_MSG = "LDAP Connection Error";
+    public final static String SERVICE_RETRY_COUNT = "RETRY COUNT: ";
 
     //Service thread status
     public final static String SERVICE_SUBMITTED = "SUBMITTED";

@@ -8,6 +8,7 @@ public class ServiceParameter {
     }
     
     private int    id;
+    private int    retries;
     private String url;
     private String description;
     private String type;
@@ -105,5 +106,13 @@ public class ServiceParameter {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setRetries(int retries) {
+        this.retries = retries;
+    }
+
+    public int getRetries() {
+        return retries;
     }
 }

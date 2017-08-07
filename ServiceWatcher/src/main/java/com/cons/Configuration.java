@@ -20,7 +20,7 @@ public class Configuration {
     private boolean sendMailUpdates = false;
     private boolean smtpSendEmailOnSuccess = false;
     private boolean isProduction = false;
-    private boolean isLogEnabled = false;
+    private static boolean isLogEnabled = false;
     private int smtpSendActivityEmailInterval = 60000;
     private String smtpHost = "smtp.gmail.com";
     private int smtpPort = 465;

@@ -1,5 +1,8 @@
 package com.cons;
 
+import com.cons.utils.GenericUtils;
+import com.cons.utils.SWConstants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +18,7 @@ public class CommandLineArgs {
 
 
     public CommandLineArgs() {
-        
+
     }
 
 
@@ -27,10 +30,13 @@ public class CommandLineArgs {
             for (int i = 0; i < args.length; i++) {
                 // -conf
                 if (args[i].toLowerCase().startsWith("-conf")) {
-                    if (args[i].split(":").length != 2) {
-                        System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");                        
+                    if (args[i].split(":").length < 2) {
+                        System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
                     } else {
-                        tmp = (args[i].split(":")[1]).trim();
+                        //Fix bug with colon in file name (e.g. C:\something\config.properties)
+                        //This bug appears only in windows
+                        //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
+                        tmp = (args[i].split(":", 2)[1]).trim();
                         if (tmp.length() > 0) {
                             setConfigFile(tmp);
                             System.out.println("Custom configuration specified (" + getConfigFile() + ")");
@@ -48,16 +54,16 @@ public class CommandLineArgs {
                 if (args[i].toLowerCase().startsWith("-autorefresh")) {
                     long interval = 1;
                     if (args[i].split(":").length == 2) {
-                        tmp = (args[i].split(":")[1]).trim(); 
+                        tmp = (args[i].split(":")[1]).trim();
                         try {
-                           interval = Long.parseLong(tmp);
+                            interval = Long.parseLong(tmp);
                         } catch (NumberFormatException e) {
-                            System.out.println("Wrong value for auto refresh time (" + tmp + "), using the default one: " +
-                                  interval);
+                            System.out.println("Wrong value for auto refresh time (" + tmp +
+                                               "), using the default one: " + interval);
                         }
-                    }                     
+                    }
                     setAutoRefreshTime(interval);
-                }                    
+                }
                 // -nogui
                 if (args[i].toLowerCase().equals("-nogui")) {
                     setNoGUI(true);
@@ -67,10 +73,14 @@ public class CommandLineArgs {
                 if (args[i].toLowerCase().equals("-help")) {
                     help();
                 }
+                //-version
+                if (args[i].toLowerCase().equals("-version")) {
+                    System.out.println(SWConstants.PROGRAM_NAME + "\n" + "Version: " + SWConstants.PROGRAM_VERSION);
+                    System.exit(0); //Exit after displaying the version
+                }
             }
         }
     }
-
 
     public void setConfigFile(String configFile) {
         this.configFile = configFile;
@@ -106,19 +116,30 @@ public class CommandLineArgs {
 
 
     public void help() {
+        String ANSI_RED_RESET = "\u001B[0m";
+        String ANSI_RED = "\u001B[31m";
 
         try {
             InputStream in = getClass().getResourceAsStream("/src/images/help.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in)) ;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line = null;
             while ((line = reader.readLine()) != null) {
-                line = line.replaceAll("<b>","\u001B[1m" );
-                line = line.replaceAll("</b>","\u001B[0m" );
+                if (GenericUtils.isUnix()) {
+                    line = line.replaceAll("<b>", "\u001B[1m");
+                    line = line.replaceAll("</b>", "\u001B[0m");
+                    line = line.replaceAll("<red>", ANSI_RED);
+                    line = line.replaceAll("</red>", ANSI_RED_RESET);
+                } else if (GenericUtils.isWindows()) {
+                    line = line.replaceAll("<b>", "").trim();
+                    line = line.replaceAll("</b>", "").trim();
+                    line = line.replaceAll("<red>", "").trim();
+                    line = line.replaceAll("</red>", "").trim();
+                }
                 System.out.println(line);
             }
             System.exit(0);
         } catch (IOException e) {
-            System.out.println("file does not exist.");
+            System.out.println("File does not exist.");
         } catch (Exception e) {
             System.out.println("Help is not available.");
         }

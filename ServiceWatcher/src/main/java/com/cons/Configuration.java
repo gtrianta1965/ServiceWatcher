@@ -82,6 +82,8 @@ public class Configuration {
                             serviceParameter.setPassword(prop.getProperty("password." + i));
                         }
                     }
+                    serviceParameter.setQuery(prop.getProperty("query." + i));
+                    
                     //add each param based on the sequence number of the parameter
                     serviceParameters.add(serviceParameter);
 

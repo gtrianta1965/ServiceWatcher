@@ -7,7 +7,6 @@ import com.cons.ui.ServicesTableModel;
 public class Main {
     public static void main(String[] args) {
 
-
         CommandLineRunner clr = null;
         Configuration conf = null;
 
@@ -18,7 +17,7 @@ public class Main {
         //Setup and initialize of configuration (Read property file)
         conf = new Configuration();
         conf.setCmdArguments(cla); //Pass command line arguments to configuration it might be helpful
-        conf.init(cla.getConfigFile()); 
+        conf.init(cla.getConfigFile());
         if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
             System.exit(1);
@@ -38,6 +37,7 @@ public class Main {
             clr = new CommandLineRunner(cla.getAutoRefreshTime());
             clr.setServiceOrchestrator(serviceOrchestrator);
             clr.run();
+            System.exit(0);
         } else {
             MainFrame mf = new MainFrame();
             mf.setServiceOrchestrator(serviceOrchestrator);

@@ -44,5 +44,5 @@ public class SWConstants {
     public final static String REPORTER_MSG_SUBJECT = "Service Watcher Report";
     public final static String REPORTER_RUN_ONCE_MSG = "Reporter sending a mail...";
     public final static String REPORTER_RUN_ONCE_DONE = "mail send!";
-
+    public final static String REPORTER_TEMPLATE_TITLE = "Service Watcher";
 }

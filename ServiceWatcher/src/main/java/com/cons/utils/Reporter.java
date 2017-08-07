@@ -12,6 +12,8 @@ import java.io.File;
 
 import java.io.IOException;
 
+import java.io.StringWriter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +23,8 @@ import java.util.Timer;
 import java.util.TimeZone;
 
 import java.util.TimerTask;
+
+import java.util.Vector;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -41,6 +45,10 @@ import javax.mail.internet.MimeMultipart;
 
 import javax.mail.internet.MimeUtility;
 
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -164,7 +172,7 @@ public class Reporter{
             message.setSubject(SWConstants.REPORTER_MSG_SUBJECT + appendSubjectStatus);
 
             // Set HTML message
-            msgBodyPart.setContent(makePage("report_template.html", log).toString(), "text/html");
+            msgBodyPart.setContent(vlc().toString(), "text/html");
 
             // Add HTML to multipart
             multipart.addBodyPart(msgBodyPart);
@@ -263,6 +271,29 @@ public class Reporter{
         for(ServiceParameter sp:this.serviceOrchestrator.getConfiguration().getServiceParameters()){
             statusLog.add("Service: " + sp.getDescription() + " is " + (sp.getStatus() == SWConstants.SERVICE_SUCCESS?"UP":"DOWN"));
         }
+    }
+    
+    private String vlc(){
+        StringWriter w = new StringWriter();
+        VelocityEngine ve = new VelocityEngine();
+        VelocityContext context = new VelocityContext();
+        ve.init();
+        Vector logVector = new Vector();
+        Template t = ve.getTemplate("report_template.html");
+        context.put("title", SWConstants.REPORTER_TEMPLATE_TITLE + " Version " + SWConstants.PROGRAM_VERSION);
+        context.put("date", (new Date()).toString());
+        context.put("log_title", "Log");
+        
+        makeLog();
+        for(String alog : statusLog){
+            logVector.addElement(alog);
+        }
+        
+        context.put("logs", logVector.iterator());
+        
+        t.merge(context, w);
+        
+        return w.toString();
     }
     
     /**

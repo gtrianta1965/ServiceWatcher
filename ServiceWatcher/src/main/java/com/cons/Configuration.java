@@ -20,6 +20,7 @@ public class Configuration {
     private boolean sendMailUpdates = false;
     private boolean smtpSendEmailOnSuccess = false;
     private boolean isProduction = false;
+    private static boolean isLogEnabled = false;
     private int smtpSendActivityEmailInterval = 60000;
     private String smtpHost = "smtp.gmail.com";
     private int smtpPort = 465;
@@ -100,6 +101,7 @@ public class Configuration {
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
             this.setSmtpSendEmailOnSuccess(getBooleanProperty(prop.getProperty("smtpSendMailOnSuccess"), false));
             this.setIsProduction(getBooleanProperty(prop.getProperty("isProduction"), false));
+            this.setIsLogEnabled(getBooleanProperty(prop.getProperty("isLogEnabled"), false));
             this.setSmtpSendActivityEmailInterval(getNumberProperty(prop.getProperty("smtpSendActivityEmailInterval"),
                                                                     5) * 1000);
             this.setSmtpHost(getStringProperty(prop.getProperty("smtpHost"), "smtp.gmail.com"));
@@ -281,15 +283,15 @@ public class Configuration {
     public boolean getSendMailUpdates() {
         return this.sendMailUpdates;
     }
-    
-    public void setSmtpSendEmailOnSuccess(boolean smtpSendEmailOnSuccess){
+
+    public void setSmtpSendEmailOnSuccess(boolean smtpSendEmailOnSuccess) {
         this.smtpSendEmailOnSuccess = smtpSendEmailOnSuccess;
     }
-    
-    public boolean getSmtpSendEmailOnSuccess(){
+
+    public boolean getSmtpSendEmailOnSuccess() {
         return this.smtpSendEmailOnSuccess;
     }
-    
+
     public void setIsProduction(boolean isProduction) {
         this.isProduction = isProduction;
     }
@@ -298,11 +300,19 @@ public class Configuration {
         return this.isProduction;
     }
 
-    public void setSmtpSendActivityEmailInterval(int smtpSendActivityEmailInterval){
-        this.smtpSendActivityEmailInterval = smtpSendActivityEmailInterval;
+    public void setIsLogEnabled(boolean isLogEnabled){
+        this.isLogEnabled = isLogEnabled;
     }
     
-    public int getSmtpSendActivityEmailInterval(){
+    public boolean isLogEnabled(){
+        return this.isLogEnabled;
+    }
+
+    public void setSmtpSendActivityEmailInterval(int smtpSendActivityEmailInterval) {
+        this.smtpSendActivityEmailInterval = smtpSendActivityEmailInterval;
+    }
+
+    public int getSmtpSendActivityEmailInterval() {
         return this.smtpSendActivityEmailInterval;
     }
 

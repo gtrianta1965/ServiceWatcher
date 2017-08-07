@@ -171,6 +171,13 @@ public class ServiceOrchestrator {
     
     public void startReporter(){
         this.reporter = new Reporter(this);
-        reporter.run();
+        if(!(this.configuration.getCmdArguments().getAutoRefreshTime() == 0 
+           && this.configuration.getCmdArguments().isNoGUI())){
+            reporter.run();
+        }
+    }
+    
+    public void runReporterOnce(){
+        reporter.runOnce();
     }
 }

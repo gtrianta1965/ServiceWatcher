@@ -81,6 +81,18 @@ public class Reporter{
         }
     }
     
+    public void runOnce(){
+        if (serviceOrchestrator.checkSendMail()) {
+            try {
+                System.out.print(SWConstants.REPORTER_RUN_ONCE_MSG);
+                sendMail();
+                System.out.println(SWConstants.REPORTER_RUN_ONCE_DONE);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
     /**
      * This function sends a log email to the recipients based on an html template.
      * @param recipients is a string array which includes all the recipients e-mails.

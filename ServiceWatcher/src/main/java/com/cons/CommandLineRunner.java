@@ -25,10 +25,10 @@ public class CommandLineRunner extends Thread {
     public void run() {
         if (this.autoRefresh == 0) {
             runOnce();
+            getServiceOrchestrator().runReporterOnce();
         } else {
             runPeriodically();
         }
-
     }
 
     private void runOnce() {

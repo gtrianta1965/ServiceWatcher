@@ -21,13 +21,13 @@ public class SWConstants {
     public final static String IDLE_STATUS = "IDLE";
     public final static String SERVICE_SOCKET_UNREACHABLE_MSG = "Remote is unreachable at IP:PORT -> ";
     public final static String SERVICE_LDAP_ERROR_MSG = "LDAP Connection Error";
-    public final static String SERVICE_RETRY_COUNT = "RETRY COUNT: ";
 
     //Service thread status
     public final static String SERVICE_SUBMITTED = "SUBMITTED";
     public final static String SERVICE_SUCCESS = "SUCCESS";
     public final static String SERVICE_FAILED = "FAILED";
     public final static String SERVICE_RUNNING = "RUNNING";
+    public final static String SERVICE_RETRIES = "RETRIES";
 
     //JTable Column Indexes (zero based)
     public final static int TABLE_ID_INDEX = 0;

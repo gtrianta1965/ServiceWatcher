@@ -18,7 +18,7 @@ public class ServiceOrchestrator {
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
     private OrchestratorStatus orchestratorStatus;
-    
+
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();
@@ -135,8 +135,10 @@ public class ServiceOrchestrator {
     public OrchestratorStatus getStatus() {
         /*clear orchestratorStatus obj except of totalSubmitted*/
         int submitted = orchestratorStatus.getTotalSubmitted();
+        int retries = orchestratorStatus.getTotalRetries();
         orchestratorStatus.reset();
         orchestratorStatus.setTotalSubmitted(submitted);
+        orchestratorStatus.setTotalRetries(retries);
         List<ServiceParameter> lsp = configuration.getServiceParameters();
         orchestratorStatus.setTotalServices(lsp.size());
         int getValue = 0;

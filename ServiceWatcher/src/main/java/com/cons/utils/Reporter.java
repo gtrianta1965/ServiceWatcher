@@ -279,10 +279,16 @@ public class Reporter{
         VelocityContext context = new VelocityContext();
         ve.init();
         Vector logVector = new Vector();
+        
         Template t = ve.getTemplate("report_template.html");
+        
         context.put("title", SWConstants.REPORTER_TEMPLATE_TITLE + " Version " + SWConstants.PROGRAM_VERSION);
         context.put("date", (new Date()).toString());
         context.put("log_title", "Log");
+        
+        putConfigurationProperties(context);        
+        
+        putCmdArguments(context);
         
         makeLog();
         for(String alog : statusLog){
@@ -294,6 +300,44 @@ public class Reporter{
         t.merge(context, w);
         
         return w.toString();
+    }
+    
+    /**
+     * Puts configuration properties to the context.
+     * @param context
+     */
+    private void putConfigurationProperties(VelocityContext context) {
+        Vector autoRefreshIntervals = new Vector();
+        
+        context.put("configFileName", configuration.getConfigFile());
+        context.put("isProduction", configuration.isProduction());
+        context.put("isLogEnabled", configuration.isLogEnabled());
+        context.put("smtpSendEmailOnSuccess", configuration.getSmtpSendEmailOnSuccess());
+        context.put("smtpSendActivityEmailInterval", configuration.getSmtpSendActivityEmailInterval());
+        context.put("concurrentThreads", configuration.getConcurrentThreads());
+        context.put("httpResponseTimeout", configuration.getHttpResponseTimeout());
+        context.put("ldapResponseTimeout", configuration.getLdapResponseTimeout());
+        context.put("socketDieInterval", configuration.getSocketDieInterval());
+        
+        autoRefreshIntervals.addElement("1");
+        autoRefreshIntervals.addElement("2");
+        autoRefreshIntervals.addElement("3");
+
+        for(String interval:configuration.getAutoRefreshIntervals()){
+            autoRefreshIntervals.addElement(interval);
+        }
+        context.put("autoRefreshIntervals", autoRefreshIntervals);        
+    }
+    
+    /**
+     * Puts command line arguments to the context from the configuration.
+     * @param context
+     */
+    private void putCmdArguments(VelocityContext context) {
+        context.put("cmdConfigFileName", configuration.getCmdArguments().getConfigFile());
+        context.put("encrypt", configuration.getCmdArguments().getEncrypt());
+        context.put("isNoGUI", configuration.getCmdArguments().isNoGUI());
+        context.put("cmdAutoRefreshTime", configuration.getCmdArguments().getAutoRefreshTime());
     }
     
     /**

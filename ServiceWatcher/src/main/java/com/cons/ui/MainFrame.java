@@ -192,7 +192,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
-        float[] columnWidthPercentage = { 2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f, 2.0f, 35.0f};
+        float[] columnWidthPercentage = { 2.0f, 25.0f, 15.0f, 3.0f, 10.0f, 25.0f, 2.0f, 18.0f};
 
         int tW = servicesTable.getWidth();
         TableColumn column;
@@ -214,10 +214,6 @@ public class MainFrame extends javax.swing.JFrame {
         servicesTable.getTableHeader().setReorderingAllowed(false);
         servicesTable.setColumnSelectionAllowed(true);
         servicesTable.setRowSelectionAllowed(true);
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        servicesTable.getColumnModel().getColumn(SWConstants.TABLE_RETRIES_INDEX).setCellRenderer(rightRenderer);
-
 
         if (servicesTable.getCellEditor() != null) {
             servicesTable.getCellEditor().stopCellEditing();

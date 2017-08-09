@@ -17,14 +17,9 @@ public class Main {
         //Setup and initialize of configuration (Read property file)
         conf = new Configuration();
         conf.setCmdArguments(cla); //Pass command line arguments to configuration it might be helpful
-        
-        if(cla.getAllConfigFiles().size()>1){
-            for(String filename:cla.getAllConfigFiles()){
-                conf.init(filename);
-            }
-        }else{
-            conf.init(cla.getConfigFile());
-        }
+
+        conf.init(cla.getConfigFile());
+
         if (!conf.isValid()) {
             System.out.println("Error reading configuration (" + conf.getError() + ")");
             System.exit(1);

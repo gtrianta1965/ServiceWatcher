@@ -42,10 +42,10 @@ public class CommandLineArgs {
                         tmp = (args[i].split(":", 2)[1]).trim();
                         System.out.println("Size of array=" + getAllConfigFiles().size());
                         if (tmp.length() > 0) {
-                            getAllConfigFiles().add(tmp);
                             if (getAllConfigFiles().size() == 0) {
                                 setConfigFile(tmp);
                             }
+                            getAllConfigFiles().add(tmp);
                             System.out.println("Custom configuration specified (" + getConfigFile() + ")");
                         } else {
                             System.out.println("Invalid  <config file Name>");

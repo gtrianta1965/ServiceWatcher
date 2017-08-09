@@ -49,8 +49,7 @@ public class Configuration {
     }
 
     public void init(String fileName) {
-//        this.serviceParameters.clear();
-
+        this.serviceParameters.clear();
         setConfigFile(fileName);
         Properties prop = new Properties();
         InputStream input = null;
@@ -118,7 +117,22 @@ public class Configuration {
 
         if (isProduction() && !getCmdArguments().getEncrypt()) {
             CryptoUtils.obfuscatePasswordInConfig(fileName);
-    }
+        }
+        //additional files
+        if(getCmdArguments().getAllConfigFiles().size()>1){
+            for (int i = 1; i < getCmdArguments().getAllConfigFiles().size(); i++) {
+                prop = new Properties();
+                try {
+                    input = new FileInputStream(fileName);
+                    prop.load(input);
+                } catch (FileNotFoundException e) {
+                } catch (IOException f) {
+                }
+                initServiceParameters(prop);
+            }
+            
+            getCmdArguments().getAllConfigFiles().clear();
+        }
     
     }
 

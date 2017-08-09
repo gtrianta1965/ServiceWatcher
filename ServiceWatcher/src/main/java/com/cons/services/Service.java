@@ -30,14 +30,15 @@ public abstract class Service implements Runnable {
             serviceOrchestrator.getOrchestratorStatus()
                 .setTotalRetries(serviceOrchestrator.getOrchestratorStatus().getTotalRetries() + 1);
         }
-
-        int i = serviceParameter.getRetries();
-        while ((i > 0) && !isSuccessfulCall()) {
-            printStatus(SWConstants.SERVICE_RETRIES + ": " + i);
+        int actualRetries = 0;
+        while ((!isSuccessfulCall()) && (actualRetries < serviceParameter.getRetries())) {
+            printStatus(SWConstants.SERVICE_RETRIES + ": " + actualRetries);
             serviceParameter.setStatus(SWConstants.SERVICE_RETRIES);
             service();
-            i--;
+            actualRetries++;
         }
+
+        System.out.println(actualRetries);
 
         if (isSuccessfulCall()) {
             serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);

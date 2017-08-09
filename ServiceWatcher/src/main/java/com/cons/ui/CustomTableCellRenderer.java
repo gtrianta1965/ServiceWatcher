@@ -33,16 +33,25 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(Color.green);
             } else if (value.toString().startsWith(SWConstants.SERVICE_FAILED)) {
                 c.setBackground(Color.red);
-            }     
-            
+            }
+
         }
-        if(column ==SWConstants.TABLE_PASSWORD_INDEX){
-            if(table.isCellEditable(row,column)== false){
-                c.setBackground(Color.lightGray);
-                }
-            
+        System.out.println(column);
+        if (column == SWConstants.TABLE_RETRIES_INDEX) {
+            System.out.println("George");
+            if (!value.equals(0)) {
+                c.setBackground(Color.orange);
+            }
         }
-        return c;
-      }
         
+        if (column == SWConstants.TABLE_PASSWORD_INDEX) {
+            if (table.isCellEditable(row, column) == false) {
+                c.setBackground(Color.lightGray);
+            }
+        }
+
+
+        return c;
+    }
+
 }

@@ -14,7 +14,7 @@ public class ServicesTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private boolean DEBUG = false;
 
-    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status", "RETRIES","Password"};
+    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status", "R","Password"};
 
     private Object[][] data;
     

@@ -38,8 +38,6 @@ public abstract class Service implements Runnable {
             actualRetries++;
         }
 
-        System.out.println(actualRetries);
-
         if (isSuccessfulCall()) {
             serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);
 

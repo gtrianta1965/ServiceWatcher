@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CommandLineArgs {
 
@@ -15,7 +18,7 @@ public class CommandLineArgs {
     private boolean encrypt = false;
     private boolean noGUI = false;
     private long autoRefreshTime = 0;
-
+    private List<String> allConfigFiles = new ArrayList<String>();
 
     public CommandLineArgs() {
 
@@ -37,8 +40,12 @@ public class CommandLineArgs {
                         //This bug appears only in windows
                         //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
                         tmp = (args[i].split(":", 2)[1]).trim();
+                        System.out.println("Size of array=" + getAllConfigFiles().size());
                         if (tmp.length() > 0) {
-                            setConfigFile(tmp);
+                            getAllConfigFiles().add(tmp);
+                            if (getAllConfigFiles().size() == 0) {
+                                setConfigFile(tmp);
+                            }
                             System.out.println("Custom configuration specified (" + getConfigFile() + ")");
                         } else {
                             System.out.println("Invalid  <config file Name>");
@@ -80,6 +87,7 @@ public class CommandLineArgs {
                 }
             }
         }
+        debugArguments();
     }
 
     public void setConfigFile(String configFile) {
@@ -142,6 +150,21 @@ public class CommandLineArgs {
             System.out.println("File does not exist.");
         } catch (Exception e) {
             System.out.println("Help is not available.");
+        }
+    }
+
+    public void setAdditionalConfigFiles(List<String> allConfigFiles) {
+        this.allConfigFiles = allConfigFiles;
+    }
+
+    public List<String> getAllConfigFiles() {
+        return allConfigFiles;
+    }
+    
+    private void debugArguments() {
+        System.out.println("configFile=" + configFile);
+        for (String s : getAllConfigFiles()) {
+            System.out.println(s);
         }
     }
 }

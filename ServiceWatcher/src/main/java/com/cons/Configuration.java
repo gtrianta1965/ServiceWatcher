@@ -49,49 +49,20 @@ public class Configuration {
     }
 
     public void init(String fileName) {
-        this.serviceParameters.clear();
+//        this.serviceParameters.clear();
 
         setConfigFile(fileName);
-
         Properties prop = new Properties();
         InputStream input = null;
-
+    
+    
         setValid(true);
         setError(null);
         try {
             input = new FileInputStream(fileName);
             prop.load(input);
             //Read first all "array" properties (ServiceParameters)
-            int i = 0;
-            boolean hasMore = true;
-            while (hasMore) {
-                i++;
-                ServiceParameter serviceParameter = new ServiceParameter();
-                serviceParameter.setUrl(prop.getProperty("url." + i));
-                if (serviceParameter.getUrl() != null) {
-                    serviceParameter.setId(i);
-                    serviceParameter.setDescription(prop.getProperty("description." + i));
-                    serviceParameter.setType(prop.getProperty("type." + i));
-                    serviceParameter.setGroup(prop.getProperty("group." + i));
-                    serviceParameter.setSearchString(prop.getProperty("searchString." + i));
-                    serviceParameter.setUsername(prop.getProperty("username." + i));
-                    //serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
-                    if (prop.getProperty("password." + i) != null) {
-                        if (CryptoUtils.decrypt(prop.getProperty("password." + i)) != null) {
-                            serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." + i)));
-                        } else {
-                            serviceParameter.setPassword(prop.getProperty("password." + i));
-                        }
-                    }
-                    serviceParameter.setQuery(prop.getProperty("query." + i));
-                    
-                    //add each param based on the sequence number of the parameter
-                    serviceParameters.add(serviceParameter);
-
-                } else {
-                    hasMore = false;
-                }
-            }
+            initServiceParameters(prop);
 
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"), 5));
@@ -386,5 +357,39 @@ public class Configuration {
 
     public String getConfigFile() {
         return this.configFile;
+    }
+
+
+    private void initServiceParameters(Properties prop) {
+        boolean hasMore = true;
+        int i = 0;
+        while (hasMore) {
+            i++;
+            ServiceParameter serviceParameter = new ServiceParameter();
+            serviceParameter.setUrl(prop.getProperty("url." + i));
+            if (serviceParameter.getUrl() != null) {
+                serviceParameter.setId(serviceParameters.size() + 1);
+                serviceParameter.setDescription(prop.getProperty("description." + i));
+                serviceParameter.setType(prop.getProperty("type." + i));
+                serviceParameter.setGroup(prop.getProperty("group." + i));
+                serviceParameter.setSearchString(prop.getProperty("searchString." + i));
+                serviceParameter.setUsername(prop.getProperty("username." + i));
+                //serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
+                if (prop.getProperty("password." + i) != null) {
+                    if (CryptoUtils.decrypt(prop.getProperty("password." + i)) != null) {
+                        serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." + i)));
+                    } else {
+                        serviceParameter.setPassword(prop.getProperty("password." + i));
+                    }
+                }
+                serviceParameter.setQuery(prop.getProperty("query." + i));
+                
+                //add each param based on the sequence number of the parameter
+                serviceParameters.add(serviceParameter);
+
+            } else {
+                hasMore = false;
+            }
+        }
     }
 }

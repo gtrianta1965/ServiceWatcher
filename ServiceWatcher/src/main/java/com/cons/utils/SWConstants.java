@@ -27,7 +27,6 @@ public class SWConstants {
     public final static String SERVICE_SUCCESS = "SUCCESS";
     public final static String SERVICE_FAILED = "FAILED";
     public final static String SERVICE_RUNNING = "RUNNING";
-    public final static String SERVICE_RETRIES = "RETRIES";
 
     //JTable Column Indexes (zero based)
     public final static int TABLE_ID_INDEX = 0;

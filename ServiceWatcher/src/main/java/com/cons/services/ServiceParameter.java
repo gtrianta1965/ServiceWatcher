@@ -8,7 +8,9 @@ public class ServiceParameter {
     }
     
     private int    id;
-    private int    retries;
+    private int    retries; //Number of retries to connect to the service before consider it "dead"
+    private int    actualRetries; //Number of attempts (retries). If they reach "retries" and the service still doesn't
+                                  //respond then we have a failure
     private String url;
     private String description;
     private String type;
@@ -114,5 +116,13 @@ public class ServiceParameter {
 
     public int getRetries() {
         return retries;
+    }
+
+    public void setActualRetries(int actualRetries) {
+        this.actualRetries = actualRetries;
+    }
+
+    public int getActualRetries() {
+        return actualRetries;
     }
 }

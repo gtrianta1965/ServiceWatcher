@@ -23,20 +23,22 @@ public abstract class Service implements Runnable {
     public void run() {
         printStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setStatus(SWConstants.SERVICE_RUNNING);
+        serviceParameter.setActualRetries(0); //Reset the actual retries
 
-        service();
-
-        if ((serviceParameter.getRetries()) > 0 && (!isSuccessfulCall())) {
-            serviceOrchestrator.getOrchestratorStatus()
-                .setTotalRetries(serviceOrchestrator.getOrchestratorStatus().getTotalRetries() + 1);
-        }
-        int actualRetries = 0;
-        while ((!isSuccessfulCall()) && (actualRetries < serviceParameter.getRetries())) {
-            printStatus(SWConstants.SERVICE_RETRIES + ": " + actualRetries);
-            serviceParameter.setStatus(SWConstants.SERVICE_RETRIES);
-            service();
-            actualRetries++;
-        }
+        while (serviceParameter.getActualRetries() <= serviceParameter.getRetries()) {
+             service();
+             if (serviceParameter.getActualRetries() == serviceParameter.getRetries()) {
+                break; //We reached the maximum number of retries. Stop trying.
+             } else {
+                //Give it another try if it is still  Unsuccesfull
+                 if (!isSuccessfulCall()) {
+                    serviceParameter.setActualRetries(serviceParameter.getActualRetries() + 1);
+                    printStatus(SWConstants.SERVICE_RUNNING); // Refresh the retry counter
+                 } else {
+                     break; //Again step out. Service succeeded.
+                 }
+             }
+        }  
 
         if (isSuccessfulCall()) {
             serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);

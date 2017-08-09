@@ -18,6 +18,7 @@ public class ServicesTableModel extends AbstractTableModel {
 
     private Object[][] data;
     
+    List<ServiceParameter> serviceParameters;
     private ServiceParameter sp;
     
     
@@ -26,25 +27,27 @@ public class ServicesTableModel extends AbstractTableModel {
      */
     public void setStatus(int row, String status) {
         data[row][SWConstants.TABLE_STATUS_INDEX] = status;
+        data[row][SWConstants.TABLE_RETRIES_INDEX] = serviceParameters.get(row).getActualRetries() + "/" +
+                                                     serviceParameters.get(row).getRetries();
         fireTableDataChanged();
     }
     
     public void initFromConfiguration(Configuration configuration) {
         int rows = configuration.getServiceParameters().size();
         
-        List<ServiceParameter> spl = configuration.getServiceParameters();
+        serviceParameters = configuration.getServiceParameters();
         data = new Object[rows][SWConstants.TABLE_NUMBER_OF_COLUMNS];
         
         
         for (int i=0 ; i< rows ; i++) {
-            sp = (ServiceParameter)spl.get(i);
+            sp = (ServiceParameter)serviceParameters.get(i);
             data[i][SWConstants.TABLE_ID_INDEX] = sp.getId();
             data[i][SWConstants.TABLE_URL_INDEX] = sp.getUrl();
             data[i][SWConstants.TABLE_DESCRIPTION_INDEX] = sp.getDescription();
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
-            data[i][SWConstants.TABLE_RETRIES_INDEX] = sp.getRetries();
+            data[i][SWConstants.TABLE_RETRIES_INDEX] = sp.getActualRetries() + "/" + sp.getRetries();
             
             String password_ast = "";
             for (int j = 0; j < GenericUtils.nvl(sp.getPassword(), "")

@@ -40,7 +40,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         }
         if (column == SWConstants.TABLE_RETRIES_INDEX) {
             setHorizontalAlignment(SwingConstants.CENTER);
-            if (!value.equals(0)) {                
+            if (!value.toString().startsWith("0/")) {                
                 c.setBackground(Color.orange);
             }
         }

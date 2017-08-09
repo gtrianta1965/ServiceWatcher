@@ -14,7 +14,7 @@ public class ServicesTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private boolean DEBUG = false;
 
-    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status","Password"};
+    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status", "RETRIES","Password"};
 
     private Object[][] data;
     
@@ -44,6 +44,8 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
+            data[i][SWConstants.TABLE_RETRIES_INDEX]=sp.getRetries();
+            
             String password_ast = "";
             for (int j = 0; j < GenericUtils.nvl(sp.getPassword(), "")
                                             .toString()

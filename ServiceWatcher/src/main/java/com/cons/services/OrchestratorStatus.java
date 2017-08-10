@@ -56,11 +56,11 @@ public class OrchestratorStatus {
         return totalFailed;
     }
 
-    public void setTotalRetries(int totalRetries) {
+    public synchronized void setTotalRetries(int totalRetries) {
         this.totalRetries = totalRetries;
     }
 
-    public int getTotalRetries() {
+    public synchronized int getTotalRetries() {
         return totalRetries;
     }
 
@@ -70,7 +70,7 @@ public class OrchestratorStatus {
         this.totalRunning = 0;
         this.totalFailed = 0;
         this.totalSuccess = 0;
-        this.totalRetries = 0;
+      
     }
 
     @Override

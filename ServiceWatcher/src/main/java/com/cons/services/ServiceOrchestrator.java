@@ -64,6 +64,7 @@ public class ServiceOrchestrator {
 
         //Reset all counters
         orchestratorStatus.reset();
+        orchestratorStatus.setTotalRetries(0);
 
         //Start Thread Pooling with services
         int totalSub = 0;
@@ -135,10 +136,8 @@ public class ServiceOrchestrator {
     public OrchestratorStatus getStatus() {
         /*clear orchestratorStatus obj except of totalSubmitted*/
         int submitted = orchestratorStatus.getTotalSubmitted();
-        int retries = orchestratorStatus.getTotalRetries();
         orchestratorStatus.reset();
         orchestratorStatus.setTotalSubmitted(submitted);
-        orchestratorStatus.setTotalRetries(retries);
         List<ServiceParameter> lsp = configuration.getServiceParameters();
         orchestratorStatus.setTotalServices(lsp.size());
         int getValue = 0;

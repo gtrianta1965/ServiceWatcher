@@ -70,6 +70,7 @@ public class OrchestratorStatus {
         this.totalRunning = 0;
         this.totalFailed = 0;
         this.totalSuccess = 0;
+        this.totalRetries = 0;
       
     }
 

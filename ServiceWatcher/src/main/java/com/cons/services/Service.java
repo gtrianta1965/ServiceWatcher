@@ -3,7 +3,7 @@ package com.cons.services;
 import com.cons.Configuration;
 import com.cons.utils.SWConstants;
 
-public abstract class  Service implements Runnable {
+public abstract class Service implements Runnable {
 
     ServiceParameter serviceParameter = new ServiceParameter();
     ServiceOrchestrator serviceOrchestrator;
@@ -11,6 +11,7 @@ public abstract class  Service implements Runnable {
     private String errorCall; //message for successful/unsuccessful call
     private String successCall; //message for successful/unsuccessful call
     private boolean successfulCall; //boolean for  for successful/unsuccessful call
+
     public Service() { //default constructor
         super();
     }
@@ -18,32 +19,32 @@ public abstract class  Service implements Runnable {
     public Service(ServiceParameter sp) {
         setServiceParameter(sp);
     }
-    private synchronized void addRetry(){
-        int a=serviceOrchestrator.getOrchestratorStatus().getTotalRetries();
-        serviceOrchestrator.getOrchestratorStatus().setTotalRetries(a+1);
-        System.out.println(serviceOrchestrator.getOrchestratorStatus().getTotalRetries());
-        
-    }
 
-    public  void run() {
+
+    public void run() {
         printStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setActualRetries(0); //Reset the actual retries
+
+
         while (serviceParameter.getActualRetries() <= serviceParameter.getRetries()) {
-             service();
-             if (serviceParameter.getActualRetries() == serviceParameter.getRetries()) {
+            service();
+            if (serviceParameter.getActualRetries() == serviceParameter.getRetries()) {
                 break; //We reached the maximum number of retries. Stop trying.
-             } else {
+            } else {
                 //Give it another try if it is still  Unsuccesfull
-                 if (!isSuccessfulCall()) {
+                if (!isSuccessfulCall()) {
                     serviceParameter.setActualRetries(serviceParameter.getActualRetries() + 1);
                     printStatus(SWConstants.SERVICE_RUNNING); // Refresh the retry counter
-                    addRetry();
-                 } else {
-                     break; //Again step out. Service succeeded.
-                 }
-             }
-        }  
+                } else {
+                    break; //Again step out. Service succeeded.
+                }
+            }
+            if (serviceParameter.getActualRetries() ==1) {
+                serviceOrchestrator.getOrchestratorStatus()
+                    .setTotalRetries(serviceOrchestrator.getOrchestratorStatus().getTotalRetries() + 1);
+            }
+        }
 
         if (isSuccessfulCall()) {
             serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);

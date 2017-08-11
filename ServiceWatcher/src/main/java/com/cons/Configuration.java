@@ -123,7 +123,7 @@ public class Configuration {
             for (int i = 1; i < getCmdArguments().getAllConfigFiles().size(); i++) {
                 prop = new Properties();
                 try {
-                    input = new FileInputStream(fileName);
+                    input = new FileInputStream(getCmdArguments().getAllConfigFiles().get(i));
                     prop.load(input);
                 } catch (FileNotFoundException e) {
                 } catch (IOException f) {

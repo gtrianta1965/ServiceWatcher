@@ -155,7 +155,8 @@ public class ServiceOrchestrator {
             }
             
             if (s.getActualRetries() > 0 &&(s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_SUCCESS)
-                                            ||s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED))) {
+                                            ||s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED)
+                                            ||s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_RUNNING))) {
                 getValue = orchestratorStatus.getTotalRetries();
                 orchestratorStatus.setTotalRetries(++getValue);
             }

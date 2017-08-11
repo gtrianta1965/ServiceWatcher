@@ -53,7 +53,7 @@ public class Configuration {
         setConfigFile(fileName);
         Properties prop = new Properties();
         InputStream input = null;
-    
+
     
         setValid(true);
         setError(null);
@@ -62,7 +62,7 @@ public class Configuration {
             prop.load(input);
             //Read first all "array" properties (ServiceParameters)
             initServiceParameters(prop);
-
+                    
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"), 5));
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"), 5000));
@@ -117,7 +117,7 @@ public class Configuration {
 
         if (isProduction() && !getCmdArguments().getEncrypt()) {
             CryptoUtils.obfuscatePasswordInConfig(fileName);
-        }
+    }
         //additional files
         if(getCmdArguments().getAllConfigFiles().size()>1){
             for (int i = 1; i < getCmdArguments().getAllConfigFiles().size(); i++) {
@@ -130,10 +130,10 @@ public class Configuration {
                 }
                 initServiceParameters(prop);
             }
-            
-            getCmdArguments().getAllConfigFiles().clear();
-        }
     
+            getCmdArguments().getAllConfigFiles().clear();
+    }
+
     }
 
     private String getStringProperty(String value, String defaultValue) {
@@ -394,8 +394,16 @@ public class Configuration {
                         serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." + i)));
                     } else {
                         serviceParameter.setPassword(prop.getProperty("password." + i));
-                    }
+}
                 }
+                if (prop.getProperty("retries." + i) != null) {
+                        serviceParameter.setRetries(Integer.parseInt(prop.getProperty("retries." + i)));
+                    } else {
+                        serviceParameter.setRetries(0);
+                    }
+                    serviceParameter.setQuery(prop.getProperty("query." + i));
+
+                    //add each param
                 serviceParameter.setQuery(prop.getProperty("query." + i));
                 
                 //add each param based on the sequence number of the parameter

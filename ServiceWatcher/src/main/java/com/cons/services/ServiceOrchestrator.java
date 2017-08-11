@@ -135,10 +135,10 @@ public class ServiceOrchestrator {
     public OrchestratorStatus getStatus() {
         /*clear orchestratorStatus obj except of totalSubmitted*/
         int submitted = orchestratorStatus.getTotalSubmitted();
-        int retries = orchestratorStatus.getTotalRetries();
+       // int retries = orchestratorStatus.getTotalRetries();
         orchestratorStatus.reset();
         orchestratorStatus.setTotalSubmitted(submitted);
-        orchestratorStatus.setTotalRetries(retries);
+        //orchestratorStatus.setTotalRetries(retries);
         List<ServiceParameter> lsp = configuration.getServiceParameters();
         orchestratorStatus.setTotalServices(lsp.size());
         int getValue = 0;
@@ -152,6 +152,11 @@ public class ServiceOrchestrator {
             } else if (s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED)) {
                 getValue = orchestratorStatus.getTotalFailed();
                 orchestratorStatus.setTotalFailed(getValue + 1);
+            }
+            
+            if (s.getActualRetries() > 0 &&(s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_SUCCESS)||s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED))) {
+                getValue = orchestratorStatus.getTotalRetries();
+                orchestratorStatus.setTotalRetries(++getValue);
             }
         }
 

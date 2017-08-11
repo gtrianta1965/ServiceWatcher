@@ -40,10 +40,7 @@ public abstract class Service implements Runnable {
                     break; //Again step out. Service succeeded.
                 }
             }
-            if (serviceParameter.getActualRetries() ==1) {
-                serviceOrchestrator.getOrchestratorStatus()
-                    .setTotalRetries(serviceOrchestrator.getOrchestratorStatus().getTotalRetries() + 1);
-            }
+
         }
 
         if (isSuccessfulCall()) {

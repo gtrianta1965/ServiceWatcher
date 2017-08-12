@@ -8,7 +8,8 @@
     <name>ServiceWatcher</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <project.build.sourceEncoding>cp1252</project.build.sourceEncoding>
+        <project.build.sourceEncoding>cp1253</project.build.sourceEncoding>
+        <log4j.version>1.2.17</log4j.version>        
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.json/json -->
@@ -51,16 +52,13 @@
             <artifactId>commons-codec</artifactId>
             <version>1.3</version>
         </dependency>
+        <dependency>
+	   <groupId>log4j</groupId>
+           <artifactId>log4j</artifactId>
+	   <version>${log4j.version}</version>
+	</dependency>
     </dependencies>
     <build>
-        <resources>
-            <resource>
-                <directory>src/images/</directory>
-                <targetPath>src/images/</targetPath>
-                <filtering>false</filtering>
-                <includes/>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

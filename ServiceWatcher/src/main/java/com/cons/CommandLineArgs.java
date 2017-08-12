@@ -11,8 +11,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 
 public class CommandLineArgs {
+    final static Logger logger = Logger.getLogger(CommandLineArgs.class); 
 
     private String configFile = "config.properties";
     private boolean encrypt = false;
@@ -27,7 +30,7 @@ public class CommandLineArgs {
 
     public void init(String[] args) {
         if (args.length == 0) {
-            System.out.println("Empty args.");
+            logger.info("No arguments specified. Default settings will be applied");
         } else {
             String tmp;
             for (int i = 0; i < args.length; i++) {
@@ -40,22 +43,21 @@ public class CommandLineArgs {
                         //This bug appears only in windows
                         //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
                         tmp = (args[i].split(":", 2)[1]).trim();
-                        System.out.println("Size of array=" + getAllConfigFiles().size());
                         if (tmp.length() > 0) {
                             if (getAllConfigFiles().size() == 0) {
                                 setConfigFile(tmp);
                             }
                             getAllConfigFiles().add(tmp);
-                            System.out.println("Custom configuration specified (" + getConfigFile() + ")");
+                            logger.info("Custom configuration specified (" + getConfigFile() + ")");
                         } else {
-                            System.out.println("Invalid  <config file Name>");
+                            logger.error("Invalid  <config file Name>");
                         }
                     }
                 }
                 // -encrypt
                 if (args[i].toLowerCase().equals("-encrypt")) {
                     setEncrypt(true);
-                    System.out.println("Encrypt passwords: " + getEncrypt());
+                    logger.info("Encrypt passwords: " + getEncrypt());
                 }
                 // -autorefresh
                 if (args[i].toLowerCase().startsWith("-autorefresh")) {
@@ -65,7 +67,7 @@ public class CommandLineArgs {
                         try {
                             interval = Long.parseLong(tmp);
                         } catch (NumberFormatException e) {
-                            System.out.println("Wrong value for auto refresh time (" + tmp +
+                            logger.info("Wrong value for auto refresh time (" + tmp +
                                                "), using the default one: " + interval);
                         }
                     }
@@ -74,7 +76,7 @@ public class CommandLineArgs {
                 // -nogui
                 if (args[i].toLowerCase().equals("-nogui")) {
                     setNoGUI(true);
-                    System.out.println("GUI is disabled.");
+                    logger.info("-nogui specified, GUI is disabled.");
                 }
                 //-help
                 if (args[i].toLowerCase().equals("-help")) {
@@ -82,7 +84,7 @@ public class CommandLineArgs {
                 }
                 //-version
                 if (args[i].toLowerCase().equals("-version")) {
-                    System.out.println(SWConstants.PROGRAM_NAME + "\n" + "Version: " + SWConstants.PROGRAM_VERSION);
+                    System.out.println(SWConstants.PROGRAM_NAME + " " + "Version: " + SWConstants.PROGRAM_VERSION);
                     System.exit(0); //Exit after displaying the version
                 }
             }
@@ -128,7 +130,7 @@ public class CommandLineArgs {
         String ANSI_RED = "\u001B[31m";
 
         try {
-            InputStream in = getClass().getResourceAsStream("/src/images/help.txt");
+            InputStream in = getClass().getResourceAsStream("/images/help.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line = null;
             while ((line = reader.readLine()) != null) {
@@ -162,9 +164,9 @@ public class CommandLineArgs {
     }
     
     private void debugArguments() {
-        System.out.println("configFile=" + configFile);
+        logger.debug("Main configFile=" + configFile);
         for (String s : getAllConfigFiles()) {
-            System.out.println(s);
+            logger.debug("getAllConfigFiles:" + s);
         }
     }
 }

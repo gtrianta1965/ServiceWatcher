@@ -20,12 +20,14 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
-
+import org.apache.log4j.Logger;
 
 /**
  * Helper Class for obfuscating passwords in a config file
  */
 public class CryptoUtils {
+    
+    static final Logger logger = Logger.getLogger(CryptoUtils.class);    
 
     private static String initializationVector;
     private static String key;
@@ -33,19 +35,22 @@ public class CryptoUtils {
     private static String error;
 
     static {
-        System.out.println("Initializing key and initialization vector.");
+        
+        logger.info("Initializing key and initialization vector.");
         String systemProperties =
             getStringto16Length(System.getProperty("user.name") + System.getProperty("os.name") +
                                 System.getProperty("os.version") + System.getProperty("os.arch"));
-        key = systemProperties;
+        key = "1234567890123456";//systemProperties;
+        logger.debug("key=[" + systemProperties + "]");        
         initializationVector = new StringBuilder(systemProperties).reverse().toString();
+        logger.debug("initializationVector=" + initializationVector);
     }
 
     public CryptoUtils() {
     }
 
     public static void obfuscatePasswordInConfig(String fileName) {
-        System.out.println("Initializing Obfuscation procedure");
+        logger.debug("Initializing Obfuscation procedure");
         // This will reference one line at a time
         String line = null;
         StringBuilder sb = new StringBuilder();
@@ -68,11 +73,11 @@ public class CryptoUtils {
             }
             System.out.println("File: " + fileName + " obfuscated");
         } catch (FileNotFoundException ex) {
-            System.out.println("Property file '" + fileName + "' not found.\nIOException: " + ex.getMessage());
+            logger.error("Property file '" + fileName + "' not found.\nIOException: " + ex.getMessage());
             CryptoUtils.setValid(false);
             CryptoUtils.setError("Property file " + fileName + " not found.");
         } catch (IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
+            logger.error("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
             CryptoUtils.setValid(false);
             CryptoUtils.setError("Error reading file '" + fileName + "'");
         } finally {
@@ -84,7 +89,7 @@ public class CryptoUtils {
             }
         }
 
-        System.out.println("Writing changes to file");
+        logger.debug("Writing changes to file");
 
         FileWriter fileWriter;
         BufferedWriter bufferedWriter = null;
@@ -98,14 +103,14 @@ public class CryptoUtils {
 
             System.out.println("Obfuscation procedure finished");
         } catch (IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
+            logger.error("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
             CryptoUtils.setValid(false);
             CryptoUtils.setError("Error reading file '" + fileName + "'");
         } finally {
             try {
                 bufferedWriter.close();
             } catch (IOException ex) {
-                System.out.println("Error while closing bufferWriter\nIOException: " + ex.getMessage());
+                logger.error("Error while closing bufferWriter\nIOException: " + ex.getMessage());
             }
         }
     }
@@ -132,15 +137,19 @@ public class CryptoUtils {
             return new String(Base64.encodeBase64(encrypted), "UTF-8");
 
         } catch (UnsupportedEncodingException ex) {
+            logger.error("UnsupportedEncodingException " + ex.getMessage());
             CryptoUtils.setValid(false);
             CryptoUtils.setError("UnsupportedEncodingException " + ex.getMessage());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            logger.error("NoSuchAlgorithmException | NoSuchPaddingException " + ex.getMessage());
             CryptoUtils.setValid(false);
             CryptoUtils.setError("NoSuchAlgorithmException | NoSuchPaddingException " + ex.getMessage());
         } catch (InvalidAlgorithmParameterException | InvalidKeyException ex) {
+            logger.error("InvalidAlgorithmParameterException | InvalidKeyException " + ex.getMessage());
             CryptoUtils.setValid(false);
             CryptoUtils.setError("InvalidAlgorithmParameterException | InvalidKeyException " + ex.getMessage());
         } catch (BadPaddingException | IllegalBlockSizeException ex) {
+            logger.error("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
             CryptoUtils.setValid(false);
             CryptoUtils.setError("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
         }
@@ -166,19 +175,26 @@ public class CryptoUtils {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
+            logger.trace("value=" + value);
+            logger.trace("Base64 Value=" + Base64.decodeBase64(value.getBytes()));
+            
             byte[] original = cipher.doFinal(Base64.decodeBase64(value.getBytes()));
 
             return new String(original);
         } catch (UnsupportedEncodingException ex) {
+            logger.error("UnsupportedEncodingException " + ex.getMessage());
             setValid(false);
             setError("UnsupportedEncodingException " + ex.getMessage());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException ex) {
+            logger.error("NoSuchAlgorithmException | NoSuchPaddingException " + ex.getMessage());
             setValid(false);
             setError("NoSuchAlgorithmException | NoSuchPaddingException " + ex.getMessage());
         } catch (InvalidAlgorithmParameterException | InvalidKeyException ex) {
+            logger.error("InvalidAlgorithmParameterException | InvalidKeyException " + ex.getMessage());
             setValid(false);
             setError("InvalidAlgorithmParameterException | InvalidKeyException " + ex.getMessage());
         } catch (BadPaddingException | IllegalBlockSizeException ex) {
+            logger.error("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
             setValid(false);
             setError("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
         }
@@ -210,7 +226,7 @@ public class CryptoUtils {
             toPad = toPad.substring(0, 16);
             return toPad;
         }
-        System.out.println("Error while padding String");
+        logger.warn("Error while padding String");
         return null;
     }
 

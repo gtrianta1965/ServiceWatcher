@@ -11,16 +11,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 
 public class Configuration {
+    final static Logger logger = Logger.getLogger(Configuration.class);
+    
     private CommandLineArgs cmdArgs;
     private List<ServiceParameter> serviceParameters = new ArrayList<ServiceParameter>();
     private boolean sendMailUpdates = false;
     private boolean smtpSendEmailOnSuccess = false;
     private boolean isProduction = false;
-    private static boolean isLogEnabled = false;
+    private boolean isLogEnabled = false;
     private int smtpSendActivityEmailInterval = 60000;
     private String smtpHost = "smtp.gmail.com";
     private int smtpPort = 465;
@@ -49,6 +51,7 @@ public class Configuration {
     }
 
     public void init(String fileName) {
+        logger.debug("init with file:" + fileName);
         this.serviceParameters.clear();
         setConfigFile(fileName);
         Properties prop = new Properties();
@@ -65,27 +68,40 @@ public class Configuration {
                     
             //Read single value properties
             this.setConcurrentThreads(getNumberProperty(prop.getProperty("concurrentThreads"), 5));
+            logger.debug("ConcurrentThreads=" + this.getConcurrentThreads());
             this.setHttpResponseTimeout(getNumberProperty(prop.getProperty("httpResponseTimeout"), 5000));
+            logger.debug("HttpResponseTimeout=" + this.getHttpResponseTimeout());
             this.setLdapResponseTimeout(getNumberProperty(prop.getProperty("ldapResponseTimeout"), 5000));
+            logger.debug("LdapResponseTimeout=" + getLdapResponseTimeout());            
             this.setSocketDieInterval(getNumberProperty(prop.getProperty("socketDieInterval"), 5000));
+            logger.debug("SocketDieInterval=" + getSocketDieInterval());
             this.setSendMailUpdates(getBooleanProperty(prop.getProperty("sendMailUpdates"), false));
+            logger.debug("SendMailUpdates=" + getSendMailUpdates());
             this.setSmtpSendEmailOnSuccess(getBooleanProperty(prop.getProperty("smtpSendMailOnSuccess"), false));
+            logger.debug("SmtpSendEmailOnSuccess=" + getSmtpSendEmailOnSuccess());            
             this.setIsProduction(getBooleanProperty(prop.getProperty("isProduction"), false));
+            logger.debug("IsProduction=" + isProduction());
             this.setIsLogEnabled(getBooleanProperty(prop.getProperty("isLogEnabled"), false));
+            logger.debug("IsLogEnabled" + isLogEnabled());
             this.setSmtpSendActivityEmailInterval(getNumberProperty(prop.getProperty("smtpSendActivityEmailInterval"),
                                                                     5) * 1000);
+            logger.debug("SmtpSendActivityEmailInterval=" + getSmtpSendActivityEmailInterval());
             this.setSmtpHost(getStringProperty(prop.getProperty("smtpHost"), "smtp.gmail.com"));
+            logger.debug("SmtpHost=" + getSmtpHost());
             this.setSmtpPort(getNumberProperty(prop.getProperty("smtpPort"), 465));
+            logger.debug("SmtpPort=" + getSmtpPort());
             this.setSmtpUsername(getStringProperty(prop.getProperty("smtpUsername"), ""));
+            logger.debug("SmtpUsername=" + getSmtpUsername());
             if (prop.getProperty("smtpPassword") != null) {
                 if (CryptoUtils.decrypt(prop.getProperty("smtpPassword")) != null) {
                     this.setSmtpPassword(getStringProperty(CryptoUtils.decrypt(prop.getProperty("smtpPassword")), ""));
                 } else {
-            this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
+                  this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
                 }
             }
             this.setAutoRefreshIntervals(getStringArrayProperty(prop.getProperty("autoRefreshIntervals"),
                                                                 new String[] { "1", "2", "3" }));
+            logger.debug("AutoRefreshIntervals=" + this.getAutoRefreshIntervals().toString());
             
             if (getSendMailUpdates()) {
                 String emails = prop.getProperty("to");
@@ -143,7 +159,7 @@ public class Configuration {
                 strValue = value;
             } catch (NumberFormatException nfe) {
                 strValue = defaultValue;
-                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                logger.warn("NumberFormatException reading property value " + value + ". Set to default (" +
                                    defaultValue + ")");
             }
 
@@ -161,7 +177,7 @@ public class Configuration {
                 intValue = Integer.parseInt(value);
             } catch (NumberFormatException nfe) {
                 intValue = defaultValue;
-                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                logger.warn("NumberFormatException reading property value " + value + ". Set to default (" +
                                    defaultValue + ")");
             }
 
@@ -179,7 +195,7 @@ public class Configuration {
                 strValue = value.split(",");
             } catch (NumberFormatException nfe) {
                 strValue = defaultValue;
-                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                logger.warn("NumberFormatException reading property value " + value + ". Set to default (" +
                                    defaultValue + ")");
             }
 
@@ -198,7 +214,7 @@ public class Configuration {
                 booleanValue = Boolean.parseBoolean(value);
             } catch (NumberFormatException nfe) {
                 booleanValue = defaultValue;
-                System.out.println("NumberFormatException reading property value " + value + ". Set to default (" +
+                logger.warn("NumberFormatException reading property value " + value + ". Set to default (" +
                                    defaultValue + ")");
             }
 
@@ -377,6 +393,8 @@ public class Configuration {
     private void initServiceParameters(Properties prop) {
         boolean hasMore = true;
         int i = 0;
+        
+        logger.debug("Start");
         while (hasMore) {
             i++;
             ServiceParameter serviceParameter = new ServiceParameter();
@@ -413,5 +431,6 @@ public class Configuration {
                 hasMore = false;
             }
         }
+        logger.debug("Read " + serviceParameters.size() + " services.");
     }
 }

@@ -8,8 +8,12 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 
 public class CommandLineRunner extends Thread {
+    static final Logger logger = Logger.getLogger(CommandLineRunner.class);
+    
     private ServiceOrchestrator serviceOrchestrator;
     private long autoRefresh;
 
@@ -23,6 +27,7 @@ public class CommandLineRunner extends Thread {
 
     @Override
     public void run() {
+        logger.debug("Begin");
         if (this.autoRefresh == 0) {
             runOnce();
         } else {
@@ -31,9 +36,10 @@ public class CommandLineRunner extends Thread {
 
     }
 
-    private void runOnce() {
+    private void runOnce() {        
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        System.out.println(dateFormat.format(new Date()) + ": " + SWConstants.RUNNING_STATUS);
+        logger.debug("Begin");
+        logger.info(dateFormat.format(new Date()) + ": " + SWConstants.RUNNING_STATUS);
         serviceOrchestrator.start();
         while (serviceOrchestrator.isRunning()) {
             try {
@@ -41,18 +47,19 @@ public class CommandLineRunner extends Thread {
             } catch (InterruptedException e) {
             }
         }
-        System.out.println(dateFormat.format(new Date()) + " : " + serviceOrchestrator.getStatus().toString());
+        logger.info(dateFormat.format(new Date()) + " : " + serviceOrchestrator.getStatus().toString());
         //TODO: Send mail.
     }
 
     private void runPeriodically() {
+        logger.debug("Begin");
         while (true) {
             runOnce();
             try {
                 sleep(autoRefresh * 60000);
             } catch (InterruptedException e) {
                 //e.printStackTrace();
-                System.out.println("Interrupt requested.");
+                logger.warn("Interrupt requested.");
             }
         }
     }

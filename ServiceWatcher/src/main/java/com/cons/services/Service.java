@@ -3,8 +3,11 @@ package com.cons.services;
 import com.cons.Configuration;
 import com.cons.utils.SWConstants;
 
-public abstract class Service implements Runnable {
+import org.apache.log4j.Logger;
 
+public abstract class Service implements Runnable {
+ 
+    static final Logger logger = Logger.getLogger(Service.class);
     ServiceParameter serviceParameter = new ServiceParameter();
     ServiceOrchestrator serviceOrchestrator;
     Configuration configuration;
@@ -14,14 +17,18 @@ public abstract class Service implements Runnable {
 
     public Service() { //default constructor
         super();
+        logger.debug("Constructor Called - without arguments");
     }
 
     public Service(ServiceParameter sp) {
+        logger.debug("Constructor Called with ServiceParameter");
         setServiceParameter(sp);
     }
 
 
     public void run() {
+        logger.debug("Begin running service");
+        
         printStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setActualRetries(0); //Reset the actual retries
@@ -65,6 +72,7 @@ public abstract class Service implements Runnable {
                                                   serviceParameter.getError() + ")");
             }
         }
+        logger.debug("End running service.");
     }
 
     /*

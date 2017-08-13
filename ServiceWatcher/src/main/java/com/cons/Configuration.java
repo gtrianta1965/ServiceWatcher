@@ -132,6 +132,7 @@ public class Configuration {
         }
 
         if (isProduction() && !getCmdArguments().getEncrypt()) {
+            logger.info("Production mode:Obfuscating " + fileName);
             CryptoUtils.obfuscatePasswordInConfig(fileName);
     }
         //additional files
@@ -142,8 +143,12 @@ public class Configuration {
                     input = new FileInputStream(getCmdArguments().getAllConfigFiles().get(i));
                     prop.load(input);
                 } catch (FileNotFoundException e) {
+                    logger.error("Additional configuration file " + getCmdArguments().getAllConfigFiles().get(i) + " not found");
                 } catch (IOException f) {
+                    logger.error("Error reading additional configuration file " + getCmdArguments().getAllConfigFiles().get(i) +
+                                 " (" + f.getMessage() + ")");
                 }
+                logger.debug("Read Services from additional configuration file:" + getCmdArguments().getAllConfigFiles().get(i));
                 initServiceParameters(prop);
             }
     

@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
+
 public class ServiceOrchestrator {
+    static final Logger logger = Logger.getLogger(ServiceOrchestrator.class);
+    
     protected List<String> statusLog;
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
@@ -55,6 +59,7 @@ public class ServiceOrchestrator {
 
 
     public void start() {
+        logger.debug("Begin");
 
         //Check if we are running
         if (executor != null && !executor.isTerminated()) {
@@ -84,8 +89,12 @@ public class ServiceOrchestrator {
             ((Service) serviceWorker).setServiceOrchestrator(this);
             executor.execute(serviceWorker);
         }
+        
+        logger.debug(configuration.getServiceParameters().size() + " submitted to thread pool.");
 
         executor.shutdown();
+        logger.debug("Executor shutdown.");
+        
         /* Study the following code and activate it when it is needed
         while (!executor.isTerminated()) {
         }

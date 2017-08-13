@@ -11,3 +11,8 @@
 
 <b><red>-conf:path</red></b>
     Loads a custom configuration file.
+
+<b><red>-debug</red></b>
+    Enables debuging. Writes debuging messages to log file.
+    
+

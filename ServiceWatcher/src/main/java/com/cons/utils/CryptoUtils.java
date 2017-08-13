@@ -71,7 +71,7 @@ public class CryptoUtils {
                 sb.append(line);
                 sb.append(System.getProperty("line.separator"));
             }
-            System.out.println("File: " + fileName + " obfuscated");
+            logger.info("File: " + fileName + " obfuscated");
         } catch (FileNotFoundException ex) {
             logger.error("Property file '" + fileName + "' not found.\nIOException: " + ex.getMessage());
             CryptoUtils.setValid(false);
@@ -101,7 +101,7 @@ public class CryptoUtils {
 
             bufferedWriter.write(sb.toString());
 
-            System.out.println("Obfuscation procedure finished");
+            logger.debug("Obfuscation completed");
         } catch (IOException ex) {
             logger.error("Error reading file '" + fileName + "'\nIOException: " + ex.getMessage());
             CryptoUtils.setValid(false);

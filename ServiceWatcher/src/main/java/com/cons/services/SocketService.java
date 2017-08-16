@@ -36,7 +36,7 @@ public class SocketService extends Service {
         try{
             port = fullURL[1];
         }catch (ArrayIndexOutOfBoundsException oofbex){
-            logger.warn("No port specified using default port 80.");
+            logger.warn("Socket Service no port specified using default port 80.");
             port = "80";
         }
         

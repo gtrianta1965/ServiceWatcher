@@ -17,20 +17,22 @@ import org.apache.log4j.Logger;
 public class ServiceOrchestrator {
     static final Logger logger = Logger.getLogger(ServiceOrchestrator.class);
     
-    protected List<String> statusLog;
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
+    private Reporter reporter;
     private OrchestratorStatus orchestratorStatus;
-
+    
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();
-        this.statusLog = new ArrayList<String>();
     }
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+        if(this.configuration.getSendMailUpdates()){
+            this.startReporter();
+    }
     }
 
     public Configuration getConfiguration() {
@@ -60,7 +62,6 @@ public class ServiceOrchestrator {
 
     public void start() {
         logger.debug("Begin");
-
         //Check if we are running
         if (executor != null && !executor.isTerminated()) {
             System.out.println("Executor is running");
@@ -89,12 +90,19 @@ public class ServiceOrchestrator {
             ((Service) serviceWorker).setServiceOrchestrator(this);
             executor.execute(serviceWorker);
         }
-        
+
         logger.debug(configuration.getServiceParameters().size() + " submitted to thread pool.");
 
         executor.shutdown();
         logger.debug("Executor shutdown.");
-        
+        logger.debug("Starting send mail thread.");
+        new Thread(new Runnable() {
+            public void run() {
+                while (isRunning()) {
+                }
+                checkSendMail();
+            }
+        }).start();
         /* Study the following code and activate it when it is needed
         while (!executor.isTerminated()) {
         }
@@ -102,13 +110,6 @@ public class ServiceOrchestrator {
         System.out.println("Finished all threads");
         */
 
-    }
-
-
-    public void sendStatusLog() {
-        Reporter.sendMail(configuration.getRecipients().toArray(new String[0]), this.statusLog,
-                          configuration.getSmtpHost(), configuration.getSmtpPort(), configuration.getSmtpUsername(),
-                          configuration.getSmtpPassword());
     }
 
     public ExecutorService getExecutor() {
@@ -121,13 +122,6 @@ public class ServiceOrchestrator {
         serviceTableModel.initFromConfiguration(configuration);
         setServiceTableModel(serviceTableModel);
         setConfiguration(configuration);
-    }
-
-    /**
-     * Cleans log
-     */
-    public void cleanLog() {
-        this.statusLog = new ArrayList<String>();
     }
 
     public Boolean isRunning() {
@@ -168,9 +162,24 @@ public class ServiceOrchestrator {
                                             ||s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_RUNNING))) {
                 getValue = orchestratorStatus.getTotalRetries();
                 orchestratorStatus.setTotalRetries(++getValue);
-            }
+        }
         }
 
         return orchestratorStatus;
+    }
+
+    /**
+     * Checks if it should send emails for the current run.
+     */
+    public void checkSendMail(){
+        if(this.configuration.getSendMailUpdates() && 
+           (this.configuration.getSmtpSendEmailOnSuccess() || 
+            this.orchestratorStatus.getTotalSubmitted()!=this.orchestratorStatus.getTotalSuccess())){
+            reporter.send();
+}
+    }
+    
+    public void startReporter(){
+        this.reporter = new Reporter(this);
     }
 }

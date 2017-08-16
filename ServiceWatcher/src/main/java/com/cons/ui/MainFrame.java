@@ -33,16 +33,14 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
-    Configuration configuration;
-    private int interval = 200;
-    private boolean send = false;
+    private int interval=200;
     private Timer generic_timer;
     private long diff;
 
-    //The following variables control the fire times of the refresh timer.
+    //The following variables control the fire times of the refresh timer.    
     private Date currentRefreshFireTime = null;
     private Date nextRefreshFireTime = null;
-
+    
     /** Creates new form MainFrame */
     public MainFrame() {
 
@@ -54,40 +52,39 @@ public class MainFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 checkAutoRefresh();
                 updateStatusBar();
-                checkSendMail();
             }
         });
         generic_timer.start();
     }
 
-    public ImageIcon getImg() {
-        if (serviceOrchestrator.isRunning()) {
+    public ImageIcon getImg(){
+        if(serviceOrchestrator.isRunning()){
             return new ImageIcon(this.getClass().getResource("/images/active.gif"));
-        } else {
+        }else{
             return new ImageIcon();
         }
     }
-
-    public String[] getIntervalnumbers() {
+    
+    public String[] getIntervalnumbers(){
         String[] intervals = this.serviceOrchestrator
                                  .getConfiguration()
                                  .getAutoRefreshIntervals();
-
+        
         return intervals;
     }
-
+    
     /**
      * Updates status bar.
      */
-    private void updateStatusBar() {
+    private void updateStatusBar(){
         statusMsg.setText((serviceOrchestrator.getStatus()).toHTML());
-        if (statusRun.getIcon() == null && serviceOrchestrator.isRunning()) {
+        if(statusRun.getIcon() == null && serviceOrchestrator.isRunning()){
             statusRun.setIcon(getImg());
-        } else if (!serviceOrchestrator.isRunning()) {
+        }else if(!serviceOrchestrator.isRunning()){
             statusRun.setIcon(null);
         }
-
-        statusRun.setText(getServiceOrchestrator() != null ? (!serviceOrchestrator.isRunning() ? "IDLE" : "") : "IDLE");
+        
+        statusRun.setText(getServiceOrchestrator()!=null?(!serviceOrchestrator.isRunning()?"IDLE":""):"IDLE");
         if (serviceOrchestrator.isRunning()) {
             btnRefresh.setEnabled(false);
             btnLoad.setEnabled(false);
@@ -96,32 +93,10 @@ public class MainFrame extends javax.swing.JFrame {
             btnLoad.setEnabled(true);
         }
     }
-
-    /**
-     * Checks if it should send emails for the current run.
-     */
-    private void checkSendMail() {
-        if (this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator
-                                                                      .getConfiguration()
-                                                                      .getSendMailUpdates() &&
-            (this.serviceOrchestrator
-                                                                                                    .getConfiguration()
-                                                                                                    .getSmtpSendEmailOnSuccess() ||
-             this.serviceOrchestrator
-                                                                                                                                        .getOrchestratorStatus()
-                                                                                                                                        .getTotalSubmitted() !=
-                           this.serviceOrchestrator
-                                                                                                                                                                    .getOrchestratorStatus()
-                                                                                                                                                                    .getTotalSuccess())) {
-
-            this.send = false;
-            this.serviceOrchestrator.sendStatusLog();
-            this.serviceOrchestrator.cleanLog();
-        }
-    }
-
+    
+            
+    
     private void RefreshServices() {
-        this.send = true;
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime =
             DateUtils.addMinutesToDate(currentRefreshFireTime,
@@ -153,7 +128,7 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * CheckForAutoRefresh
      */
-    public void checkAutoRefresh() {
+    public void checkAutoRefresh(){
         if (checkAutoRefresh.isSelected()) {
             //Check if we are running, that is the current time is not null
             if (currentRefreshFireTime != null) {
@@ -172,53 +147,52 @@ public class MainFrame extends javax.swing.JFrame {
                     next_refresh.setText("Next refresh in " + String.valueOf(diff) + " s");
                     RefreshServices();
                 }
-            } else {
-                this.send = true;
+        } else {
                 //The refresh never executed (execute it now)
                 currentRefreshFireTime = new Date(); //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
                 nextRefreshFireTime =
                     DateUtils.addMinutesToDate(currentRefreshFireTime,
-                                               Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
+                    Long.parseLong(cbAutoRefreshInterval.getSelectedItem().toString()));
                 serviceOrchestrator.start();
-            }
+        }
         } else {
             //Autorefresh is disabled. Nullify current and next fire times
             currentRefreshFireTime = null;
             nextRefreshFireTime = null;
-        }
+    }
     }
 
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
         float[] columnWidthPercentage = { 2.0f, 25.0f, 15.0f, 3.0f, 10.0f, 25.0f, 2.0f, 18.0f};
-
+        
         int tW = servicesTable.getWidth();
-        TableColumn column;
-        TableColumnModel jTableColumnModel = servicesTable.getColumnModel();
-        int cantCols = jTableColumnModel.getColumnCount();
-        for (int i = 0; i < cantCols; i++) {
-            column = jTableColumnModel.getColumn(i);
-            int pWidth = Math.round(columnWidthPercentage[i] * tW);
-            column.setPreferredWidth(pWidth);
-        }
+            TableColumn column;
+            TableColumnModel jTableColumnModel = servicesTable.getColumnModel();
+            int cantCols = jTableColumnModel.getColumnCount();
+            for (int i = 0; i < cantCols; i++) {
+                column = jTableColumnModel.getColumn(i);
+                int pWidth = Math.round(columnWidthPercentage[i] * tW);
+                column.setPreferredWidth(pWidth);
+            }
     }
 
     public void initModel(ServicesTableModel stm) {
-        servicesTableModel = stm;
-
+        servicesTableModel = stm;       
+        
         //ImageIcon icon = new ImageIcon(this.getClass().getResource("/src/images/refresh.png"));
-        initComponents();
+        initComponents();  
         setColumnsWidth();
         servicesTable.getTableHeader().setReorderingAllowed(false);
         servicesTable.setColumnSelectionAllowed(true);
         servicesTable.setRowSelectionAllowed(true);
-
-        if (servicesTable.getCellEditor() != null) {
-            servicesTable.getCellEditor().stopCellEditing();
-        }
-
+        
+           if (servicesTable.getCellEditor() != null) {
+             servicesTable.getCellEditor().stopCellEditing();
+            }
+ 
     }
 
     /** This method is called from within the constructor to
@@ -435,14 +409,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-END:initComponents
 
     private void ButtonExit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExit
-        this.dispose(); //Remove JFrame
-        System.exit(0);
+      this.dispose();  //Remove JFrame 
+      System.exit(0);
     }//GEN-LAST:event_ButtonExit
 
     private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
-        //TODO: Disable button, check if orchestrator is running, display a message if it is already running
-        this.send = true;
-        serviceOrchestrator.start();
+       //TODO: Disable button, check if orchestrator is running, display a message if it is already running
+       serviceOrchestrator.start();
        
     }//GEN-LAST:event_buttonRefresh
 
@@ -451,7 +424,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (checkAutoRefresh.isSelected()) {
             cbAutoRefreshInterval.setEnabled(false);
             btnRefresh.setEnabled(false);
-            String time_value = String.valueOf(cbAutoRefreshInterval.getSelectedItem());
+            String time_value= String.valueOf(cbAutoRefreshInterval.getSelectedItem());           
             //serviceOrchestrator.start();
         } else {
             //Clean up
@@ -471,7 +444,7 @@ public class MainFrame extends javax.swing.JFrame {
             JFileChooser fc = new JFileChooser();
             javax.swing.JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
             int returnVal = fc.showOpenDialog(jFileChooser1);
-
+        
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 serviceOrchestrator.loadNewFile(file);

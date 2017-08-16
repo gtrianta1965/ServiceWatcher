@@ -33,10 +33,9 @@ public class CommandLineRunner extends Thread {
         } else {
             runPeriodically();
         }
-
     }
 
-    private void runOnce() {        
+    private void runOnce() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         logger.debug("Begin");
         logger.info(dateFormat.format(new Date()) + ": " + SWConstants.RUNNING_STATUS);
@@ -48,7 +47,6 @@ public class CommandLineRunner extends Thread {
             }
         }
         logger.info(dateFormat.format(new Date()) + " : " + serviceOrchestrator.getStatus().toString());
-        //TODO: Send mail.
     }
 
     private void runPeriodically() {

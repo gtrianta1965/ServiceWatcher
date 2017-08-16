@@ -50,7 +50,7 @@ public class DBService extends Service {
         } catch (SQLException ex) {
             this.setErrorCall(SWConstants.SERVICE_DB_ERROR_ORACLE_SQLEXCEPTION_MSG + ":" + ex.getMessage());
             this.setSuccessfulCall(false);
-            System.out.println("Wrong Query=" + serviceParameter.getQuery() );
+            //System.out.println("Wrong Query=" + serviceParameter.getQuery() );
         } catch (Exception ex) {
             ex.printStackTrace();
             this.setErrorCall(SWConstants.GENERIC_EXCEPTION_MSG + ":" + ex.getMessage());

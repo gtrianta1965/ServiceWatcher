@@ -6,36 +6,36 @@ import com.cons.utils.SWConstants;
 import org.apache.log4j.Logger;
 
 public abstract class Service implements Runnable {
-    
+
     static final Logger logger = Logger.getLogger(Service.class);
     ServiceParameter serviceParameter = new ServiceParameter();
     ServiceOrchestrator serviceOrchestrator;
     Configuration configuration;
-    private String errorCall;        //message for successful/unsuccessful call
+    private String errorCall; //message for successful/unsuccessful call
     private String successCall; //message for successful/unsuccessful call
-    private boolean successfulCall;      //boolean for  for successful/unsuccessful call
-    
-    public Service(){   //default constructor
+    private boolean successfulCall; //boolean for  for successful/unsuccessful call
+
+    public Service() { //default constructor
         super();
         logger.debug("Constructor Called - without arguments");
     }
-    
-    public Service(ServiceParameter sp){ 
+
+    public Service(ServiceParameter sp) {
         logger.debug("Constructor Called with ServiceParameter");
         setServiceParameter(sp);
     }
-    
+
 
     public void run() {
         logger.debug("Begin running service");
-        
+
         printStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setActualRetries(0); //Reset the actual retries
 
 
         while (serviceParameter.getActualRetries() <= serviceParameter.getRetries()) {
-        service();
+            service();
             if (serviceParameter.getActualRetries() == serviceParameter.getRetries()) {
                 break; //We reached the maximum number of retries. Stop trying.
             } else {
@@ -57,22 +57,23 @@ public abstract class Service implements Runnable {
                 printStatus(SWConstants.SERVICE_SUCCESS + ":" + getSuccessCall());
 
             } else {
-            printStatus(SWConstants.SERVICE_SUCCESS);
+                printStatus(SWConstants.SERVICE_SUCCESS);
             }
 
         } else {
             serviceParameter.setStatus(SWConstants.SERVICE_FAILED);
             serviceParameter.setError(getErrorCall());
             printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
-            }
         }
         logger.debug("End running service.");
-    
+    }
+
+
     /*
      * Service is the main method that all services should override
      */
     public abstract void service();
-       
+
     public void setServiceParameter(ServiceParameter serviceParameter) {
         this.serviceParameter = serviceParameter;
     }
@@ -96,7 +97,7 @@ public abstract class Service implements Runnable {
     public String getErrorCall() {
         return errorCall;
     }
-    
+
 
     public void setServiceOrchestrator(ServiceOrchestrator serviceOrchestrator) {
         this.serviceOrchestrator = serviceOrchestrator;
@@ -105,10 +106,10 @@ public abstract class Service implements Runnable {
     public ServiceOrchestrator getServiceOrchestrator() {
         return serviceOrchestrator;
     }
-    
+
     protected void printStatus(String status) {
-        if (serviceOrchestrator != null ) {
-           this.serviceOrchestrator.printStatus(serviceParameter.getId() - 1, status);
+        if (serviceOrchestrator != null) {
+            this.serviceOrchestrator.printStatus(serviceParameter.getId() - 1, status);
         } else {
             /* Uncomment for command line status
             System.out.println(status);
@@ -126,7 +127,7 @@ public abstract class Service implements Runnable {
 
     public void setSuccessCall(String successCall) {
         this.successCall = successCall;
-}
+    }
 
     public String getSuccessCall() {
         return successCall;

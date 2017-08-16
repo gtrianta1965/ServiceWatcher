@@ -25,7 +25,6 @@ public class CommandLineRunner extends Thread {
     public void run() {
         if (this.autoRefresh == 0) {
             runOnce();
-            getServiceOrchestrator().runReporterOnce();
         } else {
             runPeriodically();
         }
@@ -42,7 +41,6 @@ public class CommandLineRunner extends Thread {
             }
         }
         System.out.println(dateFormat.format(new Date()) + " : " + serviceOrchestrator.getStatus().toString());
-        //TODO: Send mail.
     }
 
     private void runPeriodically() {

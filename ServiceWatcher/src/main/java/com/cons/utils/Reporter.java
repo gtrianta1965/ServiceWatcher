@@ -71,33 +71,13 @@ public class Reporter{
         this.statusLog = new ArrayList<String>();
     }
     
-    public void run() {
-        if(this.mailTimer == null){
-            this.mailTimer = new Timer();
-            mailTimer.scheduleAtFixedRate(new TimerTask(){
-                @Override
-                public void run() {
-                    if(serviceOrchestrator.checkSendMail()){
-                        try{
-                            sendMail();
-                        }catch(Exception ex){
-                            ex.printStackTrace();
-                        }
-                    }
-                }
-            }, 0, this.configuration.getSmtpSendActivityEmailInterval());
-        }
-    }
-    
-    public void runOnce(){
-        if (serviceOrchestrator.checkSendMail()) {
-            try {
-                System.out.print(SWConstants.REPORTER_RUN_ONCE_MSG);
-                sendMail();
-                System.out.println(SWConstants.REPORTER_RUN_ONCE_DONE);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+    public void send() {
+        try {
+            System.out.print(SWConstants.REPORTER_RUN_ONCE_MSG);
+            sendMail();
+            System.out.println(SWConstants.REPORTER_RUN_ONCE_DONE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
     
@@ -197,53 +177,6 @@ public class Reporter{
     }
     
     /**
-     * This function initializes and loads a Document based on an HTML template with UTF-8 encoding
-     * pareses it with jsoup adds now date to a <p> element with id="date"
-     * and appends <p>log n</p> * n logs to the log section of the page
-     * 
-     * @param templatePath is the relative path to the HTML template
-     * @param log is the log to be added in the log section of the page
-     * @return returns an HTML page type of Document.
-     */
-    private Document makePage(String templatePath, List<String> log){
-        Document doc = null;
-        File input = null;
-        try{
-            // Parse template
-            input = new File(templatePath);
-            doc = Jsoup.parse(input, "UTF-8");
-            // Add date
-            Element element = doc.select("p#date").first();
-            Date date = new Date();
-            element.text(date.toString());
-            // Add log
-            element = doc.select("p#field").first().appendElement("h4 id=\"logtlt\" align=\"center\"");
-            element.text("Log");
-            
-            element = doc.select("p#field").last().appendElement("p id=\"stsBarResult\" align=\"center\"");
-            element.text(this.serviceOrchestrator.getStatus().toString());
-            
-            int id=0;
-            for(String report:log){
-                String status = "white";
-                if(report.contains("UP")){
-                    status = "#76BB1E";
-                }else{
-                    status = "#D24626";
-                }
-                doc.select("p#field").first()
-                   .appendElement("p id=\"" + id + "\" style=\"background-color: " + status + ";\"")
-                   .text(report);
-                id++;
-            }
-        } catch (IOException ioex) {
-            ioex.printStackTrace();
-        }
-        return doc;
-    }
-    
-    
-    /**
      * Makes a mail attachment from a relative file path and adds refrenses it to an id to be later used
      * in an HTML page.
      * 
@@ -284,11 +217,8 @@ public class Reporter{
         
         context.put("title", SWConstants.REPORTER_TEMPLATE_TITLE + " Version " + SWConstants.PROGRAM_VERSION);
         context.put("date", (new Date()).toString());
-        context.put("log_title", "Log");
-        
-        putConfigurationProperties(context);        
-        
-        putCmdArguments(context);
+        context.put("configuration", configuration);
+        context.put("service_parameters", configuration.getServiceParameters());
         
         makeLog();
         for(String alog : statusLog){
@@ -300,44 +230,6 @@ public class Reporter{
         t.merge(context, w);
         
         return w.toString();
-    }
-    
-    /**
-     * Puts configuration properties to the context.
-     * @param context
-     */
-    private void putConfigurationProperties(VelocityContext context) {
-        Vector autoRefreshIntervals = new Vector();
-        
-        context.put("configFileName", configuration.getConfigFile());
-        context.put("isProduction", configuration.isProduction());
-        context.put("isLogEnabled", configuration.isLogEnabled());
-        context.put("smtpSendEmailOnSuccess", configuration.getSmtpSendEmailOnSuccess());
-        context.put("smtpSendActivityEmailInterval", configuration.getSmtpSendActivityEmailInterval());
-        context.put("concurrentThreads", configuration.getConcurrentThreads());
-        context.put("httpResponseTimeout", configuration.getHttpResponseTimeout());
-        context.put("ldapResponseTimeout", configuration.getLdapResponseTimeout());
-        context.put("socketDieInterval", configuration.getSocketDieInterval());
-        
-        autoRefreshIntervals.addElement("1");
-        autoRefreshIntervals.addElement("2");
-        autoRefreshIntervals.addElement("3");
-
-        for(String interval:configuration.getAutoRefreshIntervals()){
-            autoRefreshIntervals.addElement(interval);
-        }
-        context.put("autoRefreshIntervals", autoRefreshIntervals);        
-    }
-    
-    /**
-     * Puts command line arguments to the context from the configuration.
-     * @param context
-     */
-    private void putCmdArguments(VelocityContext context) {
-        context.put("cmdConfigFileName", configuration.getCmdArguments().getConfigFile());
-        context.put("encrypt", configuration.getCmdArguments().getEncrypt());
-        context.put("isNoGUI", configuration.getCmdArguments().isNoGUI());
-        context.put("cmdAutoRefreshTime", configuration.getCmdArguments().getAutoRefreshTime());
     }
     
     /**

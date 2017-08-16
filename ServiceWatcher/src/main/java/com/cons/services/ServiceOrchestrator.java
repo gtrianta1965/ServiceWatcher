@@ -16,26 +16,19 @@ public class ServiceOrchestrator {
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
-    private boolean send;
     private Reporter reporter;
     private OrchestratorStatus orchestratorStatus;
     
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();
-        //this.statusLog = new ArrayList<String>();
-        this.send = false;
     }
-
-//    public List<String> getStatusLog(){
-//        return this.statusLog;
-//    }
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
         if(this.configuration.getSendMailUpdates()){
             this.startReporter();
-    }
+        }
     }
 
     public Configuration getConfiguration() {
@@ -64,8 +57,6 @@ public class ServiceOrchestrator {
     
     
     public void start() {
-        // You can send mail
-        this.send = true;
         //Check if we are running
         if (executor != null && !executor.isTerminated()) {
             System.out.println("Executor is running");
@@ -96,6 +87,15 @@ public class ServiceOrchestrator {
         }
         
         executor.shutdown();
+        
+        new Thread(new Runnable() {
+            public void run() {
+                while (isRunning()) {
+                }
+                checkSendMail();
+            }
+        }).start();
+        
         /* Study the following code and activate it when it is needed
         while (!executor.isTerminated()) {
         }
@@ -155,29 +155,15 @@ public class ServiceOrchestrator {
     /**
      * Checks if it should send emails for the current run.
      */
-    public boolean checkSendMail(){
-        boolean canSend = false;
-        if(this.send && 
-           !this.isRunning() && 
-           this.configuration.getSendMailUpdates() && 
+    public void checkSendMail(){
+        if(this.configuration.getSendMailUpdates() && 
            (this.configuration.getSmtpSendEmailOnSuccess() || 
             this.orchestratorStatus.getTotalSubmitted()!=this.orchestratorStatus.getTotalSuccess())){
-            
-            this.send = false;
-            canSend = true;
+            reporter.send();
         }
-        return canSend;
     }
     
     public void startReporter(){
         this.reporter = new Reporter(this);
-        if(!(this.configuration.getCmdArguments().getAutoRefreshTime() == 0 
-           && this.configuration.getCmdArguments().isNoGUI())){
-            reporter.run();
-        }
-    }
-    
-    public void runReporterOnce(){
-        reporter.runOnce();
     }
 }

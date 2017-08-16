@@ -215,7 +215,8 @@ public class Reporter{
         
         Template t = ve.getTemplate("report_template.html");
         
-        context.put("title", SWConstants.REPORTER_TEMPLATE_TITLE + " Version " + SWConstants.PROGRAM_VERSION);
+        context.put("program_name", SWConstants.REPORTER_TEMPLATE_TITLE);
+        context.put("version", SWConstants.PROGRAM_VERSION);
         context.put("date", (new Date()).toString());
         context.put("configuration", configuration);
         context.put("service_parameters", configuration.getServiceParameters());

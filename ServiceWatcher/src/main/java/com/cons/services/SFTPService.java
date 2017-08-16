@@ -5,7 +5,11 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import org.apache.log4j.Logger;
+
 public class SFTPService extends Service {
+    final static Logger logger = Logger.getLogger(SFTPService.class);
+    
     public SFTPService(ServiceParameter serviceParameter) {
         super(serviceParameter);
     }
@@ -24,20 +28,27 @@ public class SFTPService extends Service {
         String protocol = "sftp";
         
         try{
+            logger.debug("Starting session.");
             JSch jsch = new JSch();
             Session session = jsch.getSession(username, url, port);
             session.setPassword(password);
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
+            logger.debug("Session Started");
             ChannelSftp sftpChannel = (ChannelSftp) session.openChannel(protocol);
+            logger.debug("Starting SFTP Connection");
             sftpChannel.connect();
+            logger.debug("Connected!");
             sftpChannel.disconnect();
             session.disconnect();
+            logger.debug("SFTP Service Success");
             setSuccessfulCall(true);
         }catch (JSchException jschex){
+            logger.error("SFTP Service error " + jschex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(jschex.getMessage());
         }catch (Exception ex){
+            logger.error("SFTP Service error " + ex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(ex.getMessage());
         }

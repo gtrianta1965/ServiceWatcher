@@ -14,7 +14,7 @@ public class ServicesTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private boolean DEBUG = false;
 
-    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status", "R","Password"};
+    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status", "R","Password","Query"};
 
     private Object[][] data;
     
@@ -56,6 +56,11 @@ public class ServicesTableModel extends AbstractTableModel {
                 password_ast += "*";
             }
             data[i][SWConstants.TABLE_PASSWORD_INDEX] = password_ast;
+            if(sp.getQuery()!=null){
+                data[i][SWConstants.TABLE_QUERY_INDEX]=sp.getQuery();                
+            }else{
+                data[i][SWConstants.TABLE_QUERY_INDEX]="";
+            }
         }    
         
         fireTableDataChanged();
@@ -131,6 +136,8 @@ public class ServicesTableModel extends AbstractTableModel {
             printDebugData();
         }
     }
+
+        
 
     private void printDebugData() {
         int numRows = getRowCount();

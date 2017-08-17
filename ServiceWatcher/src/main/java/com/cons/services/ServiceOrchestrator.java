@@ -15,13 +15,13 @@ import org.apache.log4j.Logger;
 
 public class ServiceOrchestrator {
     static final Logger logger = Logger.getLogger(ServiceOrchestrator.class);
-    
+
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
     private Reporter reporter;
     private OrchestratorStatus orchestratorStatus;
-    
+
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();
@@ -29,7 +29,7 @@ public class ServiceOrchestrator {
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
-        if(this.configuration.getSendMailUpdates()){
+        if (this.configuration.getSendMailUpdates()) {
             this.initReporter();
         }
     }
@@ -137,7 +137,7 @@ public class ServiceOrchestrator {
     public OrchestratorStatus getStatus() {
         /*clear orchestratorStatus obj except of totalSubmitted*/
         int submitted = orchestratorStatus.getTotalSubmitted();
-       // int retries = orchestratorStatus.getTotalRetries();
+        // int retries = orchestratorStatus.getTotalRetries();
         orchestratorStatus.reset();
         orchestratorStatus.setTotalSubmitted(submitted);
         //orchestratorStatus.setTotalRetries(retries);
@@ -155,13 +155,14 @@ public class ServiceOrchestrator {
                 getValue = orchestratorStatus.getTotalFailed();
                 orchestratorStatus.setTotalFailed(getValue + 1);
             }
-            
-            if (s.getActualRetries() > 0 &&(s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_SUCCESS)
-                                            ||s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED)
-                                            ||s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_RUNNING))) {
+
+            if (s.getActualRetries() > 0 &&
+                (s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_SUCCESS) ||
+                 s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED) ||
+                 s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_RUNNING))) {
                 getValue = orchestratorStatus.getTotalRetries();
                 orchestratorStatus.setTotalRetries(++getValue);
-        }
+            }
         }
 
         return orchestratorStatus;
@@ -170,15 +171,15 @@ public class ServiceOrchestrator {
     /**
      * Checks if it should send emails for the current run.
      */
-    private void checkSendMail(){
-        if(this.configuration.getSendMailUpdates() && 
-           (this.configuration.getSmtpSendEmailOnSuccess() || 
-            this.orchestratorStatus.getTotalSubmitted()!=this.orchestratorStatus.getTotalSuccess())){
+    private void checkSendMail() {
+        if (this.configuration.getSendMailUpdates() &&
+            (this.configuration.getSmtpSendEmailOnSuccess() ||
+             this.orchestratorStatus.getTotalSubmitted() != this.orchestratorStatus.getTotalSuccess())) {
             reporter.send();
-}
+        }
     }
-    
-    private void initReporter(){
+
+    private void initReporter() {
         this.reporter = new Reporter(this);
     }
 }

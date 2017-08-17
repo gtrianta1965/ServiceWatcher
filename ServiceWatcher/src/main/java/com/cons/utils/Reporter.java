@@ -5,13 +5,6 @@ import com.cons.services.ServiceOrchestrator;
 
 import com.cons.services.ServiceParameter;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.io.File;
-
-import java.io.IOException;
-
 import java.io.StringWriter;
 
 import java.util.ArrayList;
@@ -22,8 +15,6 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimeZone;
 
-import java.util.TimerTask;
-
 import java.util.Vector;
 
 import javax.activation.DataHandler;
@@ -31,6 +22,7 @@ import javax.activation.DataSource;
 
 import javax.activation.FileDataSource;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -46,6 +38,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 
+import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -53,14 +46,10 @@ import org.apache.velocity.app.VelocityEngine;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import org.jsoup.nodes.Document;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-
 public class Reporter{
+    final static Logger logger = Logger.getLogger(Reporter.class);
+
     protected List<String> statusLog;
-    private Timer mailTimer;
     private ServiceOrchestrator serviceOrchestrator;
     private Configuration configuration;
     
@@ -73,11 +62,12 @@ public class Reporter{
     
     public void send() {
         try {
-            System.out.print(SWConstants.REPORTER_RUN_ONCE_MSG);
             sendMail();
-            System.out.println(SWConstants.REPORTER_RUN_ONCE_DONE);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.debug("Failed to send e-mail. " + ex.getMessage());
+            if(configuration.getCmdArguments().isNoGUI()){
+                System.out.println("Failed to send e-mail.");
+            }
         }
     }
     
@@ -87,6 +77,12 @@ public class Reporter{
      * @param log is a string array which includes the log to be sent via e-mail.
      */
     private void sendMail() {
+        logger.info("Starting Sending Mail Proccess");
+        if(configuration.getCmdArguments().isNoGUI()){
+            System.out.print(SWConstants.REPORTER_RUN_ONCE_MSG);
+        }
+        
+        logger.debug("Making log from results to send.");
         makeLog();
         // Mail Header
         final String[] recipients = this.configuration.getRecipients().toArray(new String[0]);
@@ -102,7 +98,8 @@ public class Reporter{
         InternetAddress[] to;
         // Sender's email ID needs to be mentioned
         String from = SWConstants.REPORTER_NAME;
-
+        
+        logger.debug("Initializing SMTP properties.");
         // Get system properties
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
@@ -110,6 +107,7 @@ public class Reporter{
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", Integer.toString(port));
+        logger.debug("Creating authentication.");
         //get Session
         Session session = Session.getDefaultInstance(props,    
             new javax.mail.Authenticator() {    
@@ -119,13 +117,14 @@ public class Reporter{
             }
         );
 
-        //Session session = Session.getDefaultInstance(props);
-
         try {
+            logger.debug(SWConstants.REPORTER_DEBUG_COOKING);
             int failed = 0;
             String appendSubjectStatus = "";
+            
             // Create a default MimeMessage object.
             MimeMessage message = new MimeMessage(session);
+
             // Init message parts
             MimeMultipart multipart = new MimeMultipart("related");
             BodyPart msgBodyPart = new MimeBodyPart();
@@ -166,13 +165,26 @@ public class Reporter{
 
             // Set message content as multipart
             message.setContent(multipart);
-
+            logger.info(SWConstants.REPORTER_INFO_STATUS_SENDING);
             // Send message
             Transport.send(message);
+            
+            logger.info(SWConstants.REPORTER_INFO_STATUS_SEND);
+            if(configuration.getCmdArguments().isNoGUI()){
+                System.out.println(SWConstants.REPORTER_RUN_ONCE_DONE);
+            }
+        } catch (AuthenticationFailedException auther){
+            logger.warn(SWConstants.REPORTER_WARN);
+            logger.error(SWConstants.REPORTER_FAIL_AUTH);
+            logger.debug("Trace: " + auther.getMessage());
         } catch (MessagingException mex) {
-            mex.printStackTrace();
+            logger.warn(SWConstants.REPORTER_WARN);
+            logger.error(SWConstants.REPORTER_FAIL_MESSAGING);
+            logger.debug("Trace: " + mex.getMessage());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.warn(SWConstants.REPORTER_WARN);
+            logger.error(SWConstants.REPORTER_FAIL_GENERAL);
+            logger.debug("Trace: " + ex.getMessage());
         }
     }
     
@@ -192,9 +204,11 @@ public class Reporter{
             msgBodyPart.setHeader("Content-ID", id);
             msgBodyPart.setFileName(MimeUtility.encodeText("logo.png", "UTF-8", null));
         } catch (MessagingException msge) {
-            msge.printStackTrace();
+            logger.error(SWConstants.REPORTER_FAIL_MESSAGING);
+            logger.debug("Trace: " + msge.getMessage());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(SWConstants.REPORTER_FAIL_GENERAL);
+            logger.debug("Trace: " + ex.getMessage());
         }
         return msgBodyPart;
     }

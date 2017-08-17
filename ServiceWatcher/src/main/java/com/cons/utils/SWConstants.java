@@ -47,4 +47,12 @@ public class SWConstants {
     public final static String REPORTER_RUN_ONCE_MSG = "Reporter sending a mail...";
     public final static String REPORTER_RUN_ONCE_DONE = "mail send!";
     public final static String REPORTER_TEMPLATE_TITLE = "Service Watcher";
+    public final static String REPORTER_WARN = "There was a problem while sending an e-mail report.";
+    public final static String REPORTER_FAIL_AUTH = "SMTP Authentication failed.";
+    public final static String REPORTER_FAIL_GENERAL = "STMP General Exception was Thrown.";
+    public final static String REPORTER_FAIL_MESSAGING = "SMTP Messaging error.";
+    public final static String REPORTER_INFO_STATUS_SEND = "E-mail has been send.";
+    public final static String REPORTER_INFO_STATUS_SENDING = "Sending Mail";
+    public final static String REPORTER_DEBUG_COOKING = "Constructing mail to send.";
+
 }

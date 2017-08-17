@@ -36,7 +36,7 @@ public class SocketService extends Service {
         try{
             port = fullURL[1];
         }catch (ArrayIndexOutOfBoundsException oofbex){
-            logger.warn("Socket Service no port specified using default port 80.");
+            logger.debug("Socket Service no port specified using default port 80.");
             port = "80";
         }
         
@@ -77,7 +77,7 @@ public class SocketService extends Service {
                     logger.debug("Socket Service setting default die interval from configuration.");
                     soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), configuration.getSocketDieInterval());
                 }else{
-                    logger.warn("Socket Service configuration was null setting default die interval to 5ms");
+                    logger.debug("Socket Service configuration was null setting default die interval to 5ms");
                     soc.connect(new InetSocketAddress(url, Integer.parseInt(port)), 5000);
                 }
                 logger.debug("Socket Service Bind was successful.");

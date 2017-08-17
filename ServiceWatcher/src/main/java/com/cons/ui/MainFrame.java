@@ -190,7 +190,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
-        float[] columnWidthPercentage = { 2.0f, 25.0f, 15.0f, 3.0f, 10.0f, 25.0f, 2.0f, 18.0f,18.0f};
+        float[] columnWidthPercentage = { 2.0f, 25.0f, 15.0f, 3.0f, 10.0f, 25.0f, 18.0f, 2.0f, 18.0f};
 
         int tW = servicesTable.getWidth();
         TableColumn column;

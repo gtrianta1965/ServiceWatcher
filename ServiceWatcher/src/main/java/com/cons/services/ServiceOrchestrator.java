@@ -30,8 +30,8 @@ public class ServiceOrchestrator {
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
         if(this.configuration.getSendMailUpdates()){
-            this.startReporter();
-    }
+            this.initReporter();
+        }
     }
 
     public Configuration getConfiguration() {
@@ -170,7 +170,7 @@ public class ServiceOrchestrator {
     /**
      * Checks if it should send emails for the current run.
      */
-    public void checkSendMail(){
+    private void checkSendMail(){
         if(this.configuration.getSendMailUpdates() && 
            (this.configuration.getSmtpSendEmailOnSuccess() || 
             this.orchestratorStatus.getTotalSubmitted()!=this.orchestratorStatus.getTotalSuccess())){
@@ -178,7 +178,7 @@ public class ServiceOrchestrator {
 }
     }
     
-    public void startReporter(){
+    private void initReporter(){
         this.reporter = new Reporter(this);
     }
 }

@@ -78,9 +78,6 @@ public class Reporter{
      */
     private void sendMail() {
         logger.info("Starting Sending Mail Proccess");
-        if(configuration.getCmdArguments().isNoGUI()){
-            System.out.print(SWConstants.REPORTER_RUN_ONCE_MSG);
-        }
         
         logger.debug("Making log from results to send.");
         makeLog();
@@ -170,9 +167,6 @@ public class Reporter{
             Transport.send(message);
             
             logger.info(SWConstants.REPORTER_INFO_STATUS_SEND);
-            if(configuration.getCmdArguments().isNoGUI()){
-                System.out.println(SWConstants.REPORTER_RUN_ONCE_DONE);
-            }
         } catch (AuthenticationFailedException auther){
             logger.warn(SWConstants.REPORTER_WARN);
             logger.error(SWConstants.REPORTER_FAIL_AUTH);

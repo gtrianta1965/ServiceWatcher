@@ -47,6 +47,7 @@ public class CommandLineRunner extends Thread {
             }
         }
         logger.info(dateFormat.format(new Date()) + " : " + serviceOrchestrator.getStatus().toString());
+        serviceOrchestrator.checkSendMail();
     }
 
     private void runPeriodically() {

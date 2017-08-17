@@ -50,17 +50,17 @@ public class SocketService extends Service {
                 ipAddr = (InetAddress.getByName(new URL("http://"+url).getHost())).getHostAddress();
             }catch (UnknownHostException uhex){
                 // Catch and set call false and set error
-                logger.error("Socket Service error failed to resolve " + "http://" + url);
+                logger.debug("Socket Service error failed to resolve " + "http://" + url);
                 this.setSuccessfulCall(false);
                 this.setErrorCall("Unknown Host");
             }catch (MalformedURLException murlex){
                 // Catch and set call false and set error
-                logger.error("Socket Service error bad url " + "http://" + url);
+                logger.debug("Socket Service error bad url " + "http://" + url);
                 this.setSuccessfulCall(false);
                 this.setErrorCall("Bad URL");
             }catch (Exception ex){
                 // Catch and set call false and set error
-                logger.error("Socket Service error " + ex.getMessage());
+                logger.debug("Socket Service error " + ex.getMessage());
                 this.setSuccessfulCall(false);
                 this.setErrorCall(ex.getMessage());
             }
@@ -85,15 +85,15 @@ public class SocketService extends Service {
                 this.setSuccessfulCall(true);
             } catch (IOException ioex){
                 // Catch and set call false and set error
-                logger.error("Socket Service error " + SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + fullURL[0] +":"+ fullURL[1]);
+                logger.debug("Socket Service error " + SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + fullURL[0] +":"+ fullURL[1]);
                 this.setSuccessfulCall(false);
                 this.setErrorCall(SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + fullURL[0] +":"+ fullURL[1]);
             } catch (NumberFormatException nfex){
-                logger.error("Socket Serice error number format error.");
+                logger.debug("Socket Serice error number format error.");
                 this.setSuccessfulCall(false);
                 this.setErrorCall("Number format error");
             } catch (Exception ex){
-                logger.error("Socket Service error " + ex.getMessage());
+                logger.debug("Socket Service error " + ex.getMessage());
                 this.setSuccessfulCall(false);
                 this.setErrorCall(ex.getMessage());
             }finally {
@@ -101,7 +101,7 @@ public class SocketService extends Service {
                 soc.close();
             }
         } catch (Exception ex){
-            logger.error("Socket Service error " + ex.getMessage());
+            logger.debug("Socket Service error " + ex.getMessage());
             this.setSuccessfulCall(false);
             this.setErrorCall(ex.getMessage());
         }

@@ -44,11 +44,11 @@ public class SFTPService extends Service {
             logger.debug("SFTP Service Success");
             setSuccessfulCall(true);
         }catch (JSchException jschex){
-            logger.error("SFTP Service error " + jschex.getMessage());
+            logger.debug("SFTP Service error " + jschex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(jschex.getMessage());
         }catch (Exception ex){
-            logger.error("SFTP Service error " + ex.getMessage());
+            logger.debug("SFTP Service error " + ex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(ex.getMessage());
         }

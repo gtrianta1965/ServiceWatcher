@@ -7,6 +7,8 @@ import com.cons.ui.ServicesTableModel;
 import com.cons.utils.SWConstants;
 
 
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
@@ -18,7 +20,7 @@ public class Main {
         setDebug(args);
         
         logger.debug("--------- Start (" + SWConstants.PROGRAM_NAME + " " + SWConstants.PROGRAM_VERSION + ") --------");
-
+        logger.info("Starting Time Stamp : " + new Date().toString());
         CommandLineRunner clr = null;
         Configuration conf = null;
 

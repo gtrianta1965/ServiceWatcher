@@ -194,7 +194,7 @@ public class CryptoUtils {
             setValid(false);
             setError("InvalidAlgorithmParameterException | InvalidKeyException " + ex.getMessage());
         } catch (BadPaddingException | IllegalBlockSizeException ex) {
-            logger.error("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
+            logger.debug("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
             setValid(false);
             setError("BadPaddingException | IllegalBlockSizeException " + ex.getMessage());
         }

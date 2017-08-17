@@ -2,7 +2,6 @@
 package com.cons.ui;
 
 
-import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.DateUtils;
 import com.cons.utils.SWConstants;
@@ -17,9 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -47,6 +44,9 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void initialization() {
+        ImageIcon icon = new ImageIcon("../sw.png");
+        this.setIconImage(icon.getImage());
+
         generic_timer = new Timer(interval, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

@@ -31,7 +31,7 @@ public class HTTPService extends Service {
         String responseMessage = null;
         boolean found = false;
         try {
-            logger.info("starting an HTTP connection");
+            logger.debug("starting an HTTP connection");
             URL url = new URL(serviceParameter.getUrl());
             HttpURLConnection huc = (HttpURLConnection) url.openConnection();
             huc.setRequestMethod("GET");
@@ -51,25 +51,25 @@ public class HTTPService extends Service {
                 while ((inputLine = in.readLine()) != null) {
                     if (serviceParameter.getSearchString() != null) {
                         if (inputLine.toLowerCase().contains(serviceParameter.getSearchString().toLowerCase())) {
-                            logger.info("connection success");
+                            logger.debug("connection success");
                             this.setSuccessfulCall(true);
                             found = true;
                             break;
                         }
                     } else {
-                        logger.info("connection success");
+                        logger.debug("connection success");
                         this.setSuccessfulCall(true);
                         break;
                     }
 
                 }
                 if (serviceParameter.getSearchString() != null && found == false) { //if no match found for getSearchString
-                    logger.info("connection failed");
+                    logger.debug("connection failed");
                     this.setSuccessfulCall(false);
                     this.setErrorCall(SWConstants.SEARCH_STRING_NOT_FOUND_MSG);
                 }
             } else { //if status is <>200
-                logger.error(SWConstants.URL_RESPONSE_ERROR_MSG + responseMessage);
+                logger.debug(SWConstants.URL_RESPONSE_ERROR_MSG + responseMessage);
                 this.setSuccessfulCall(false);
                 this.setErrorCall(SWConstants.URL_RESPONSE_ERROR_MSG + responseMessage);
             }
@@ -79,15 +79,15 @@ public class HTTPService extends Service {
 
         } catch (MalformedURLException e) {
             this.setSuccessfulCall(false);
-            logger.error(SWConstants.MALLFORMED_URL_EXCEPTION_MSG + e.getMessage());
+            logger.debug(SWConstants.MALLFORMED_URL_EXCEPTION_MSG + e.getMessage());
             this.setErrorCall(SWConstants.MALLFORMED_URL_EXCEPTION_MSG + e.getMessage());
         } catch (ProtocolException e) {
             this.setSuccessfulCall(false);
-            logger.error(SWConstants.PROTOCOL_EXCEPTION_MSG + e.getMessage());
+            logger.debug(SWConstants.PROTOCOL_EXCEPTION_MSG + e.getMessage());
             this.setErrorCall(SWConstants.PROTOCOL_EXCEPTION_MSG + e.getMessage());
         } catch (Exception e) {
             this.setSuccessfulCall(false);
-            logger.error(SWConstants.GENERIC_EXCEPTION_MSG + e.getMessage());
+            logger.debug(SWConstants.GENERIC_EXCEPTION_MSG + e.getMessage());
             this.setErrorCall(SWConstants.GENERIC_EXCEPTION_MSG + e.getMessage());
         }
     }

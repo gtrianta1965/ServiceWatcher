@@ -8,12 +8,9 @@ import com.cons.services.ServiceParameter;
 import java.io.StringWriter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.Timer;
-import java.util.TimeZone;
 
 import java.util.Vector;
 
@@ -43,9 +40,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 public class Reporter{
     final static Logger logger = Logger.getLogger(Reporter.class);
 
@@ -62,7 +56,8 @@ public class Reporter{
     
     public void send() {
         try {
-            sendMail();
+            vlcJSON("file.json");
+            //sendMail();
         } catch (Exception ex) {
             logger.debug("Failed to send e-mail. " + ex.getMessage());
             if(configuration.getCmdArguments().isNoGUI()){
@@ -214,6 +209,10 @@ public class Reporter{
         }
     }
     
+    /**
+     * Fills an html template with the log output and programs operating configuration.
+     * @return
+     */
     private String vlc(){
         StringWriter w = new StringWriter();
         VelocityEngine ve = new VelocityEngine();
@@ -242,27 +241,26 @@ public class Reporter{
     }
     
     /**
-     * JSON log exporter.
-     * 
-     * @param log the log of services to be exported
-     * @return returns a JSONObject which includes:
-     * name of application,
-     * application version,
-     * timestamp of export,
-     * services log.
+     * Fills a json file using a specified Template with application configuration and logs.
+     * @param jsonTemplate
      */
-    public static JSONObject exportToJSON(List<String> log){
-        JSONObject jsn = new JSONObject();
-        jsn.put("Application", "Service Watcher");
-        jsn.put("Version", "1");
-        jsn.put("Date",Calendar.getInstance(TimeZone.getTimeZone("Greece/Athens")).getTime().toString());
+    public String vlcJSON(String fileName){
+        StringWriter w = new StringWriter();
+        VelocityEngine ve = new VelocityEngine();
+        VelocityContext context = new VelocityContext();
         
-        JSONArray alog = new JSONArray();
-        for(String a:log){
-            alog.put(a);
-        }
+        Template jsonTemplate = ve.getTemplate(fileName);
         
-        jsn.put("Log", alog);
-        return jsn;
+        context.put("program_name", SWConstants.REPORTER_TEMPLATE_TITLE);
+        context.put("version", SWConstants.PROGRAM_VERSION);
+        context.put("date", (new Date()).toString());
+        context.put("configuration", configuration);
+        context.put("service_parameters", configuration.getServiceParameters());
+        
+        makeLog();
+        context.put("logs", this.statusLog);
+        jsonTemplate.merge(context, w);
+
+        return w.toString();
     }
 }

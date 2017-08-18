@@ -85,7 +85,7 @@ public class ServicesTableModel extends AbstractTableModel {
      */
     
     public Class getColumnClass(int c) {
-        if (c != SWConstants.TABLE_RETRIES_INDEX) {
+        if (c != SWConstants.TABLE_RETRIES_INDEX && c!= SWConstants.TABLE_ID_INDEX) {
            return getValueAt(0, c).getClass();
         } else {
             //This is important because the class cannot be determined automatically (the value is primitive type int)

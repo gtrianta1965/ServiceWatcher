@@ -36,8 +36,13 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             } else if (value.toString().startsWith(SWConstants.SERVICE_FAILED)) {
                 c.setBackground(Color.red);
             }
-
         }
+        
+
+        if (column == SWConstants.TABLE_ID_INDEX){
+            setHorizontalAlignment(SwingConstants.CENTER);            
+        }
+        
         if (column == SWConstants.TABLE_RETRIES_INDEX) {
             setHorizontalAlignment(SwingConstants.CENTER);
             if (!value.toString().startsWith("0/")) {                

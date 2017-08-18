@@ -4,7 +4,9 @@ import com.cons.utils.SWConstants;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -55,8 +57,14 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
                 c.setBackground(Color.lightGray);
             }
         }
-
-
+        
+        if(column==SWConstants.tABLE_CONTEXT_INDEX){
+            JLabel lbl =new JLabel();
+            lbl.setText(String.valueOf(value));
+            lbl.setToolTipText(String.valueOf(value));
+            lbl.setFont(new Font("plain", Font.PLAIN, 12));
+            c = lbl;
+        }
         return c;
     }
 

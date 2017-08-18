@@ -50,12 +50,7 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
-            if(sp.getQuery()!=null){
-                data[i][SWConstants.tABLE_CONTEXT_INDEX]=sp.getContext();                 
-            }else{
-                data[i][SWConstants.tABLE_CONTEXT_INDEX]=""; 
-            }
-            
+            data[i][SWConstants.tABLE_CONTEXT_INDEX] = sp.getContext()== null?"":sp.getContext(); 
             data[i][SWConstants.TABLE_RETRIES_INDEX] = sp.getActualRetries() + "/" + sp.getRetries();
             
             String password_ast = "";

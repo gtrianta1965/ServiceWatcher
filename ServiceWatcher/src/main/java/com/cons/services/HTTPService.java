@@ -26,7 +26,6 @@ public class HTTPService extends Service {
 
     @Override
     public void service() {
-
         int responseCode = 0;
         String responseMessage = null;
         boolean found = false;
@@ -37,6 +36,7 @@ public class HTTPService extends Service {
             huc.setRequestMethod("GET");
             if (configuration != null) {
                 huc.setConnectTimeout(configuration.getHttpResponseTimeout());
+                huc.setReadTimeout(configuration.getHttpResponseTimeout());
                 logger.debug("connection timed out");
             }
             huc.connect();

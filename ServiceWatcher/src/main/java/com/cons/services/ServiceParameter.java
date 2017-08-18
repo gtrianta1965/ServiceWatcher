@@ -21,6 +21,7 @@ public class ServiceParameter {
     private String status;
     private String error;
     private String query;
+    private String context;
 
     public void setQuery(String query) {
         this.query = query;
@@ -125,4 +126,13 @@ public class ServiceParameter {
     public int getActualRetries() {
         return actualRetries;
     }
+    
+    public void setContext(String context){
+        this.context=context;
+    }
+    
+    public String getContext(){
+        return context;
+    }
+    
 }

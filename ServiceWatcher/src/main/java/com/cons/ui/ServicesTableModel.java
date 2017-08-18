@@ -29,6 +29,9 @@ public class ServicesTableModel extends AbstractTableModel {
         data[row][SWConstants.TABLE_STATUS_INDEX] = status;
         data[row][SWConstants.TABLE_RETRIES_INDEX] = serviceParameters.get(row).getActualRetries() + "/" +
                                                      serviceParameters.get(row).getRetries();
+        if(serviceParameters.get(row).getContext()!=null){
+            data[row][SWConstants.tABLE_CONTEXT_INDEX]=serviceParameters.get(row).getContext();   
+        }  
         fireTableDataChanged();
     }
     
@@ -47,7 +50,12 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.TABLE_TYPE_INDEX] = sp.getType();
             data[i][SWConstants.TABLE_GROUP_INDEX] = sp.getGroup();
             data[i][SWConstants.TABLE_STATUS_INDEX] = new String();
-            data[i][SWConstants.tABLE_CONTEXT_INDEX]=""; 
+            if(sp.getQuery()!=null){
+                data[i][SWConstants.tABLE_CONTEXT_INDEX]=sp.getContext();                 
+            }else{
+                data[i][SWConstants.tABLE_CONTEXT_INDEX]=""; 
+            }
+            
             data[i][SWConstants.TABLE_RETRIES_INDEX] = sp.getActualRetries() + "/" + sp.getRetries();
             
             String password_ast = "";

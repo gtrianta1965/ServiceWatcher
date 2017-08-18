@@ -125,6 +125,8 @@ public abstract class Service implements Runnable {
 
     public void setSuccessCall(String successCall) {
         this.successCall = successCall;
+        serviceParameter.setContext(successCall);
+        
     }
 
     public String getSuccessCall() {

@@ -47,7 +47,7 @@ public abstract class Service implements Runnable {
             serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);
 
             if (getSuccessCall() != null) {
-                printStatus(SWConstants.SERVICE_SUCCESS + ":" + getSuccessCall());
+                printStatus(SWConstants.SERVICE_SUCCESS);
 
             } else {
                 printStatus(SWConstants.SERVICE_SUCCESS);
@@ -59,7 +59,7 @@ public abstract class Service implements Runnable {
         } else {
             serviceParameter.setStatus(SWConstants.SERVICE_FAILED);
             serviceParameter.setError(getErrorCall());
-            printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
+            printStatus(SWConstants.SERVICE_FAILED);
             if (serviceOrchestrator != null) {
                 serviceOrchestrator.statusLog.add("Service: " + serviceParameter.getDescription() + " is DOWN (" +
                                                   serviceParameter.getError() + ")");
@@ -90,6 +90,7 @@ public abstract class Service implements Runnable {
 
     public void setErrorCall(String errorCall) {
         this.errorCall = errorCall;
+        serviceParameter.setContext(errorCall);
     }
 
     public String getErrorCall() {

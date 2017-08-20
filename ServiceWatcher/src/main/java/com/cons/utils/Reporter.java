@@ -2,7 +2,6 @@ package com.cons.utils;
 
 import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
-
 import com.cons.services.ServiceParameter;
 
 import java.io.StringWriter;
@@ -11,12 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-
 import java.util.Vector;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-
 import javax.activation.FileDataSource;
 
 import javax.mail.AuthenticationFailedException;
@@ -29,11 +26,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-
 import javax.mail.internet.MimeMultipart;
-
 import javax.mail.internet.MimeUtility;
-
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;

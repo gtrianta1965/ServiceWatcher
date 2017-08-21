@@ -2,7 +2,6 @@ package com.cons.ui;
 
 import com.cons.Configuration;
 import com.cons.services.ServiceParameter;
-import com.cons.utils.GenericUtils;
 import com.cons.utils.SWConstants;
 
 import java.util.List;
@@ -53,13 +52,13 @@ public class ServicesTableModel extends AbstractTableModel {
             data[i][SWConstants.tABLE_CONTEXT_INDEX] = sp.getContext()== null?"":sp.getContext(); 
             data[i][SWConstants.TABLE_RETRIES_INDEX] = sp.getActualRetries() + "/" + sp.getRetries();
             
-            String password_ast = "";
-            for (int j = 0; j < GenericUtils.nvl(sp.getPassword(), "")
-                                            .toString()
-                                            .length(); j++) {
-                password_ast += "*";
-            }
-            data[i][SWConstants.TABLE_PASSWORD_INDEX] = password_ast;
+//            String password_ast = "";
+//            for (int j = 0; j < GenericUtils.nvl(sp.getPassword(), "")
+//                                            .toString()
+//                                            .length(); j++) {
+//                password_ast += "*";
+//            }
+            data[i][SWConstants.TABLE_PASSWORD_INDEX] = sp.getPassword()==null?"":sp.getPassword();
         }    
         
         fireTableDataChanged();
@@ -120,20 +119,16 @@ public class ServicesTableModel extends AbstractTableModel {
             System.out.println("Setting value at " + row + "," + col + " to " + value + " (an instance of " +
                                value.getClass() + ")");
         }
-
-        fireTableCellUpdated(row, col);
+        sp = (ServiceParameter)serviceParameters.get(row);
         if (col == SWConstants.TABLE_PASSWORD_INDEX) {
             sp.setPassword(value.toString());
-
-            data[row][col] = "";
-            for (char a : sp.getPassword().toCharArray()) {
-                data[row][col] += "*";
-            }
+            data[row][col] = sp.getPassword();
         }
         if (DEBUG) {
             System.out.println("New value of data:");
             printDebugData();
         }
+        fireTableCellUpdated(row, col);
     }
 
         

@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -53,9 +54,12 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         }
         
         if (column == SWConstants.TABLE_PASSWORD_INDEX) {
+            JPasswordField pass = new JPasswordField();
+            pass.setText(String.valueOf(value));
             if (table.isCellEditable(row, column) == false) {
-                c.setBackground(Color.lightGray);
+                pass.setBackground(Color.lightGray);
             }
+            c=pass;
         }
         
         if(column==SWConstants.tABLE_CONTEXT_INDEX){

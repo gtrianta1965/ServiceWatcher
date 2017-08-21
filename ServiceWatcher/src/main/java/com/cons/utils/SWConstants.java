@@ -35,12 +35,14 @@ public class SWConstants {
     public final static int TABLE_TYPE_INDEX = 3;
     public final static int TABLE_GROUP_INDEX = 4;
     public final static int TABLE_STATUS_INDEX = 5;
-    public final static int TABLE_RETRIES_INDEX = 6;
-    public final static int TABLE_PASSWORD_INDEX = 7;
+    public final static int tABLE_CONTEXT_INDEX=6;
+    public final static int TABLE_RETRIES_INDEX = 7;
+    public final static int TABLE_PASSWORD_INDEX = 8;
+    
     
 
     //Number of columns in the table
-    public final static int TABLE_NUMBER_OF_COLUMNS = 8;
+    public final static int TABLE_NUMBER_OF_COLUMNS = 9;
     //Reporter
     public final static String REPORTER_NAME = "reporter@servicewatcher.com";
     public final static String REPORTER_MSG_SUBJECT = "Service Watcher Report";

@@ -23,7 +23,6 @@ public class DBService extends Service {
 
         Connection conn = null;
         this.setSuccessfulCall(true);
-        //String value = null;
         Statement stm = null;
         ResultSet rs = null;
 
@@ -36,7 +35,6 @@ public class DBService extends Service {
             if (serviceParameter.getQuery() != null && serviceParameter.getQuery().length() != 0) {
                 stm = conn.createStatement();
                 rs = stm.executeQuery(serviceParameter.getQuery());
-                //ResultSetMetaData metaData = rs.getMetaData();
                 String msgSuccess = "";
                 if (rs.next()) {
                     msgSuccess = rs.getString(1);
@@ -50,7 +48,7 @@ public class DBService extends Service {
         } catch (SQLException ex) {
             this.setErrorCall(SWConstants.SERVICE_DB_ERROR_ORACLE_SQLEXCEPTION_MSG + ":" + ex.getMessage());
             this.setSuccessfulCall(false);
-            //System.out.println("Wrong Query=" + serviceParameter.getQuery() );
+            getServiceParameter().setContext("Wrong Query=" + serviceParameter.getQuery()+" - "+getErrorCall());
         } catch (Exception ex) {
             ex.printStackTrace();
             this.setErrorCall(SWConstants.GENERIC_EXCEPTION_MSG + ":" + ex.getMessage());

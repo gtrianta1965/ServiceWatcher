@@ -54,7 +54,7 @@ public abstract class Service implements Runnable {
             serviceParameter.setStatus(SWConstants.SERVICE_SUCCESS);
 
             if (getSuccessCall() != null) {
-                printStatus(SWConstants.SERVICE_SUCCESS + ":" + getSuccessCall());
+                printStatus(SWConstants.SERVICE_SUCCESS);
 
             } else {
                 printStatus(SWConstants.SERVICE_SUCCESS);
@@ -92,6 +92,7 @@ public abstract class Service implements Runnable {
 
     public void setErrorCall(String errorCall) {
         this.errorCall = errorCall;
+        serviceParameter.setContext(errorCall);
     }
 
     public String getErrorCall() {
@@ -127,6 +128,8 @@ public abstract class Service implements Runnable {
 
     public void setSuccessCall(String successCall) {
         this.successCall = successCall;
+        serviceParameter.setContext(successCall);
+        
     }
 
     public String getSuccessCall() {

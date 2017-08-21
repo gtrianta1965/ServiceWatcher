@@ -212,7 +212,7 @@ public class Reporter{
         VelocityEngine ve = new VelocityEngine();
         VelocityContext context = new VelocityContext();
         ve.init();
-        Vector logVector = new Vector();
+        Vector<String> logVector = new Vector<String>();
         
         Template t = ve.getTemplate("report_template.html");
         

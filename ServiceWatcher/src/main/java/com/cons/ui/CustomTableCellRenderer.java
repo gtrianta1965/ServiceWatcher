@@ -4,7 +4,10 @@ import com.cons.utils.SWConstants;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -36,8 +39,13 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             } else if (value.toString().startsWith(SWConstants.SERVICE_FAILED)) {
                 c.setBackground(Color.red);
             }
-
         }
+        
+
+        if (column == SWConstants.TABLE_ID_INDEX){
+            setHorizontalAlignment(SwingConstants.CENTER);            
+        }
+        
         if (column == SWConstants.TABLE_RETRIES_INDEX) {
             setHorizontalAlignment(SwingConstants.CENTER);
             if (!value.toString().startsWith("0/")) {                
@@ -46,12 +54,21 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
         }
         
         if (column == SWConstants.TABLE_PASSWORD_INDEX) {
+            JPasswordField pass = new JPasswordField();
+            pass.setText(String.valueOf(value));
             if (table.isCellEditable(row, column) == false) {
-                c.setBackground(Color.lightGray);
+                pass.setBackground(Color.lightGray);
             }
+            c=pass;
         }
-
-
+        
+        if(column==SWConstants.tABLE_CONTEXT_INDEX){
+            JLabel lbl =new JLabel();
+            lbl.setText(String.valueOf(value));
+            lbl.setToolTipText(String.valueOf(value));
+            lbl.setFont(new Font("plain", Font.PLAIN, 12));
+            c = lbl;
+        }
         return c;
     }
 

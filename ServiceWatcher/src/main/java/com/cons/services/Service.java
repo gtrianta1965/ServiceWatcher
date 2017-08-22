@@ -63,7 +63,7 @@ public abstract class Service implements Runnable {
         } else {
             serviceParameter.setStatus(SWConstants.SERVICE_FAILED);
             serviceParameter.setError(getErrorCall());
-            printStatus(SWConstants.SERVICE_FAILED + ":" + getErrorCall());
+            printStatus(SWConstants.SERVICE_FAILED);
         }
         logger.debug("End running service.");
     }

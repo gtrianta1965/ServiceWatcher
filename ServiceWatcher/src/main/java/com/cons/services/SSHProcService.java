@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 public class SSHProcService extends Service {
     final static Logger logger = Logger.getLogger(SSHProcService.class);
+    private String output;
 
     public SSHProcService() {
         super();
@@ -48,15 +49,15 @@ public class SSHProcService extends Service {
             logger.debug("SSH Session Started");
             logger.debug("Starting SSH Connection");
             logger.debug("Connected!");
-            String result = sendCommand(session, serviceParameter.getCommand());
+            boolean result = sendCommand(session, serviceParameter.getCommand());
             logger.debug("SSH Service Success");
 
-            if (result == null || result.equals("")) {
+            if (!result) {
                 setSuccessfulCall(false);
-                setErrorCall("SSH Command Execution failed");
+                setErrorCall(getOutput());
             } else {
                 setSuccessfulCall(true);
-                setSuccessCall(result);
+                setSuccessCall(serviceParameter.getSearchString());
             }
 
         } catch (JSchException jschex) {
@@ -72,11 +73,11 @@ public class SSHProcService extends Service {
         }
     }
 
-    private String sendCommand(Session session, String command) {
+    private boolean sendCommand(Session session, String command) {
         logger.debug("SSH Session sending command to remote PC");
 
         if (command == null) {
-            return command;
+            return false;
         }
 
         StringBuilder outputBuffer = new StringBuilder();
@@ -99,17 +100,26 @@ public class SSHProcService extends Service {
             logger.debug("SSH Session command: " + ex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(ex.getMessage());
-            return null;
+            return false;
         } catch (JSchException ex) {
             logger.debug("SSH Session command: " + ex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(ex.getMessage());
-            return null;
+            return false;
         }
 
         logger.debug("SSH Session command execution: Success");
 
-        return outputBuffer.toString();
+        setOutput(outputBuffer.toString());
+
+        return outputBuffer.toString().contains(serviceParameter.getSearchString());
     }
 
+    private void setOutput(String output) {
+        this.output = output;
+    }
+
+    private String getOutput() {
+        return output;
+    }
 }

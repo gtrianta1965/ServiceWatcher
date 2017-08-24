@@ -37,21 +37,18 @@ public class SSHProcService extends Service {
             url = serviceParameter.getUrl();
         }
 
-        String username = serviceParameter.getUsername();
-        String password = serviceParameter.getPassword();
-
         Session session = null;
         try {
             logger.debug("Starting SSH session.");
             JSch jsch = new JSch();
-            session = jsch.getSession(username, url, port);
-            session.setPassword(password);
+            session = jsch.getSession(serviceParameter.getUsername(), url, port);
+            session.setPassword(serviceParameter.getPassword());
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
             logger.debug("SSH Session Started");
             logger.debug("Starting SSH Connection");
             logger.debug("Connected!");
-            String result = sendCommand(session, "ls /oravol");
+            String result = sendCommand(session, serviceParameter.getCommand());
             logger.debug("SSH Service Success");
 
             if (result == null || result.equals("")) {
@@ -77,6 +74,10 @@ public class SSHProcService extends Service {
 
     private String sendCommand(Session session, String command) {
         logger.debug("SSH Session sending command to remote PC");
+
+        if (command == null) {
+            return command;
+        }
 
         StringBuilder outputBuffer = new StringBuilder();
 

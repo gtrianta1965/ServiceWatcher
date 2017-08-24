@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 
 public class SSHProcService extends Service {
     final static Logger logger = Logger.getLogger(SSHProcService.class);
-    private String output;
 
     public SSHProcService() {
         super();
@@ -49,15 +48,20 @@ public class SSHProcService extends Service {
             logger.debug("SSH Session Started");
             logger.debug("Starting SSH Connection");
             logger.debug("Connected!");
-            boolean result = sendCommand(session, serviceParameter.getCommand());
+            String result = sendCommand(session);
             logger.debug("SSH Service Success");
 
-            if (!result) {
-                setSuccessfulCall(false);
-                setErrorCall(getOutput());
-            } else {
+            if ((result != null) && (result.contains(serviceParameter.getSearchString()))) {
                 setSuccessfulCall(true);
                 setSuccessCall(serviceParameter.getSearchString());
+            } else {
+                System.out.println("OK");
+                setSuccessfulCall(false);
+                if ((result == null) || (result == "")) {
+                    result = "SSH Session command execution: Failed";
+                }
+
+                setErrorCall(result);
             }
 
         } catch (JSchException jschex) {
@@ -73,11 +77,11 @@ public class SSHProcService extends Service {
         }
     }
 
-    private boolean sendCommand(Session session, String command) {
+    private String sendCommand(Session session) {
         logger.debug("SSH Session sending command to remote PC");
 
-        if (command == null) {
-            return false;
+        if ((serviceParameter.getCommand() == null) || (serviceParameter.getSearchString() == null)) {
+            return null;
         }
 
         StringBuilder outputBuffer = new StringBuilder();
@@ -85,7 +89,7 @@ public class SSHProcService extends Service {
         try {
             Channel channel = session.openChannel("exec");
             logger.debug("SSH Session opening a channel from current session");
-            ((ChannelExec) channel).setCommand(command);
+            ((ChannelExec) channel).setCommand(serviceParameter.getCommand());
             InputStream commandOutput = channel.getInputStream();
             channel.connect();
             int readByte = commandOutput.read();
@@ -100,26 +104,22 @@ public class SSHProcService extends Service {
             logger.debug("SSH Session command: " + ex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(ex.getMessage());
-            return false;
+            return null;
         } catch (JSchException ex) {
             logger.debug("SSH Session command: " + ex.getMessage());
             setSuccessfulCall(false);
             setErrorCall(ex.getMessage());
-            return false;
+            return null;
         }
 
-        logger.debug("SSH Session command execution: Success");
+        if (outputBuffer.toString().contains(serviceParameter.getSearchString())) {
+            logger.debug("SSH Session command execution: Success");
+        } else {
+            logger.debug("SSH Session command execution: Failed");
+        }
 
-        setOutput(outputBuffer.toString());
-
-        return outputBuffer.toString().contains(serviceParameter.getSearchString());
+        return outputBuffer.toString().contains(serviceParameter.getSearchString()) ?
+               serviceParameter.getSearchString() : outputBuffer.toString();
     }
 
-    private void setOutput(String output) {
-        this.output = output;
-    }
-
-    private String getOutput() {
-        return output;
-    }
 }

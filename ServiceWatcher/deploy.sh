@@ -5,10 +5,10 @@ mkdir "$ROOT_F"
 mkdir "$ROOT_F"/bin/
 mkdir "$ROOT_F"/bin/target/
 mkdir "$ROOT_F"/bin/target/lib/
-cp ../sw.png "$ROOT_F"/
 cp report_template.html "$ROOT_F"/bin/
 cp target/lib/* "$ROOT_F"/bin/target/lib/
 cp target/ServiceWatcher* "$ROOT_F"/bin/target/
+cp sample-config.properties "$ROOT_F"/bin/
 if [ "$OS" = "-win" ]
 then
 	cp sw.bat "$ROOT_F"/bin/

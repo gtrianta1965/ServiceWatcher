@@ -104,7 +104,8 @@ public class ServicesTableModel extends AbstractTableModel {
         //Nothing is editable
         if (col == SWConstants.TABLE_PASSWORD_INDEX &&
             ((data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB")) ||
-             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")))) {
+             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")) ||
+             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("SFTP")))) {
             return true;            
             }
         return false;

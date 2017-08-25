@@ -6,11 +6,11 @@ public class ServiceParameter {
         super();
         this.status = "NA";
     }
-
-    private int id;
-    private int retries; //Number of retries to connect to the service before consider it "dead"
-    private int actualRetries; //Number of attempts (retries). If they reach "retries" and the service still doesn't
-    //respond then we have a failure
+    
+    private int    id;
+    private int    retries; //Number of retries to connect to the service before consider it "dead"
+    private int    actualRetries; //Number of attempts (retries). If they reach "retries" and the service still doesn't
+                                  //respond then we have a failure
     private String url;
     private String description;
     private String type;
@@ -127,21 +127,20 @@ public class ServiceParameter {
     public int getActualRetries() {
         return actualRetries;
     }
-
-    public void setContext(String context) {
-        this.context = context;
+    
+    public void setContext(String context){
+        this.context=context;
     }
-
-    public String getContext() {
+    
+    public String getContext(){
         return context;
     }
-
+    
     public void setCommand(String command) {
         this.command = command;
-    }
+}
 
     public String getCommand() {
         return command;
     }
-
 }

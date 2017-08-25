@@ -1,26 +1,17 @@
-OS=$1
-ROOT_F=$2
-echo "Deploying at path $ROOT_F/"
+ROOT_F=$1
+printf "\n[\033[1;38;2;0;255;0mINFO\033[0m] Deploying at path $ROOT_F/\n"
+# Make dir structure
 mkdir "$ROOT_F"
-mkdir "$ROOT_F"/bin/
-mkdir "$ROOT_F"/bin/target/
-mkdir "$ROOT_F"/bin/target/lib/
-cp report_template.html "$ROOT_F"/bin/
-cp target/lib/* "$ROOT_F"/bin/target/lib/
-cp target/ServiceWatcher* "$ROOT_F"/bin/target/
-cp sample-config.properties "$ROOT_F"/bin/
-if [ "$OS" = "-win" ]
-then
-	cp sw.bat "$ROOT_F"/bin/
-	cp appendSW.bat "$ROOT_F"/bin/
-	echo "Application deployed at $ROOT_F"
-	echo "To run Service Watcher 'run ./sw.bat' located in "$ROOT_F"/bin/"
-elif [ "$OS" = "-unix" ]
-then
-	cp sw.sh "$ROOT_F"/bin/
-	echo "Application deployed at $ROOT_F"
-	echo "To run Service Watcher 'run ./sw.sh' located in "$ROOT_F"/bin/"
-else
-	rm -rf "$ROOT_F"/
-	echo "Wrong OS paremeter make sure you used './deploy.sh -win/unix <path>'"
-fi
+mkdir "$ROOT_F"/target/
+mkdir "$ROOT_F"/target/lib/
+# Copy needed files for stand alone
+cp report_template.html "$ROOT_F"/
+cp target/lib/* "$ROOT_F"/target/lib/
+cp target/ServiceWatcher* "$ROOT_F"/target/
+cp sample-config.properties "$ROOT_F"/
+# Copy executable scripts for win/linux
+cp sw.bat "$ROOT_F"/
+cp appendSW.bat "$ROOT_F"/
+cp sw.sh "$ROOT_F"/
+printf "[\033[1;38;2;0;255;0mINFO\033[0m] Application deployed at -> $ROOT_F\n"
+printf "[\033[1;38;2;0;255;0mINFO\033[0m] To run Service Watcher\n-> Linux run './sw.sh' in a Terminal\n-> Windows run 'sw.bat' in CMD\nLocated in "$ROOT_F"/bin/\n"

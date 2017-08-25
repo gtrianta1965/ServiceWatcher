@@ -428,6 +428,7 @@ public class Configuration {
 
                     //add each param
                 serviceParameter.setQuery(prop.getProperty("query." + i));
+                serviceParameter.setCommand(prop.getProperty("command." + i));
                 
                 //add each param based on the sequence number of the parameter
                 serviceParameters.add(serviceParameter);

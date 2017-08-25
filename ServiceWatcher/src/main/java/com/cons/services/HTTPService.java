@@ -54,6 +54,7 @@ public class HTTPService extends Service {
                             logger.debug("connection success");
                             this.setSuccessfulCall(true);
                             found = true;
+                            this.setSuccessCall("");
                             break;
                         }
                     } else {

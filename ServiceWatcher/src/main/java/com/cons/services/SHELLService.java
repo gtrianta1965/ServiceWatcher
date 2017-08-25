@@ -1,5 +1,7 @@
 package com.cons.services;
 
+import com.cons.utils.GenericUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,53 +25,72 @@ public class SHELLService extends Service {
 
     @Override
     public void service() {
+        String result = executeCommand();
 
-        String out = executeCommand();
-        System.out.println(out);
+        if ((result != null) && (result.contains(serviceParameter.getSearchString()))) {
+            setSuccessfulCall(true);
+            setSuccessCall(serviceParameter.getSearchString());
+        } else {
+            setSuccessfulCall(false);
+            if ((result == null) || (result.trim() == "")) {
+                result = "SHELL command execution: Failed";
+            }
+
+            setErrorCall(result);
+        }
     }
 
     private String executeCommand() {
 
-        StringBuffer output = new StringBuffer();
+        logger.debug("SHELL command execution started");
 
-        Process p;
+        StringBuffer outputBuffer = new StringBuffer();
+
+        Process p = null;
+
         try {
-            p = Runtime.getRuntime().exec("echo $USER");
+
+            String[] cmd = new String[3];
+
+            if (GenericUtils.isWindows()) {
+                cmd[0] = "cmd.exe";
+                cmd[1] = "/c";
+            } else {
+                cmd[0] = "/bin/sh";
+                cmd[1] = "-c";
+            }
+            cmd[2] = serviceParameter.getCommand();
+
+            p = Runtime.getRuntime().exec(cmd);
             p.waitFor();
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String line = "";
             while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
+                outputBuffer.append(line);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            logger.debug("IOException: " + ex.getMessage());
+            setSuccessfulCall(false);
+            setErrorCall(ex.getMessage());
+        } catch (InterruptedException ex) {
+            logger.debug("InterruptedException: " + ex.getMessage());
+            setSuccessfulCall(false);
+            setErrorCall(ex.getMessage());
         } finally {
-
+            p.destroy();
         }
 
-        return output.toString();
+        if (outputBuffer.toString().contains(serviceParameter.getSearchString())) {
+            logger.debug("SHELL command execution: Success");
+        } else {
+            logger.debug("SHELL command execution: Failed");
+        }
+
+        return outputBuffer.toString().contains(serviceParameter.getSearchString()) ?
+               serviceParameter.getSearchString() : outputBuffer.toString();
 
     }
 
-    public static void main(String[] args) {
-        // Run command and wait till it's done
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("ping -n 3 www.google.com");
-
-            p.waitFor();
-
-            // Grab output and print to display
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-        } catch (InterruptedException e) {
-        }
-    }
 }

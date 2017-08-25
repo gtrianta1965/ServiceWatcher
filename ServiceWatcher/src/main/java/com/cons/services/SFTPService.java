@@ -43,6 +43,7 @@ public class SFTPService extends Service {
             session.disconnect();
             logger.debug("SFTP Service Success");
             setSuccessfulCall(true);
+            setSuccessCall("");
         }catch (JSchException jschex){
             logger.debug("SFTP Service error " + jschex.getMessage());
             setSuccessfulCall(false);

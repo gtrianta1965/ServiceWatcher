@@ -21,13 +21,13 @@ public abstract class Service implements Runnable {
     }
 
     public Service(ServiceParameter sp) {
-        logger.debug("Constructor Called with ServiceParameter");
+        logger.debug("Constructor Called with ServiceParameter, ServiceId=" + sp.getId());
         setServiceParameter(sp);
     }
 
 
     public void run() {
-        logger.debug("Begin running service");
+        logger.debug("Begin running service with id " + getServiceParameter().getId());
 
         printStatus(SWConstants.SERVICE_RUNNING);
         serviceParameter.setStatus(SWConstants.SERVICE_RUNNING);
@@ -65,7 +65,7 @@ public abstract class Service implements Runnable {
             serviceParameter.setError(getErrorCall());
             printStatus(SWConstants.SERVICE_FAILED);
         }
-        logger.debug("End running service.");
+        logger.debug("End running service with id " + getServiceParameter().getId());
     }
 
 

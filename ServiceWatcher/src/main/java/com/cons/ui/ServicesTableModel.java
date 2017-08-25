@@ -13,7 +13,8 @@ public class ServicesTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
     private boolean DEBUG = false;
 
-    private String[] columnNames = { "ID", "URL", "Description", "Type", "Group" , "Status","Context", "R","Password"};
+    private String[] columnNames = {
+        "ID", "URL", "Description", "Type", "Group", "Status", "Context", "R", "Password" };
 
     private Object[][] data;
     
@@ -26,8 +27,8 @@ public class ServicesTableModel extends AbstractTableModel {
      */
     public void setStatus(int row, String status) {
         data[row][SWConstants.TABLE_STATUS_INDEX] = status;
-        data[row][SWConstants.TABLE_RETRIES_INDEX] = serviceParameters.get(row).getActualRetries() + "/" +
-                                                     serviceParameters.get(row).getRetries();
+        data[row][SWConstants.TABLE_RETRIES_INDEX] =
+            serviceParameters.get(row).getActualRetries() + "/" + serviceParameters.get(row).getRetries();
         if(serviceParameters.get(row).getContext()!=null){
             data[row][SWConstants.tABLE_CONTEXT_INDEX]=serviceParameters.get(row).getContext();   
         }  
@@ -104,7 +105,9 @@ public class ServicesTableModel extends AbstractTableModel {
         //Nothing is editable
         if (col == SWConstants.TABLE_PASSWORD_INDEX &&
             ((data[row][SWConstants.TABLE_TYPE_INDEX].equals("DB")) ||
-             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")))) {
+             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("LDAP")) ||
+             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("SFTP"))||
+             (data[row][SWConstants.TABLE_TYPE_INDEX].equals("SSH")))) {
             return true;            
             }
         return false;
@@ -132,7 +135,6 @@ public class ServicesTableModel extends AbstractTableModel {
     }
 
         
-
     private void printDebugData() {
         int numRows = getRowCount();
         int numCols = getColumnCount();

@@ -144,7 +144,7 @@ public class Reporter{
 
             // Add image to message
             msgBodyPart = new MimeBodyPart();
-            msgBodyPart = makeAttachment("../sw.png", "<image>");
+            msgBodyPart = makeAttachment("src/main/resources/images/sw.png", "<image>");
 
             // Add image to multipart
             multipart.addBodyPart(msgBodyPart);

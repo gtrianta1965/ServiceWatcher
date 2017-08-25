@@ -26,8 +26,8 @@ import org.apache.log4j.Logger;
  * Helper Class for obfuscating passwords in a config file
  */
 public class CryptoUtils {
-    
-    static final Logger logger = Logger.getLogger(CryptoUtils.class);    
+
+    static final Logger logger = Logger.getLogger(CryptoUtils.class);
 
     private static String initializationVector;
     private static String key;
@@ -35,15 +35,14 @@ public class CryptoUtils {
     private static String error;
 
     static {
-        
         logger.info("Initializing key and initialization vector.");
         String systemProperties =
             getStringto16Length(System.getProperty("user.name") + System.getProperty("os.name") +
                                 System.getProperty("os.version") + System.getProperty("os.arch"));
-        key = "1234567890123456";//systemProperties;
-        logger.debug("key=[" + systemProperties + "]");        
+        key = "1234567890123456"; //systemProperties;
+        logger.debug("key=[" + systemProperties + "]");
         initializationVector = new StringBuilder(systemProperties).reverse().toString();
-        logger.debug("initializationVector=" + initializationVector);
+        logger.debug("initializationVector=[" + initializationVector + "]");
     }
 
     public CryptoUtils() {
@@ -63,7 +62,7 @@ public class CryptoUtils {
             bufferedReader = new BufferedReader(fileReader);
 
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains("password") && !line.startsWith("#")) {
+                if (line.toLowerCase().contains("password") && !line.startsWith("#")) {
                     if (CryptoUtils.decrypt(line.split("=", 2)[1]) == null) {
                         line = line.split("=", 2)[0] + "=" + CryptoUtils.encrypt(line.split("=", 2)[1]);
                     }
@@ -177,7 +176,7 @@ public class CryptoUtils {
 
             logger.trace("value=" + value);
             logger.trace("Base64 Value=" + Base64.decodeBase64(value.getBytes()));
-            
+
             byte[] original = cipher.doFinal(Base64.decodeBase64(value.getBytes()));
 
             return new String(original);

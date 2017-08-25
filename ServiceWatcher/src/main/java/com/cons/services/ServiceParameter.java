@@ -22,6 +22,7 @@ public class ServiceParameter {
     private String error;
     private String query;
     private String context;
+    private String command;
 
     public void setQuery(String query) {
         this.query = query;
@@ -134,5 +135,12 @@ public class ServiceParameter {
     public String getContext(){
         return context;
     }
-    
+
+    public void setCommand(String command) {
+        this.command = command;
+    }
+
+    public String getCommand() {
+        return command;
+    }
 }

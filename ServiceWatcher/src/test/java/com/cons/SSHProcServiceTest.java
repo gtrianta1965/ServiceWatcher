@@ -46,6 +46,8 @@ public class SSHProcServiceTest {
         sp.setUsername(username);
         sp.setPassword(password);
         sp.setType("SSH");
+        sp.setCommand("echo $USER");
+        sp.setSearchString("oracle");
         return sp;
     }
 }

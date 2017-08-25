@@ -1,6 +1,6 @@
 ROOT_F=$1
 ./rebuild.sh
-printf "\n[\033[1;38;2;0;255;0mINFO\033[0m] Deploying at path $ROOT_F/\n"
+printf "\n[\033[1;38;2;0;255;0mINFO\033[0m] Deploying at path $ROOT_F\n"
 # Make dir structure
 mkdir "$ROOT_F"ServiceWatcher/
 mkdir "$ROOT_F"ServiceWatcher/target/

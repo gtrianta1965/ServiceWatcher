@@ -1,5 +1,7 @@
 package com.cons.services;
 
+import com.cons.utils.GenericUtils;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -55,9 +57,8 @@ public class SSHProcService extends Service {
                 setSuccessfulCall(true);
                 setSuccessCall(serviceParameter.getSearchString());
             } else {
-                System.out.println("OK");
                 setSuccessfulCall(false);
-                if ((result == null) || (result == "")) {
+                if ((result == null) || (result.trim() == "")) {
                     result = "SSH Session command execution: Failed";
                 }
 
@@ -84,12 +85,22 @@ public class SSHProcService extends Service {
             return null;
         }
 
-        StringBuilder outputBuffer = new StringBuilder();
+        String command;
 
+        if (GenericUtils.isWindows()) {
+            command = "cmd.exe /c " + serviceParameter.getCommand();
+        } else {
+            command = serviceParameter.getCommand();
+        }
+
+        logger.debug("Command: " + command);
+
+        StringBuilder outputBuffer = new StringBuilder();
+        Channel channel = null;
         try {
-            Channel channel = session.openChannel("exec");
+            channel = session.openChannel("exec");
             logger.debug("SSH Session opening a channel from current session");
-            ((ChannelExec) channel).setCommand(serviceParameter.getCommand());
+            ((ChannelExec) channel).setCommand(command);
             InputStream commandOutput = channel.getInputStream();
             channel.connect();
             int readByte = commandOutput.read();
@@ -99,7 +110,6 @@ public class SSHProcService extends Service {
                 readByte = commandOutput.read();
             }
 
-            channel.disconnect();
         } catch (IOException ex) {
             logger.debug("SSH Session command: " + ex.getMessage());
             setSuccessfulCall(false);
@@ -110,7 +120,11 @@ public class SSHProcService extends Service {
             setSuccessfulCall(false);
             setErrorCall(ex.getMessage());
             return null;
+        } finally {
+            channel.disconnect();
         }
+
+        logger.debug("Output: " + outputBuffer.toString());
 
         if (outputBuffer.toString().contains(serviceParameter.getSearchString())) {
             logger.debug("SSH Session command execution: Success");

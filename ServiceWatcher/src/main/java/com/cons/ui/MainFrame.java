@@ -44,7 +44,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void initialization() {
-        ImageIcon icon = new ImageIcon("src/main/resources/images/sw.png");
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/swlogo.png"));
         this.setIconImage(icon.getImage());
 
         generic_timer = new Timer(interval, new ActionListener() {

@@ -83,6 +83,7 @@ public class SocketService extends Service {
                 logger.debug("Socket Service Bind was successful.");
                 // If success set call true
                 this.setSuccessfulCall(true);
+                this.setSuccessCall("");
             } catch (IOException ioex){
                 // Catch and set call false and set error
                 logger.debug("Socket Service error " + SWConstants.SERVICE_SOCKET_UNREACHABLE_MSG + fullURL[0] +":"+ fullURL[1]);

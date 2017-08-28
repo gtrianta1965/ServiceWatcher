@@ -125,7 +125,7 @@ public class Reporter{
             message.addRecipients(Message.RecipientType.TO, to);
             log.get(0);
             for(Hashtable report:log){
-                if(((String) report.get("status")).contains("DOWN")){
+                if(((String) report.get("status")).contains("Down")){
                     ++failed;
                 }
             }
@@ -144,7 +144,7 @@ public class Reporter{
 
             // Add image to message
             msgBodyPart = new MimeBodyPart();
-            msgBodyPart = makeAttachment("src/main/resources/images/sw.png", "<image>");
+            msgBodyPart = makeAttachment("src/main/resources/images/swCrop.png", "<image>");
 
             // Add image to multipart
             multipart.addBodyPart(msgBodyPart);
@@ -200,10 +200,19 @@ public class Reporter{
         this.statusLog.clear();
         for(ServiceParameter sp:this.serviceOrchestrator.getConfiguration().getServiceParameters()){
             Hashtable<String, String> logKV = new Hashtable<String, String>();
-            logKV.put("description", sp.getDescription());
-            logKV.put("url", sp.getUrl());
-            logKV.put("type", sp.getType());
-            logKV.put("status", (sp.getStatus() == SWConstants.SERVICE_SUCCESS?"UP":"DOWN"));
+            logKV.put("description", sp.getDescription()==null?"":sp.getDescription());
+            logKV.put("url", sp.getUrl()==null?"":sp.getUrl());
+            logKV.put("type", sp.getType()==null?"":sp.getType());
+            logKV.put("group",sp.getGroup()==null?"":sp.getGroup());
+            logKV.put("username",sp.getUsername()==null?"":sp.getUsername());
+            logKV.put("error",sp.getError()==null?"":sp.getError());
+            logKV.put("retries",Integer.toString(sp.getRetries())==null?"":Integer.toString(sp.getRetries()));
+            logKV.put("actual_retries",Integer.toString(sp.getActualRetries())==null?"":Integer.toString(sp.getActualRetries()));
+            logKV.put("search_string",sp.getSearchString()==null?"":sp.getSearchString());
+            logKV.put("context",sp.getContext()==null?"":sp.getContext());
+            logKV.put("query",sp.getQuery()==null?"":sp.getQuery());
+            logKV.put("command",sp.getCommand()==null?"":sp.getCommand());
+            logKV.put("status", (sp.getStatus() == SWConstants.SERVICE_SUCCESS?"Up":"Down"));
             statusLog.add(logKV);
         }
     }

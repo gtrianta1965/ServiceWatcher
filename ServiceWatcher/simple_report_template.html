@@ -20,11 +20,19 @@
 <table>
 	<tr>
 		<th>Service Description</th>
+		<th>URL</th>
+		<th>Type</th>
+		<th>Group</th>
+		<th>Retries</th>
 		<th>Status</th>
 	</tr>
 #foreach ($log in $logs)
 	<tr>
 		<td>$log["description"]</td>
+		<td>$log["url"]</td>
+		<td>$log["type"]</td>
+		<td>$log["group"]</td>
+		<td>$log["actual_retries"]/$log["retries"]</td>
 		<td>$log["status"]</td>
 	</tr>
 #end
@@ -63,10 +71,34 @@
 			URL
 		</th>
 		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			Type
+		</th>
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			Group
+		</th>
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			Retries
+		</th>
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
 			Status
 		</th>
 		
 	</tr>
+<!-- FOR EACH LOG (service report) GET ATTRIBUTE 
+* $log["description"]
+* $log["url"]
+* $log["type"]
+* $log["group"]
+* $log["username"]
+* $log["error"]
+* $log["retries"]
+* $log["actual_retries"]
+* $log["search_string"]
+* $log["context"]
+* $log["query"]
+* $log["command"]
+* $log["status"]
+-->
 #foreach ($log in $logs)
 	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
 		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
@@ -76,10 +108,128 @@
 			$log["url"]
 		</td>
 		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$log["type"]
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$log["group"]
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$log["actual_retries"]/$log["retries"]
+		</td>
+<!-- Velocity give color with basic if statement -->
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;" 
+bgcolor=
+#if( $log["status"]=="Up" )
+	#9FE25A
+#elseif( $log["status"]=="Down" )
+	#ff0000
+#else
+	#ffffff
+#end
+>
 			$log["status"]
 		</td>
 	</tr>
 #end
 </table>
-</div></body>
+<h3 style="box-sizing: inherit;font-size: 24px;font-family: &quot;Segoe UI&quot;,Arial,sans-serif;font-weight: 400;margin: 10px 0;">Configuration</h3>
+<table style="box-sizing: inherit;border-collapse: collapse;border-spacing: 0;width: 100%;display: table;border: 1px solid #ccc;">
+	<tr style="box-sizing: inherit;border-bottom: 1px solid #ddd;color: #fff!important;background-color: #212B21!important;">
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			Parameter
+		</th>
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			Value
+		</th>
+	</tr>
+<!-- FOR EACH LOG (service report) GET ATTRIBUTE 
+* $log["description"]
+* $log["url"]
+* $log["type"]
+* $log["group"]
+* $log["username"]
+* $log["error"]
+* $log["retries"]
+* $log["actual_retries"]
+* $log["search_string"]
+* $log["context"]
+* $log["query"]
+* $log["command"]
+* $log["status"]
+-->
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			Concurrent Threads
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getConcurrentThreads()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			HTTP Response Timeout
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getHttpResponseTimeout()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			LDAP Response Timeout
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getLdapResponseTimeout()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			Socket Die Interval
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getSocketDieInterval()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			Configuration File Name
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getConfigFile()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			SMTP Send Email On Success
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getSmtpSendEmailOnSuccess()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			SMTP Host
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getSmtpHost()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			SMTP Port
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getSmtpPort()
+		</td>
+	</tr>
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			SMTP Username
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$configuration.getSmtpUsername()
+		</td>
+	</tr>
+</table>
+</div>
+</body>
 </html> 

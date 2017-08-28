@@ -8,6 +8,7 @@ import java.io.StringWriter;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -37,7 +38,7 @@ import org.apache.velocity.app.VelocityEngine;
 public class Reporter{
     final static Logger logger = Logger.getLogger(Reporter.class);
 
-    protected List<String> statusLog;
+    protected List<Hashtable<String, String>> statusLog;
     private ServiceOrchestrator serviceOrchestrator;
     private Configuration configuration;
     
@@ -45,13 +46,12 @@ public class Reporter{
         super();
         this.serviceOrchestrator = serviceOrchestrator;
         this.configuration = this.serviceOrchestrator.getConfiguration();
-        this.statusLog = new ArrayList<String>();
+        this.statusLog = new ArrayList<Hashtable<String, String>>();
     }
     
     public void send() {
         try {
-            vlcJSON("file.json");
-            //sendMail();
+            sendMail();
         } catch (Exception ex) {
             logger.debug("Failed to send e-mail. " + ex.getMessage());
             if(configuration.getCmdArguments().isNoGUI()){
@@ -72,7 +72,7 @@ public class Reporter{
         makeLog();
         // Mail Header
         final String[] recipients = this.configuration.getRecipients().toArray(new String[0]);
-        final List<String> log = this.statusLog;
+        final List<Hashtable<String, String>> log = this.statusLog;
         final String host = this.configuration.getSmtpHost();
         final int port = this.configuration.getSmtpPort();
         final String username = this.configuration.getSmtpUsername();
@@ -123,9 +123,9 @@ public class Reporter{
             to = addresses.toArray(new InternetAddress[addresses.size()]);
             // Set To: header field of the header.
             message.addRecipients(Message.RecipientType.TO, to);
-
-            for(String report:log){
-                if(report.contains("DOWN")){
+            log.get(0);
+            for(Hashtable report:log){
+                if(((String) report.get("status")).contains("DOWN")){
                     ++failed;
                 }
             }
@@ -199,7 +199,12 @@ public class Reporter{
     private void makeLog(){
         this.statusLog.clear();
         for(ServiceParameter sp:this.serviceOrchestrator.getConfiguration().getServiceParameters()){
-            statusLog.add("Service: " + sp.getDescription() + " is " + (sp.getStatus() == SWConstants.SERVICE_SUCCESS?"UP":"DOWN"));
+            Hashtable<String, String> logKV = new Hashtable<String, String>();
+            logKV.put("description", sp.getDescription());
+            logKV.put("url", sp.getUrl());
+            logKV.put("type", sp.getType());
+            logKV.put("status", (sp.getStatus() == SWConstants.SERVICE_SUCCESS?"UP":"DOWN"));
+            statusLog.add(logKV);
         }
     }
     
@@ -212,9 +217,8 @@ public class Reporter{
         VelocityEngine ve = new VelocityEngine();
         VelocityContext context = new VelocityContext();
         ve.init();
-        Vector<String> logVector = new Vector<String>();
         
-        Template t = ve.getTemplate("report_template.html");
+        Template t = ve.getTemplate("simple_report_template.html");
         
         context.put("program_name", SWConstants.REPORTER_TEMPLATE_TITLE);
         context.put("version", SWConstants.PROGRAM_VERSION);
@@ -223,11 +227,7 @@ public class Reporter{
         context.put("service_parameters", configuration.getServiceParameters());
         
         makeLog();
-        for(String alog : statusLog){
-            logVector.addElement(alog);
-        }
-        
-        context.put("logs", logVector.iterator());
+        context.put("logs", statusLog);
         
         t.merge(context, w);
         

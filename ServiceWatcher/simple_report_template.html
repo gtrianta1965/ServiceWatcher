@@ -1,0 +1,85 @@
+<!-- ******************** NO STYLE EXAMPLE ******************** -->
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width"/>
+	<title>$program_name</title>
+</head>
+<body>
+
+<img src="cid:image" alt="missing log" align="center"/>
+
+<h1>$program_name</h1>
+
+<p>v.$version</p>
+<p>This report was send at $date</p>
+<div>
+<h3>Report</h3>
+<table>
+	<tr>
+		<th>Service Description</th>
+		<th>Status</th>
+	</tr>
+#foreach ($log in $logs)
+	<tr>
+		<td>$log["description"]</td>
+		<td>$log["status"]</td>
+	</tr>
+#end
+</table>
+</body>
+</html>
+-->
+<!-- ******************** SIMPLE STYLE EXAMPLE ******************** -->
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" style="box-sizing: inherit;">
+	<meta name="viewport" content="width=device-width" style="box-sizing: inherit;">
+	<title>$program_name</title>
+</head>
+<body style="margin: 0;font-family: Verdana,sans-serif;font-size: 15px;line-height: 1.5;">
+
+<!-- LOGO ATTACHMENT cid:image -->
+<img src="cid:image" alt="missing log" align="center" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;width: auto;max-width: 100%;clear: both;display: block;float: none;text-align: center;margin: 0 auto;box-sizing: inherit;border-style: none;margin-bottom: -5px;">
+
+<!-- TITLE -->
+<h1 style="box-sizing: inherit;font-size: 36px;font-family: &quot;Segoe UI&quot;,Arial,sans-serif;font-weight: 400;margin: 10px 0;">$program_name</h1>
+
+<!-- VERSION -->
+<p style="box-sizing: inherit;">v.$version</p>
+
+<!-- SEND DATE -->
+<p style="box-sizing: inherit;">This report was send at $date</p>
+<div style="box-sizing: inherit;padding: 0.01em 16px;">
+<h3 style="box-sizing: inherit;font-size: 24px;font-family: &quot;Segoe UI&quot;,Arial,sans-serif;font-weight: 400;margin: 10px 0;">Report</h3>
+<table style="box-sizing: inherit;border-collapse: collapse;border-spacing: 0;width: 100%;display: table;border: 1px solid #ccc;">
+	<tr style="box-sizing: inherit;border-bottom: 1px solid #ddd;color: #fff!important;background-color: #212B21!important;">
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			Service Description
+		</th>
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			URL
+		</th>
+		<th style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			Status
+		</th>
+		
+	</tr>
+#foreach ($log in $logs)
+	<tr style="box-sizing: inherit;border-bottom: 3px solid #ddd;"}>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;padding-left: 16px;">
+			$log["description"]
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$log["url"]
+		</td>
+		<td style="box-sizing: inherit;padding: 8px 8px;display: table-cell;text-align: left;vertical-align: top;">
+			$log["status"]
+		</td>
+	</tr>
+#end
+</table>
+</div></body>
+</html> 

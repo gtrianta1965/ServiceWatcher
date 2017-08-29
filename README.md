@@ -1,12 +1,10 @@
 ![missing logo](https://raw.githubusercontent.com/gtrianta1965/ServiceWatcher/master/ServiceWatcher/src/main/resources/images/sw.png)
 
 # Service Watcher
-## List of properties 
-[more](https://github.com/gtrianta1965/ServiceWatcher/wiki/Configuration)
 
 <div align="center">
 
-# Maven Deployment
+## Maven Deployment
 
 </div>
 
@@ -34,6 +32,14 @@ _**`./deploy.sh <path> `**_
              └── lib # all dependencies are located here.
 ```
 ***
+
+<div align="center">
+  
+## List of properties 
+
+</div>
+
+[more](https://github.com/gtrianta1965/ServiceWatcher/wiki/Configuration)
 
 * concurrentThreads
 * smtpSendMailOnSuccess

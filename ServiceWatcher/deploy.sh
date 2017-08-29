@@ -6,7 +6,7 @@ mkdir "$ROOT_F"ServiceWatcher/
 mkdir "$ROOT_F"ServiceWatcher/target/
 mkdir "$ROOT_F"ServiceWatcher/target/lib/
 # Copy needed files for stand alone
-cp report_template.html "$ROOT_F"ServiceWatcher/
+cp *report_template.html "$ROOT_F"ServiceWatcher/
 cp target/lib/* "$ROOT_F"ServiceWatcher/target/lib/
 cp target/ServiceWatcher* "$ROOT_F"ServiceWatcher/target/
 cp sample-config.properties "$ROOT_F"ServiceWatcher/

@@ -1,5 +1,9 @@
 ROOT_F=$1
 ./rebuild.sh
+# Validate path
+if ! [[ $ROOT_F =~ ^.*\/$ ]]; then
+	ROOT_F="$ROOT_F/"
+fi
 printf "\n[\033[1;38;2;0;255;0mINFO\033[0m] Deploying at path $ROOT_F\n"
 # Make dir structure
 mkdir "$ROOT_F"ServiceWatcher/

@@ -33,6 +33,7 @@ _**`./deploy.sh <path> `**_
         └── target # ServiceWatcher compiled jar file.
              └── lib # all dependencies are located here.
 ```
+***
 
 * concurrentThreads
 * smtpSendMailOnSuccess

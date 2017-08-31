@@ -25,6 +25,8 @@ public class ServiceFactory {
                 serviceToBeCreated = new SSHProcService(serviceParameter);
             }else if (serviceParameter.getType().equals("SHELL")){
                 serviceToBeCreated = new SHELLService(serviceParameter);
+            }else if (serviceParameter.getType().equals("SOAP")){
+                serviceToBeCreated = new SOAPService(serviceParameter);
             }
             
         }else{

@@ -35,7 +35,7 @@ public class SWConstants {
     public final static int TABLE_TYPE_INDEX = 3;
     public final static int TABLE_GROUP_INDEX = 4;
     public final static int TABLE_STATUS_INDEX = 5;
-    public final static int tABLE_CONTEXT_INDEX=6;
+    public final static int TABLE_CONTEXT_INDEX=6;
     public final static int TABLE_RETRIES_INDEX = 7;
     public final static int TABLE_PASSWORD_INDEX = 8;
     

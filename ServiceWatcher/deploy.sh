@@ -13,7 +13,7 @@ mkdir "$ROOT_F"ServiceWatcher/target/lib/
 cp *report_template.html "$ROOT_F"ServiceWatcher/
 cp target/lib/* "$ROOT_F"ServiceWatcher/target/lib/
 cp target/ServiceWatcher* "$ROOT_F"ServiceWatcher/target/
-cp sample-config.properties "$ROOT_F"ServiceWatcher/
+cp sample-config.properties "$ROOT_F"ServiceWatcher/config.properties
 # Copy executable scripts for win/linux
 cp sw.bat "$ROOT_F"ServiceWatcher/
 cp appendSW.bat "$ROOT_F"ServiceWatcher/

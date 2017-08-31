@@ -62,7 +62,7 @@ public class CustomTableCellRenderer extends DefaultTableCellRenderer {
             c=pass;
         }
         
-        if(column==SWConstants.tABLE_CONTEXT_INDEX){
+        if(column==SWConstants.TABLE_CONTEXT_INDEX){
             JLabel lbl =new JLabel();
             lbl.setText(String.valueOf(value));
             lbl.setToolTipText(String.valueOf(value));

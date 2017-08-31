@@ -1,6 +1,7 @@
 Package without running unit tests:
 
-mvn package -Dmaven.test.skip=true
+mvn package -Dmaven.test.skip=true //UNIX
+mvn package -DskipTests //WIN
 
 
 If you merged a branch to master by accident and it is the last commit (but not yet pushed) revert the commit with :

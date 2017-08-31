@@ -27,6 +27,8 @@ public class ServiceFactory {
                 serviceToBeCreated = new SHELLService(serviceParameter);
             }else if (serviceParameter.getType().equals("SOAP")){
                 serviceToBeCreated = new SOAPService(serviceParameter);
+            }else if (serviceParameter.getType().equals("REST")){
+                serviceToBeCreated = new RESTService(serviceParameter);
             }
             
         }else{

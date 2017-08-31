@@ -73,9 +73,7 @@ public class ServiceParameter {
     }
 
     public void setType(String type) {
-        this.type =
-            (type == null) || (type != "LDAP") || (type != "HTTP") || (type != "SHELL") || (type != "PING") ||
-            (type != "SFTP") || (type != "SSH") || (type != "DB") ? "INVALID" : type;
+        this.type = type == null ? "" : type;
     }
 
     public String getType() {

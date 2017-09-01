@@ -23,6 +23,7 @@ public class Configuration {
     private boolean smtpSendEmailOnSuccess = false;
     private boolean isProduction = false;
     private boolean isLogEnabled = false;
+    private boolean toEncrypt = false;
     private int smtpSendActivityEmailInterval = 60000;
     private String smtpHost = "smtp.gmail.com";
     private int smtpPort = 465;
@@ -46,7 +47,6 @@ public class Configuration {
 
     public void init() {
         //Initialize from the factory default configuration file (configFile)
-        //CryptoUtils.obfuscatePasswordInConfig(configFile);
         init(getCmdArguments().getConfigFile());
     }
 
@@ -97,6 +97,7 @@ public class Configuration {
                     this.setSmtpPassword(getStringProperty(CryptoUtils.decrypt(prop.getProperty("smtpPassword")), ""));
                 } else {
                     this.setSmtpPassword(getStringProperty(prop.getProperty("smtpPassword"), ""));
+                    toEncrypt = true;
                 }
             }
             this.setAutoRefreshIntervals(getStringArrayProperty(prop.getProperty("autoRefreshIntervals"),
@@ -131,7 +132,7 @@ public class Configuration {
             }
         }
 
-        if (isProduction() || getCmdArguments().getEncrypt()) {
+        if ((isProduction() || getCmdArguments().getEncrypt()) && toEncrypt) {
             logger.info("Production mode:Obfuscating " + fileName);
             CryptoUtils.obfuscatePasswordInConfig(fileName);
         }
@@ -414,12 +415,12 @@ public class Configuration {
                 serviceParameter.setGroup(prop.getProperty("group." + i));
                 serviceParameter.setSearchString(prop.getProperty("searchString." + i));
                 serviceParameter.setUsername(prop.getProperty("username." + i));
-                //serviceParameter.setPassword(prop.getProperty("password." + i)); //Read the password, g30 18/7/2017
                 if (prop.getProperty("password." + i) != null) {
                     if (CryptoUtils.decrypt(prop.getProperty("password." + i)) != null) {
                         serviceParameter.setPassword(CryptoUtils.decrypt(prop.getProperty("password." + i)));
                     } else {
                         serviceParameter.setPassword(prop.getProperty("password." + i));
+                        toEncrypt = true;
                     }
                 }
                 if (prop.getProperty("retries." + i) != null) {

@@ -3,6 +3,9 @@ package com.cons.utils;
 
 public class SWConstants {
 
+    public final static String PROGRAM_NAME = "ServiceWatcher";
+    public final static String PROGRAM_VERSION = "1.0b";
+
     public final static String LOG_FILE_NAME_CONFIQURATION = "configuration";
     public final static String LOG_FILE_NAME_SERVICE = "service";
     public final static String UNSUCCESSFUL_RESPONSE_MSG = "url with response message:";
@@ -32,13 +35,24 @@ public class SWConstants {
     public final static int TABLE_TYPE_INDEX = 3;
     public final static int TABLE_GROUP_INDEX = 4;
     public final static int TABLE_STATUS_INDEX = 5;
-    public final static int TABLE_PASSWORD_INDEX = 6;
+    public final static int TABLE_CONTEXT_INDEX=6;
+    public final static int TABLE_RETRIES_INDEX = 7;
+    public final static int TABLE_PASSWORD_INDEX = 8;
+    
+    
 
     //Number of columns in the table
-    public final static int TABLE_NUMBER_OF_COLUMNS = 7;
+    public final static int TABLE_NUMBER_OF_COLUMNS = 9;
     //Reporter
     public final static String REPORTER_NAME = "reporter@servicewatcher.com";
     public final static String REPORTER_MSG_SUBJECT = "Service Watcher Report";
-
+    public final static String REPORTER_TEMPLATE_TITLE = "Service Watcher";
+    public final static String REPORTER_WARN = "There was a problem while sending an e-mail report.";
+    public final static String REPORTER_FAIL_AUTH = "SMTP Authentication failed.";
+    public final static String REPORTER_FAIL_GENERAL = "STMP General Exception was Thrown.";
+    public final static String REPORTER_FAIL_MESSAGING = "SMTP Messaging error.";
+    public final static String REPORTER_INFO_STATUS_SEND = "E-mail has been send.";
+    public final static String REPORTER_INFO_STATUS_SENDING = "Sending Mail";
+    public final static String REPORTER_DEBUG_COOKING = "Constructing mail to send.";
 
 }

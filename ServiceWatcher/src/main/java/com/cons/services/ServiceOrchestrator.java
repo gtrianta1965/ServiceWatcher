@@ -7,26 +7,31 @@ import com.cons.utils.SWConstants;
 
 import java.io.File;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
+
 public class ServiceOrchestrator {
-    protected List<String> statusLog;
+    static final Logger logger = Logger.getLogger(ServiceOrchestrator.class);
+
     private Configuration configuration;
     private ServicesTableModel serviceTableModel;
     private ExecutorService executor;
+    private Reporter reporter;
     private OrchestratorStatus orchestratorStatus;
-    
+
     public ServiceOrchestrator() {
         super();
         orchestratorStatus = new OrchestratorStatus();
-        this.statusLog = new ArrayList<String>();
     }
 
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+        if (this.configuration.getSendMailUpdates()) {
+            this.initReporter();
+        }
     }
 
     public Configuration getConfiguration() {
@@ -55,7 +60,7 @@ public class ServiceOrchestrator {
 
 
     public void start() {
-
+        logger.debug("Begin");
         //Check if we are running
         if (executor != null && !executor.isTerminated()) {
             System.out.println("Executor is running");
@@ -85,7 +90,22 @@ public class ServiceOrchestrator {
             executor.execute(serviceWorker);
         }
 
+        logger.debug(configuration.getServiceParameters().size() + " submitted to thread pool.");
+
         executor.shutdown();
+        logger.debug("Executor shutdown.");
+        
+        if(configuration.getCmdArguments().getAutoRefreshTime() != 0 || !configuration.getCmdArguments().isNoGUI()){
+            logger.debug("Starting send mail thread.");
+            new Thread(new Runnable() {
+                public void run() {
+                    while (isRunning()) {
+                    }
+                    checkSendMail();
+                }
+            }).start();
+        }
+        
         /* Study the following code and activate it when it is needed
         while (!executor.isTerminated()) {
         }
@@ -93,13 +113,6 @@ public class ServiceOrchestrator {
         System.out.println("Finished all threads");
         */
 
-    }
-
-
-    public void sendStatusLog() {
-        Reporter.sendMail(configuration.getRecipients().toArray(new String[0]), this.statusLog,
-                          configuration.getSmtpHost(), configuration.getSmtpPort(), configuration.getSmtpUsername(),
-                          configuration.getSmtpPassword());
     }
 
     public ExecutorService getExecutor() {
@@ -112,13 +125,6 @@ public class ServiceOrchestrator {
         serviceTableModel.initFromConfiguration(configuration);
         setServiceTableModel(serviceTableModel);
         setConfiguration(configuration);
-    }
-
-    /**
-     * Cleans log
-     */
-    public void cleanLog() {
-        this.statusLog = new ArrayList<String>();
     }
 
     public Boolean isRunning() {
@@ -135,8 +141,10 @@ public class ServiceOrchestrator {
     public OrchestratorStatus getStatus() {
         /*clear orchestratorStatus obj except of totalSubmitted*/
         int submitted = orchestratorStatus.getTotalSubmitted();
+        // int retries = orchestratorStatus.getTotalRetries();
         orchestratorStatus.reset();
         orchestratorStatus.setTotalSubmitted(submitted);
+        //orchestratorStatus.setTotalRetries(retries);
         List<ServiceParameter> lsp = configuration.getServiceParameters();
         orchestratorStatus.setTotalServices(lsp.size());
         int getValue = 0;
@@ -151,8 +159,31 @@ public class ServiceOrchestrator {
                 getValue = orchestratorStatus.getTotalFailed();
                 orchestratorStatus.setTotalFailed(getValue + 1);
             }
+
+            if (s.getActualRetries() > 0 &&
+                (s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_SUCCESS) ||
+                 s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_FAILED) ||
+                 s.getStatus().equalsIgnoreCase(SWConstants.SERVICE_RUNNING))) {
+                getValue = orchestratorStatus.getTotalRetries();
+                orchestratorStatus.setTotalRetries(++getValue);
+            }
         }
 
         return orchestratorStatus;
+    }
+
+    /**
+     * Checks if it should send emails for the current run.
+     */
+    public void checkSendMail() {
+        if (this.configuration.getSendMailUpdates() &&
+            (this.configuration.getSmtpSendEmailOnSuccess() ||
+             this.orchestratorStatus.getTotalSubmitted() != this.orchestratorStatus.getTotalSuccess())) {
+            reporter.send();
+        }
+    }
+
+    private void initReporter() {
+        this.reporter = new Reporter(this);
     }
 }

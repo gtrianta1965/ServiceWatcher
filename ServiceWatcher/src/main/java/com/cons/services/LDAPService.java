@@ -42,6 +42,7 @@ public class LDAPService extends Service {
                 ctx = new InitialLdapContext(env, null);
 
                 this.setSuccessfulCall(true);
+                this.setSuccessCall("");
 
             } catch (NamingException ex) {
                 this.setSuccessfulCall(false);

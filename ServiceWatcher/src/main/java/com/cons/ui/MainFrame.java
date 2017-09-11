@@ -2,9 +2,9 @@
 package com.cons.ui;
 
 
-import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.utils.DateUtils;
+import com.cons.utils.SWConstants;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,9 +30,7 @@ import javax.swing.table.TableColumnModel;
 public class MainFrame extends javax.swing.JFrame {
     ServicesTableModel servicesTableModel;
     ServiceOrchestrator serviceOrchestrator;
-    Configuration configuration;
     private int interval=200;
-    private boolean send=false;
     private Timer generic_timer;
     private long diff;
 
@@ -46,12 +44,14 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void initialization() {
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/swlogo.png"));
+        this.setIconImage(icon.getImage());
+
         generic_timer = new Timer(interval, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 checkAutoRefresh();
                 updateStatusBar();
-                checkSendMail();
             }
         });
         generic_timer.start();
@@ -59,7 +59,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     public ImageIcon getImg(){
         if(serviceOrchestrator.isRunning()){
-            return new ImageIcon(this.getClass().getResource("/src/images/active.gif"));
+            return new ImageIcon(this.getClass().getResource("/images/active.gif"));
         }else{
             return new ImageIcon();
         }
@@ -94,31 +94,9 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-    /**
-     * Checks if it should send emails for the current run.
-     */
-    private void checkSendMail(){
-        if (this.send && !this.serviceOrchestrator.isRunning() && this.serviceOrchestrator
-                                                                      .getConfiguration()
-                                                                      .getSendMailUpdates() &&
-            (this.serviceOrchestrator
-                                                                                                    .getConfiguration()
-                                                                                                    .getSmtpSendEmailOnSuccess() ||
-             this.serviceOrchestrator
-                                                                                                                                        .getOrchestratorStatus()
-                                                                                                                                        .getTotalSubmitted() !=
-                           this.serviceOrchestrator
-                                                                                                                                                                    .getOrchestratorStatus()
-                                                                                                                                                                    .getTotalSuccess())) {
             
-            this.send = false;
-            this.serviceOrchestrator.sendStatusLog();
-            this.serviceOrchestrator.cleanLog();
-        }
-    }
     
     private void RefreshServices() {
-        this.send = true;
         currentRefreshFireTime = nextRefreshFireTime;
         nextRefreshFireTime =
             DateUtils.addMinutesToDate(currentRefreshFireTime,
@@ -127,7 +105,9 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public void setAutoRefreshEnabled() {
-        long refTime = serviceOrchestrator.getConfiguration().getCmdArguments().getAutoRefreshTime();
+        long refTime = serviceOrchestrator.getConfiguration()
+                                          .getCmdArguments()
+                                          .getAutoRefreshTime();
         if (refTime != 0) {
             boolean flag = false;
             for (int i = 0; i < cbAutoRefreshInterval.getItemCount(); i++) {
@@ -144,6 +124,7 @@ public class MainFrame extends javax.swing.JFrame {
             checkAutoRefresh.doClick();
         }
     }
+
     /**
      * CheckForAutoRefresh
      */
@@ -167,7 +148,6 @@ public class MainFrame extends javax.swing.JFrame {
                     RefreshServices();
                 }
         } else {
-                this.send = true;
                 //The refresh never executed (execute it now)
                 currentRefreshFireTime = new Date(); //Set the current to NOW!!!
                 //Set the next fire time according to interval specified
@@ -186,8 +166,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void setColumnsWidth() {
         //Size of each column espressed in percentage
-        float[] columnWidthPercentage = {2.0f, 30.0f, 20.0f, 3.0f, 10.0f, 35.0f, 35.0f};
-        
+        float[] columnWidthPercentage = { 2.0f, 25.0f, 15.0f, 3.0f, 10.0f, 7.0f, 18.0f, 2.0f, 18.0f};
+
         int tW = servicesTable.getWidth();
             TableColumn column;
             TableColumnModel jTableColumnModel = servicesTable.getColumnModel();
@@ -209,7 +189,6 @@ public class MainFrame extends javax.swing.JFrame {
         servicesTable.setColumnSelectionAllowed(true);
         servicesTable.setRowSelectionAllowed(true);
         
- 
            if (servicesTable.getCellEditor() != null) {
              servicesTable.getCellEditor().stopCellEditing();
             }
@@ -243,10 +222,10 @@ public class MainFrame extends javax.swing.JFrame {
         servicesTable.setDefaultRenderer(String.class, new CustomTableCellRenderer());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Service Watcher");
+        setTitle(SWConstants.PROGRAM_NAME + " " + "v" + SWConstants.PROGRAM_VERSION);
         setMinimumSize(new java.awt.Dimension(1004, 439));
 
-        btnRefresh.setIcon(new ImageIcon(this.getClass().getResource("/src/images/refresh.png")));
+        btnRefresh.setIcon(new ImageIcon(this.getClass().getResource("/images/refresh.png")));
         btnRefresh.setText("Refresh");
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,7 +233,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        btnExit.setIcon(new ImageIcon(this.getClass().getResource("/src/images/exit.png")));
+        btnExit.setIcon(new ImageIcon(this.getClass().getResource("/images/exit.png")));
         btnExit.setText("Exit");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -265,7 +244,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblVersion.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.focus"));
         lblVersion.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         lblVersion.setForeground(new java.awt.Color(102, 102, 255));
-        lblVersion.setText("Service Watcher v1.0");
+        lblVersion.setText("Available Services");
 
         checkAutoRefresh.setText("Auto-Refresh");
         checkAutoRefresh.addActionListener(new java.awt.event.ActionListener() {
@@ -312,11 +291,11 @@ public class MainFrame extends javax.swing.JFrame {
         statusBarSection1.setLayout(statusBarSection1Layout);
         statusBarSection1Layout.setHorizontalGroup(
             statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+            .addComponent(statusMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
         );
         statusBarSection1Layout.setVerticalGroup(
             statusBarSection1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusMsg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(statusMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -355,7 +334,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        btnLoad.setIcon(new ImageIcon(this.getClass().getResource("/src/images/add.png")));
+        btnLoad.setIcon(new ImageIcon(this.getClass().getResource("/images/add.png")));
         btnLoad.setText("Add File");
         btnLoad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -373,7 +352,7 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -395,7 +374,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(checkAutoRefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cbAutoRefreshInterval, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 500, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -436,7 +415,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void buttonRefresh(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRefresh
        //TODO: Disable button, check if orchestrator is running, display a message if it is already running
-       this.send = true;
        serviceOrchestrator.start();
        
     }//GEN-LAST:event_buttonRefresh

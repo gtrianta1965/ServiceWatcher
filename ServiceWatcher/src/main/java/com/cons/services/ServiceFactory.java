@@ -21,6 +21,10 @@ public class ServiceFactory {
                 serviceToBeCreated = new SFTPService(serviceParameter);
             }else if (serviceParameter.getType().equals("LDAP")){
                 serviceToBeCreated = new LDAPService(serviceParameter);
+            }else if (serviceParameter.getType().equals("SSH")){
+                serviceToBeCreated = new SSHProcService(serviceParameter);
+            }else if (serviceParameter.getType().equals("SHELL")){
+                serviceToBeCreated = new SHELLService(serviceParameter);
             }
             
         }else{

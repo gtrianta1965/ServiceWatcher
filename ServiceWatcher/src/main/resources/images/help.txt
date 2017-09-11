@@ -1,13 +1,18 @@
-<b>-nogui</b>
+<b><red>-nogui</red></b>
     runs the Service watcher without GUI (Graphical User Interface).
 
-<b>-autorefresh:X</b>
+<b><red>-autorefresh:X</red></b>
     Starts the auto refresh. X sets the interval between the autorefreshes.
     If you do not select an interval number the programme starts with a default interval.
     Also arguments -autorefresh must be followed by a colon (:) and the refreshTime value.
                     
-<b>-encrypt</b>
+<b><red>-encrypt</red></b>
     Obfuscates the passwords of an unencrypted file.
 
-<b>-conf:path</b>
+<b><red>-conf:path</red></b>
     Loads a custom configuration file.
+
+<b><red>-debug</red></b>
+    Enables debuging. Writes debuging messages to log file.
+    
+

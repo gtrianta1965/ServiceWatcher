@@ -1,9 +1,8 @@
+@echo off
 set SW=.
 
 for %%i in (.\target\lib\*.jar) do call appendSW %%i
 for %%i in (.\target\*.jar) do call appendSW %%i
-
-echo Using classpath:  %SW%
 
 java -cp %SW% com.cons.Main %1 %2 %3 %4 %5 %6
 

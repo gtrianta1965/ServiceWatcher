@@ -1,22 +1,23 @@
 package com.cons.utils;
 
-import java.io.File;
+import com.cons.Configuration;
+import com.cons.services.ServiceOrchestrator;
+import com.cons.services.ServiceParameter;
 
-import java.io.IOException;
+import java.io.StringWriter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
-
-import java.util.TimeZone;
+import java.util.Vector;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-
 import javax.activation.FileDataSource;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -26,23 +27,37 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-
 import javax.mail.internet.MimeMultipart;
-
 import javax.mail.internet.MimeUtility;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.apache.log4j.Logger;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
-import org.jsoup.nodes.Document;
+public class Reporter{
+    final static Logger logger = Logger.getLogger(Reporter.class);
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-
-public class Reporter {
-
-    public Reporter() {
+    protected List<Hashtable<String, String>> statusLog;
+    private ServiceOrchestrator serviceOrchestrator;
+    private Configuration configuration;
+    
+    public Reporter(ServiceOrchestrator serviceOrchestrator) {
         super();
+        this.serviceOrchestrator = serviceOrchestrator;
+        this.configuration = this.serviceOrchestrator.getConfiguration();
+        this.statusLog = new ArrayList<Hashtable<String, String>>();
+    }
+    
+    public void send() {
+        try {
+            sendMail();
+        } catch (Exception ex) {
+            logger.debug("Failed to send e-mail. " + ex.getMessage());
+            if(configuration.getCmdArguments().isNoGUI()){
+                System.out.println("Failed to send e-mail.");
+            }
+        }
     }
     
     /**
@@ -50,13 +65,27 @@ public class Reporter {
      * @param recipients is a string array which includes all the recipients e-mails.
      * @param log is a string array which includes the log to be sent via e-mail.
      */
-    public static void sendMail(String[] recipients, List<String> log, final String host, int port, final String username, final String password) {
+    private void sendMail() {
+        logger.info("Starting Sending Mail Proccess");
+        
+        logger.debug("Making log from results to send.");
+        makeLog();
+        // Mail Header
+        final String[] recipients = this.configuration.getRecipients().toArray(new String[0]);
+        final List<Hashtable<String, String>> log = this.statusLog;
+        final String host = this.configuration.getSmtpHost();
+        final int port = this.configuration.getSmtpPort();
+        final String username = this.configuration.getSmtpUsername();
+        final String password = this.configuration.getSmtpPassword();
+        
+        // IP resolve
         List<InternetAddress> addresses = new ArrayList<InternetAddress>();
         // Recipient's email ID needs to be mentioned.
         InternetAddress[] to;
         // Sender's email ID needs to be mentioned
         String from = SWConstants.REPORTER_NAME;
-
+        
+        logger.debug("Initializing SMTP properties.");
         // Get system properties
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
@@ -64,6 +93,7 @@ public class Reporter {
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", Integer.toString(port));
+        logger.debug("Creating authentication.");
         //get Session
         Session session = Session.getDefaultInstance(props,    
             new javax.mail.Authenticator() {    
@@ -73,11 +103,14 @@ public class Reporter {
             }
         );
 
-        //Session session = Session.getDefaultInstance(props);
-
         try {
+            logger.debug(SWConstants.REPORTER_DEBUG_COOKING);
+            int failed = 0;
+            String appendSubjectStatus = "";
+            
             // Create a default MimeMessage object.
             MimeMessage message = new MimeMessage(session);
+
             // Init message parts
             MimeMultipart multipart = new MimeMultipart("related");
             BodyPart msgBodyPart = new MimeBodyPart();
@@ -90,78 +123,53 @@ public class Reporter {
             to = addresses.toArray(new InternetAddress[addresses.size()]);
             // Set To: header field of the header.
             message.addRecipients(Message.RecipientType.TO, to);
-
+            log.get(0);
+            for(Hashtable report:log){
+                if(((String) report.get("status")).contains("Down")){
+                    ++failed;
+                }
+            }
+            
+            if(failed > 0){
+                appendSubjectStatus = " (" + failed + " of " + log.size() + " have failed)";
+            }
             // Set Subject: header field
-            message.setSubject(SWConstants.REPORTER_MSG_SUBJECT);
+            message.setSubject(SWConstants.REPORTER_MSG_SUBJECT + appendSubjectStatus);
 
             // Set HTML message
-            msgBodyPart.setContent(makePage("report_template.html", log).toString(), "text/html");
+            msgBodyPart.setContent(vlc().toString(), "text/html");
 
             // Add HTML to multipart
             multipart.addBodyPart(msgBodyPart);
 
             // Add image to message
             msgBodyPart = new MimeBodyPart();
-            msgBodyPart = makeAttachment("../sw.png", "<image>");
+            msgBodyPart = makeAttachment("src/main/resources/images/swCrop.png", "<image>");
 
             // Add image to multipart
             multipart.addBodyPart(msgBodyPart);
 
             // Set message content as multipart
             message.setContent(multipart);
-
+            logger.info(SWConstants.REPORTER_INFO_STATUS_SENDING);
             // Send message
             Transport.send(message);
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    /**
-     * This function initializes and loads a Document based on an HTML template with UTF-8 encoding
-     * pareses it with jsoup adds now date to a <p> element with id="date"
-     * and appends <p>log n</p> * n logs to the log section of the page
-     * 
-     * @param templatePath is the relative path to the HTML template
-     * @param log is the log to be added in the log section of the page
-     * @return returns an HTML page type of Document.
-     */
-    private static Document makePage(String templatePath, List<String> log){
-        Document doc = null;
-        File input = null;
-        try{
-            // Parse template
-            input = new File(templatePath);
-            doc = Jsoup.parse(input, "UTF-8");
-            // Add date
-            Element element = doc.select("p#date").first();
-            Date date = new Date();
-            element.text(date.toString());
-            // Add log
-            element = doc.select("p#field").first().appendElement("h4 id=\"logtlt\" align=\"center\"");
-            element.text("Log");
             
-            int id=0;
-            for(String report:log){
-                String status = "white";
-                if(report.contains("UP")){
-                    status = "#76BB1E";
-                }else{
-                    status = "#D24626";
-                }
-                doc.select("p#field").first()
-                   .appendElement("p id=\"" + id + "\" style=\"background-color: " + status + ";\"")
-                   .text(report);
-                id++;
-            }
-        } catch (IOException ioex) {
-            ioex.printStackTrace();
+            logger.info(SWConstants.REPORTER_INFO_STATUS_SEND);
+        } catch (AuthenticationFailedException auther){
+            logger.warn(SWConstants.REPORTER_WARN);
+            logger.error(SWConstants.REPORTER_FAIL_AUTH);
+            logger.debug("Trace: " + auther.getMessage());
+        } catch (MessagingException mex) {
+            logger.warn(SWConstants.REPORTER_WARN);
+            logger.error(SWConstants.REPORTER_FAIL_MESSAGING);
+            logger.debug("Trace: " + mex.getMessage());
+        } catch (Exception ex) {
+            logger.warn(SWConstants.REPORTER_WARN);
+            logger.error(SWConstants.REPORTER_FAIL_GENERAL);
+            logger.debug("Trace: " + ex.getMessage());
         }
-        return doc;
     }
-    
     
     /**
      * Makes a mail attachment from a relative file path and adds refrenses it to an id to be later used
@@ -179,35 +187,83 @@ public class Reporter {
             msgBodyPart.setHeader("Content-ID", id);
             msgBodyPart.setFileName(MimeUtility.encodeText("logo.png", "UTF-8", null));
         } catch (MessagingException msge) {
-            msge.printStackTrace();
+            logger.error(SWConstants.REPORTER_FAIL_MESSAGING);
+            logger.debug("Trace: " + msge.getMessage());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(SWConstants.REPORTER_FAIL_GENERAL);
+            logger.debug("Trace: " + ex.getMessage());
         }
         return msgBodyPart;
     }
     
-    /**
-     * JSON log exporter.
-     * 
-     * @param log the log of services to be exported
-     * @return returns a JSONObject which includes:
-     * name of application,
-     * application version,
-     * timestamp of export,
-     * services log.
-     */
-    public static JSONObject exportToJSON(List<String> log){
-        JSONObject jsn = new JSONObject();
-        jsn.put("Application", "Service Watcher");
-        jsn.put("Version", "1");
-        jsn.put("Date",Calendar.getInstance(TimeZone.getTimeZone("Greece/Athens")).getTime().toString());
-        
-        JSONArray alog = new JSONArray();
-        for(String a:log){
-            alog.put(a);
+    private void makeLog(){
+        this.statusLog.clear();
+        for(ServiceParameter sp:this.serviceOrchestrator.getConfiguration().getServiceParameters()){
+            Hashtable<String, String> logKV = new Hashtable<String, String>();
+            logKV.put("description", sp.getDescription()==null?"":sp.getDescription());
+            logKV.put("url", sp.getUrl()==null?"":sp.getUrl());
+            logKV.put("type", sp.getType()==null?"":sp.getType());
+            logKV.put("group",sp.getGroup()==null?"":sp.getGroup());
+            logKV.put("username",sp.getUsername()==null?"":sp.getUsername());
+            logKV.put("error",sp.getError()==null?"":sp.getError());
+            logKV.put("retries",Integer.toString(sp.getRetries())==null?"":Integer.toString(sp.getRetries()));
+            logKV.put("actual_retries",Integer.toString(sp.getActualRetries())==null?"":Integer.toString(sp.getActualRetries()));
+            logKV.put("search_string",sp.getSearchString()==null?"":sp.getSearchString());
+            logKV.put("context",sp.getContext()==null?"":sp.getContext());
+            logKV.put("query",sp.getQuery()==null?"":sp.getQuery());
+            logKV.put("command",sp.getCommand()==null?"":sp.getCommand());
+            logKV.put("status", (sp.getStatus() == SWConstants.SERVICE_SUCCESS?"Up":"Down"));
+            statusLog.add(logKV);
         }
+    }
+    
+    /**
+     * Fills an html template with the log output and programs operating configuration.
+     * @return
+     */
+    private String vlc(){
+        StringWriter w = new StringWriter();
+        VelocityEngine ve = new VelocityEngine();
+        VelocityContext context = new VelocityContext();
+        ve.init();
         
-        jsn.put("Log", alog);
-        return jsn;
+        Template t = ve.getTemplate("simple_report_template.html");
+        
+        context.put("program_name", SWConstants.REPORTER_TEMPLATE_TITLE);
+        context.put("version", SWConstants.PROGRAM_VERSION);
+        context.put("date", (new Date()).toString());
+        context.put("configuration", configuration);
+        context.put("service_parameters", configuration.getServiceParameters());
+        
+        makeLog();
+        context.put("logs", statusLog);
+        
+        t.merge(context, w);
+        
+        return w.toString();
+    }
+    
+    /**
+     * Fills a json file using a specified Template with application configuration and logs.
+     * @param jsonTemplate
+     */
+    public String vlcJSON(String fileName){
+        StringWriter w = new StringWriter();
+        VelocityEngine ve = new VelocityEngine();
+        VelocityContext context = new VelocityContext();
+        
+        Template jsonTemplate = ve.getTemplate(fileName);
+        
+        context.put("program_name", SWConstants.REPORTER_TEMPLATE_TITLE);
+        context.put("version", SWConstants.PROGRAM_VERSION);
+        context.put("date", (new Date()).toString());
+        context.put("configuration", configuration);
+        context.put("service_parameters", configuration.getServiceParameters());
+        
+        makeLog();
+        context.put("logs", this.statusLog);
+        jsonTemplate.merge(context, w);
+
+        return w.toString();
     }
 }

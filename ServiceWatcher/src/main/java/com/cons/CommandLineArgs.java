@@ -1,89 +1,108 @@
 package com.cons;
 
+import com.cons.utils.GenericUtils;
+import com.cons.utils.SWConstants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 
 public class CommandLineArgs {
+    final static Logger logger = Logger.getLogger(CommandLineArgs.class); 
 
     private String configFile = null;
     private boolean encrypt = false;
     private boolean noGUI = false;
     private boolean help = false;
     private long autoRefreshTime = 0;
-
+    private List<String> allConfigFiles = new ArrayList<String>();
 
     public CommandLineArgs() {
-
+        
     }
 
 
     public void init(String[] args) {
         if (args.length == 0) {
-            System.out.println("Empty args.");
+            logger.info("No arguments specified. Default settings will be applied");
         } else {
             String tmp;
             for (int i = 0; i < args.length; i++) {
                 // -conf
                 if (args[i].toLowerCase().startsWith("-conf")) {
                     if (getConfigFile() == null) {
-                        if (args[i].split(":").length != 2) {
-                            System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
+                    if (args[i].split(":").length < 2) {
+                        System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");                        
                             System.out.println("Using the default configuration file: " + getConfigFile());
-                        } else {
-                            tmp = (args[i].split(":")[1]).trim();
-                            if (tmp.length() > 0) {
-                                setConfigFile(tmp);
-                                System.out.println("Custom configuration specified (" + getConfigFile() + ")");
-                            } else {
-                                System.out.println("Invalid  <config file Name>");
+                    } else {
+                        //Fix bug with colon in file name (e.g. C:\something\config.properties)
+                        //This bug appears only in windows
+                        //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
+                        tmp = (args[i].split(":", 2)[1]).trim();
+                        if (tmp.length() > 0) {
+                            if (getAllConfigFiles().size() == 0) {
+                            setConfigFile(tmp);
                             }
+                            getAllConfigFiles().add(tmp);
+                            logger.info("Custom configuration specified (" + getConfigFile() + ")");
+                        } else {
+                            logger.error("Invalid  <config file Name>");
                         }
                     }
+                }
                 }
                 // -encrypt
                 if (args[i].toLowerCase().equals("-encrypt")) {
                     if (!getEncrypt()) {
-                        setEncrypt(true);
-                        System.out.println("Encrypt passwords: " + getEncrypt());
-                    }
+                    setEncrypt(true);
+                    logger.info("Encrypt passwords: " + getEncrypt());
+                }
                 }
                 // -autorefresh
                 if (args[i].toLowerCase().startsWith("-autorefresh")) {
                     if (getAutoRefreshTime() == 0) {
-                        long interval = 1;
-                        if (args[i].split(":").length == 2) {
-                            tmp = (args[i].split(":")[1]).trim();
-                            try {
-                                interval = Long.parseLong(tmp);
-                            } catch (NumberFormatException e) {
-                                System.out.println("Wrong value for auto refresh time (" + tmp +
-                                                   "), using the default one: " + interval);
-                            }
+                    long interval = 1;
+                    if (args[i].split(":").length == 2) {
+                        tmp = (args[i].split(":")[1]).trim(); 
+                        try {
+                           interval = Long.parseLong(tmp);
+                        } catch (NumberFormatException e) {
+                            logger.info("Wrong value for auto refresh time (" + tmp +
+                                               "), using the default one: " + interval);
                         }
-                        setAutoRefreshTime(interval);
+                    }                     
+                    setAutoRefreshTime(interval);
                         System.out.println("Autorefresh enabled with: " + interval + " interval");
-                    }
+                }                    
                 }
                 // -nogui
                 if (args[i].toLowerCase().equals("-nogui")) {
                     if (!isNoGUI()) {
-                        setNoGUI(true);
-                        System.out.println("GUI is disabled.");
-                    }
+                    setNoGUI(true);
+                    logger.info("-nogui specified, GUI is disabled.");
+                }
                 }
                 //-help
                 if (args[i].toLowerCase().equals("-help")) {
                     if (!getHelp()) {
-                        help();
-                    }
+                    help();
                 }
+                //-version
+                if (args[i].toLowerCase().equals("-version")) {
+                    System.out.println(SWConstants.PROGRAM_NAME + " " + "Version: " + SWConstants.PROGRAM_VERSION);
+                    System.exit(0); //Exit after displaying the version
             }
         }
     }
-
+        debugArguments();
+    }
 
     public void setConfigFile(String configFile) {
         this.configFile = configFile;
@@ -126,22 +145,47 @@ public class CommandLineArgs {
     }
 
     public void help() {
+        String ANSI_RED_RESET = "\u001B[0m";
+        String ANSI_RED = "\u001B[31m";
 
         try {
-            InputStream in = getClass().getResourceAsStream("/src/images/help.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            InputStream in = getClass().getResourceAsStream("/images/help.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in)) ;
             String line = null;
             while ((line = reader.readLine()) != null) {
-                line = line.replaceAll("<b>", "\u001B[1m");
-                line = line.replaceAll("</b>", "\u001B[0m");
+                if (GenericUtils.isUnix()) {
+                line = line.replaceAll("<b>","\u001B[1m" );
+                line = line.replaceAll("</b>","\u001B[0m" );
+                    line = line.replaceAll("<red>", ANSI_RED);
+                    line = line.replaceAll("</red>", ANSI_RED_RESET);
+                } else if (GenericUtils.isWindows()) {
+                    line = line.replaceAll("<b>", "").trim();
+                    line = line.replaceAll("</b>", "").trim();
+                    line = line.replaceAll("<red>", "").trim();
+                    line = line.replaceAll("</red>", "").trim();
+                }
                 System.out.println(line);
             }
             System.exit(0);
         } catch (IOException e) {
-            System.out.println("file does not exist.");
+            System.out.println("File does not exist.");
         } catch (Exception e) {
             System.out.println("Help is not available.");
         }
     }
 
+    public void setAdditionalConfigFiles(List<String> allConfigFiles) {
+        this.allConfigFiles = allConfigFiles;
+}
+
+    public List<String> getAllConfigFiles() {
+        return allConfigFiles;
+    }
+    
+    private void debugArguments() {
+        logger.debug("Main configFile=" + configFile);
+        for (String s : getAllConfigFiles()) {
+            logger.debug("getAllConfigFiles:" + s);
+        }
+    }
 }

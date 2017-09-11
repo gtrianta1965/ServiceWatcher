@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 public class CommandLineArgs {
     final static Logger logger = Logger.getLogger(CommandLineArgs.class);
 
-    private String configFile = null;
+    private String configFile = "config.properties";
     private boolean encrypt = false;
     private boolean noGUI = false;
     private boolean help = false;
@@ -37,24 +37,22 @@ public class CommandLineArgs {
             for (int i = 0; i < args.length; i++) {
                 // -conf
                 if (args[i].toLowerCase().startsWith("-conf")) {
-                    if (getConfigFile() == null) {
-                        if (args[i].split(":").length < 2) {
-                            System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
-                            System.out.println("Using the default configuration file: " + getConfigFile());
-                        } else {
-                            //Fix bug with colon in file name (e.g. C:\something\config.properties)
-                            //This bug appears only in windows
-                            //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
-                            tmp = (args[i].split(":", 2)[1]).trim();
-                            if (tmp.length() > 0) {
-                                if (getAllConfigFiles().size() == 0) {
-                                    setConfigFile(tmp);
-                                }
-                                getAllConfigFiles().add(tmp);
-                                logger.info("Custom configuration specified (" + getConfigFile() + ")");
-                            } else {
-                                logger.error("Invalid  <config file Name>");
+                    if (args[i].split(":").length < 2) {
+                        System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
+                        System.out.println("Using the default configuration file: " + getConfigFile());
+                    } else {
+                        //Fix bug with colon in file name (e.g. C:\something\config.properties)
+                        //This bug appears only in windows
+                        //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
+                        tmp = (args[i].split(":", 2)[1]).trim();
+                        if (tmp.length() > 0) {
+                            if (getAllConfigFiles().size() == 0) {
+                                setConfigFile(tmp);
                             }
+                            getAllConfigFiles().add(tmp);
+                            logger.info("Custom configuration specified (" + getConfigFile() + ")");
+                        } else {
+                            logger.error("Invalid  <config file Name>");
                         }
                     }
                 }

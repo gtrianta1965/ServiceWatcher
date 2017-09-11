@@ -15,17 +15,16 @@ import org.apache.log4j.Logger;
 
 
 public class CommandLineArgs {
-    final static Logger logger = Logger.getLogger(CommandLineArgs.class);
+    final static Logger logger = Logger.getLogger(CommandLineArgs.class); 
 
-    private String configFile = null;
+    private String configFile = "config.properties";
     private boolean encrypt = false;
     private boolean noGUI = false;
-    private boolean help = false;
     private long autoRefreshTime = 0;
     private List<String> allConfigFiles = new ArrayList<String>();
 
     public CommandLineArgs() {
-
+        
     }
 
 
@@ -37,72 +36,61 @@ public class CommandLineArgs {
             for (int i = 0; i < args.length; i++) {
                 // -conf
                 if (args[i].toLowerCase().startsWith("-conf")) {
-                    if (getConfigFile() == null) {
-                        if (args[i].split(":").length < 2) {
-                            System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");
-                            System.out.println("Using the default configuration file: " + getConfigFile());
-                        } else {
-                            //Fix bug with colon in file name (e.g. C:\something\config.properties)
-                            //This bug appears only in windows
-                            //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
-                            tmp = (args[i].split(":", 2)[1]).trim();
-                            if (tmp.length() > 0) {
-                                if (getAllConfigFiles().size() == 0) {
-                                    setConfigFile(tmp);
-                                }
-                                getAllConfigFiles().add(tmp);
-                                logger.info("Custom configuration specified (" + getConfigFile() + ")");
-                            } else {
-                                logger.error("Invalid  <config file Name>");
+                    if (args[i].split(":").length < 2) {
+                        System.out.println("Arguments -conf must be followed by a colon (:) and the <config file Name>");                        
+                    } else {
+                        //Fix bug with colon in file name (e.g. C:\something\config.properties)
+                        //This bug appears only in windows
+                        //tmp = args[i].toLowerCase().replaceAll("^-conf:", "");
+                        tmp = (args[i].split(":", 2)[1]).trim();
+                        if (tmp.length() > 0) {
+                            if (getAllConfigFiles().size() == 0) {
+                            setConfigFile(tmp);
                             }
+                            getAllConfigFiles().add(tmp);
+                            logger.info("Custom configuration specified (" + getConfigFile() + ")");
+                        } else {
+                            logger.error("Invalid  <config file Name>");
                         }
                     }
                 }
                 // -encrypt
                 if (args[i].toLowerCase().equals("-encrypt")) {
-                    if (!getEncrypt()) {
-                        setEncrypt(true);
-                        logger.info("Encrypt passwords: " + getEncrypt());
-                    }
+                    setEncrypt(true);
+                    logger.info("Encrypt passwords: " + getEncrypt());
                 }
                 // -autorefresh
                 if (args[i].toLowerCase().startsWith("-autorefresh")) {
-                    if (getAutoRefreshTime() == 0) {
-                        long interval = 1;
-                        if (args[i].split(":").length == 2) {
-                            tmp = (args[i].split(":")[1]).trim();
-                            try {
-                                interval = Long.parseLong(tmp);
-                            } catch (NumberFormatException e) {
+                    long interval = 1;
+                    if (args[i].split(":").length == 2) {
+                        tmp = (args[i].split(":")[1]).trim(); 
+                        try {
+                           interval = Long.parseLong(tmp);
+                        } catch (NumberFormatException e) {
                                 logger.info("Wrong value for auto refresh time (" + tmp + "), using the default one: " +
                                             interval);
-                            }
                         }
-                        setAutoRefreshTime(interval);
-                        System.out.println("Autorefresh enabled with: " + interval + " interval");
-                    }
-                }
+                    }                     
+                    setAutoRefreshTime(interval);
+                }                    
                 // -nogui
                 if (args[i].toLowerCase().equals("-nogui")) {
-                    if (!isNoGUI()) {
-                        setNoGUI(true);
-                        logger.info("-nogui specified, GUI is disabled.");
-                    }
+                    setNoGUI(true);
+                    logger.info("-nogui specified, GUI is disabled.");
                 }
                 //-help
                 if (args[i].toLowerCase().equals("-help")) {
-                    if (!getHelp()) {
-                        help();
-                    }
-                    //-version
-                    if (args[i].toLowerCase().equals("-version")) {
-                        System.out.println(SWConstants.PROGRAM_NAME + " " + "Version: " + SWConstants.PROGRAM_VERSION);
-                        System.exit(0); //Exit after displaying the version
-                    }
+                    help();
                 }
+                //-version
+                if (args[i].toLowerCase().equals("-version")) {
+                    System.out.println(SWConstants.PROGRAM_NAME + " " + "Version: " + SWConstants.PROGRAM_VERSION);
+                    System.exit(0); //Exit after displaying the version
             }
-            debugArguments();
         }
+    }
+        debugArguments();
+    }
     }
 
     public void setConfigFile(String configFile) {
@@ -137,13 +125,6 @@ public class CommandLineArgs {
         return autoRefreshTime;
     }
 
-    public void setHelp(boolean help) {
-        this.help = help;
-    }
-
-    public boolean getHelp() {
-        return help;
-    }
 
     public void help() {
         String ANSI_RED_RESET = "\u001B[0m";
@@ -151,12 +132,12 @@ public class CommandLineArgs {
 
         try {
             InputStream in = getClass().getResourceAsStream("/images/help.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in)) ;
             String line = null;
             while ((line = reader.readLine()) != null) {
                 if (GenericUtils.isUnix()) {
-                    line = line.replaceAll("<b>", "\u001B[1m");
-                    line = line.replaceAll("</b>", "\u001B[0m");
+                line = line.replaceAll("<b>","\u001B[1m" );
+                line = line.replaceAll("</b>","\u001B[0m" );
                     line = line.replaceAll("<red>", ANSI_RED);
                     line = line.replaceAll("</red>", ANSI_RED_RESET);
                 } else if (GenericUtils.isWindows()) {
@@ -177,12 +158,12 @@ public class CommandLineArgs {
 
     public void setAdditionalConfigFiles(List<String> allConfigFiles) {
         this.allConfigFiles = allConfigFiles;
-    }
+}
 
     public List<String> getAllConfigFiles() {
         return allConfigFiles;
     }
-
+    
     private void debugArguments() {
         logger.debug("Main configFile=" + configFile);
         for (String s : getAllConfigFiles()) {

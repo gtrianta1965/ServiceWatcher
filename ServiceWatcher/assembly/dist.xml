@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+    <id>dist</id>
+    <formats>
+        <format>zip</format>
+	<format>tar.gz</format>
+    </formats>
+    <files>
+        <file>
+            <source>sw.sh</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+ 	<file>
+            <source>sw.bat</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+ 	<file>
+            <source>appendSW.bat</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+ 	<file>
+            <source>simple_report_template.html</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+	<file>
+            <source>report_template.html</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+	<file>
+            <source>sample-config.properties</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+ 	<file>
+            <source>target/${pom.artifactId}-${pom.version}.jar</source>
+            <outputDirectory>target/</outputDirectory>
+        </file>
+    </files>
+     <dependencySets>
+    <dependencySet>
+      <outputDirectory>target/lib</outputDirectory>
+    </dependencySet>
+  </dependencySets>
+</assembly>

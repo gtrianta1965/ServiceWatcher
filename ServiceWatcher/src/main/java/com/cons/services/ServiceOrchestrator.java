@@ -94,8 +94,8 @@ public class ServiceOrchestrator {
 
         executor.shutdown();
         logger.debug("Executor shutdown.");
-        
-        if(configuration.getCmdArguments().getAutoRefreshTime() != 0 || !configuration.getCmdArguments().isNoGUI()){
+
+        if (configuration.getCmdArguments().getAutoRefreshTime() != 0 || !configuration.getCmdArguments().isNoGUI()) {
             logger.debug("Starting send mail thread.");
             new Thread(new Runnable() {
                 public void run() {
@@ -105,7 +105,7 @@ public class ServiceOrchestrator {
                 }
             }).start();
         }
-        
+
         /* Study the following code and activate it when it is needed
         while (!executor.isTerminated()) {
         }
@@ -176,10 +176,19 @@ public class ServiceOrchestrator {
      * Checks if it should send emails for the current run.
      */
     public void checkSendMail() {
-        if (this.configuration.getSendMailUpdates() &&
-            (this.configuration.getSmtpSendEmailOnSuccess() ||
-             this.orchestratorStatus.getTotalSubmitted() != this.orchestratorStatus.getTotalSuccess())) {
-            reporter.send();
+        getStatus();
+        if (this.configuration.getSendMailUpdates()) {
+            if (this.orchestratorStatus.getTotalRunning() == 0) {
+                if (this.configuration.getSmtpSendEmailOnSuccess()) {
+                    if (this.orchestratorStatus.getTotalSuccess() > 0) {
+                        reporter.send();
+                    }
+                } else {
+                    if (this.orchestratorStatus.getTotalFailed() > 0) {
+                        reporter.send();
+                    }
+                }
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import com.cons.Configuration;
 import com.cons.services.ServiceOrchestrator;
 import com.cons.services.ServiceParameter;
 
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import java.util.ArrayList;
@@ -11,11 +12,9 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
@@ -29,6 +28,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
@@ -181,8 +181,18 @@ public class Reporter{
      */
     private static BodyPart makeAttachment(String attachmentPath, String id){
         BodyPart msgBodyPart = new MimeBodyPart();
-        DataSource fds = new FileDataSource(attachmentPath);
-        try {
+        InputStream stream = Reporter.class.getResourceAsStream(attachmentPath); //or null if you can't obtain a ServletContext
+
+        if (stream == null) {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            if (classLoader == null) {
+                classLoader = Reporter.class.getClassLoader();
+            }
+            stream = classLoader.getResourceAsStream(attachmentPath);
+       }
+
+       try {
+            DataSource fds = new ByteArrayDataSource(stream, "image/*");
             msgBodyPart.setDataHandler(new DataHandler(fds));
             msgBodyPart.setHeader("Content-ID", id);
             msgBodyPart.setFileName(MimeUtility.encodeText("logo.png", "UTF-8", null));
